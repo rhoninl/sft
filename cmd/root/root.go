@@ -2,6 +2,7 @@ package root
 
 import (
 	"github.com/rhoninl/shifucli/cmd/k8s"
+	"github.com/rhoninl/shifucli/cmd/root/describe"
 	"github.com/rhoninl/shifucli/cmd/root/edgedevices"
 	"github.com/rhoninl/shifucli/cmd/root/forward"
 	"github.com/rhoninl/shifucli/cmd/root/install"
@@ -12,7 +13,7 @@ import (
 
 var (
 	RootCmd = &cobra.Command{
-		Use:   "shifuctl",
+		Use:   "sft",
 		Short: "shifuctl controls the shifu manager",
 		Long:  `shifuctl controls the shifu manager`,
 	}
@@ -24,12 +25,12 @@ func Execute() error {
 }
 
 func init() {
-	RootCmd.CompletionOptions.DisableDefaultCmd = false
 	cobra.EnableCommandSorting = false
-	RootCmd.CompletionOptions.DisableDefaultCmd = true
+	RootCmd.CompletionOptions.DisableDefaultCmd = false
 	RootCmd.PersistentFlags().StringVar(&k8s.KubeConfigPath, "config", "", "kubeconfig file (default use KUBECONFIG env or ~/.kube/config)")
 	RootCmd.AddCommand(edgedevices.EdgedeviceCmd)
 	RootCmd.AddCommand(serviceCmd)
+	RootCmd.AddCommand(describe.DescribeCmd)
 	RootCmd.AddCommand(statusCmd)
 	RootCmd.AddCommand(forward.ForwardCmd)
 	RootCmd.AddCommand(logs.LogsCmd)

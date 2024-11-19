@@ -8,6 +8,7 @@ import (
 
 func init() {
 	EdgedeviceCmd.AddCommand(describeCmd)
+	EdgedeviceCmd.CompletionOptions.DisableDefaultCmd = false
 }
 
 var describeCmd = &cobra.Command{

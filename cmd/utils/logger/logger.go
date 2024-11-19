@@ -12,6 +12,8 @@ const (
 	Yellow Color = "\033[33m"
 	Blue   Color = "\033[34m"
 	Purple Color = "\033[35m"
+	Cyan   Color = "\033[36m"
+	White  Color = "\033[37m"
 
 	Reset Color = "\033[0m"
 )

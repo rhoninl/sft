@@ -3,7 +3,6 @@ package edgedevices
 import (
 	"fmt"
 	"os"
-	"text/tabwriter"
 	"time"
 
 	"github.com/edgenesis/shifu/pkg/k8s/api/v1alpha1"
@@ -17,7 +16,7 @@ var (
 	edgedeviceLogTemplate = "%s\t%s\t%s\t%s\t%s\n"
 	protocol              string
 	status                string
-	headers               = []string{"Name", "Protocol", "Address", "Status", "AGE"}
+	headers               = []string{"\rName", "Protocol", "Address", "Status", "AGE"}
 )
 
 func init() {
@@ -43,8 +42,6 @@ var listCmd = &cobra.Command{
 		table.SetBorder(false)
 		table.SetColumnSeparator("")
 
-		writer := tabwriter.NewWriter(os.Stdout, 0, 0, 10, ' ', 0)
-
 		for _, edgedevice := range edgedevices {
 			if protocol != "" && string(*edgedevice.Spec.Protocol) != protocol {
 				continue
@@ -64,8 +61,7 @@ var listCmd = &cobra.Command{
 				phase = "N/A"
 			}
 
-			table.Append([]string{edgedevice.Name, string(*edgedevice.Spec.Protocol), address, logger.StatusWithColor(string(phase)), TimeToAge(edgedevice.CreationTimestamp.Time)})
-			writer.Flush()
+			table.Append([]string{"\r" + edgedevice.Name, string(*edgedevice.Spec.Protocol), address, logger.StatusWithColor(string(phase)), TimeToAge(edgedevice.CreationTimestamp.Time)})
 		}
 
 		table.Render()

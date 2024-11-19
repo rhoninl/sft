@@ -6,5 +6,4 @@ import (
 
 func main() {
 	root.RootCmd.Execute()
-	// cobra.CheckErr(root.RootCmd.Execute())
 }
