@@ -1,3 +1,10 @@
-# github.com/rhoninl/shifucli/cmd/k8s
-cmd/k8s/get.go:8:2: "gopkg.in/yaml.v3" imported as yaml and not used
-cmd/k8s/get.go:28:2: declared and not used: edgedevice
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp
+spec:
+  selector:
+    app: myapp
+  ports:
+  - port: <Port>
+    targetPort: <Target Port>

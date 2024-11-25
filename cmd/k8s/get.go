@@ -17,6 +17,7 @@ type Device struct {
 	EdgeDevice v1alpha1.EdgeDevice
 	Deployment appv1.Deployment
 	ConfigMap  corev1.ConfigMap
+	Services   corev1.ServiceList
 }
 
 func GetAllByDeviceName(deviceName string) (*Device, error) {
@@ -62,10 +63,16 @@ func GetAllByDeviceName(deviceName string) (*Device, error) {
 		return nil, err
 	}
 
+	services, err := GetServiceLinkedDeployment(deployment[0].Labels["app"])
+	if err != nil {
+		return nil, err
+	}
+
 	return &Device{
 		EdgeDevice: edgedevice,
 		Deployment: deployment[0],
 		ConfigMap:  *configmap,
+		Services:   *services,
 	}, nil
 }
 
@@ -76,6 +83,22 @@ func GetConfigmapByName(name string) (*corev1.ConfigMap, error) {
 	}
 
 	obj, err := clientset.CoreV1().ConfigMaps("deviceshifu").Get(context.TODO(), name, metav1.GetOptions{})
+	if err != nil {
+		return nil, err
+	}
+
+	return obj, nil
+}
+
+func GetServiceLinkedDeployment(name string) (*corev1.ServiceList, error) {
+	clientset, _, err := NewClientSet()
+	if err != nil {
+		return nil, err
+	}
+
+	obj, err := clientset.CoreV1().Services("deviceshifu").List(context.TODO(), metav1.ListOptions{
+		LabelSelector: fmt.Sprintf("app=%s", name),
+	})
 	if err != nil {
 		return nil, err
 	}

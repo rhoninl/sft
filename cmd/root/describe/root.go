@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/rhoninl/shifucli/cmd/k8s"
+	"github.com/rhoninl/shifucli/cmd/utils/logger"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 )
@@ -51,8 +52,9 @@ var DescribeCmd = &cobra.Command{
 			protocol += " -> " + *device.EdgeDevice.Spec.GatewaySettings.Protocol
 		}
 
-		fmt.Println("Protocol: ", protocol)
+		fmt.Println("Status: ", logger.StatusWithColor(string(*device.EdgeDevice.Status.EdgeDevicePhase)))
 		fmt.Println("Address: ", getRealDeviceAddress(*device))
+		fmt.Println("Protocol: ", protocol)
 
 		var gatewayInfo, deviceInfo string
 		if len(connectionSettings) != 0 {
@@ -212,7 +214,7 @@ func getRealDeviceAddress(device k8s.Device) string {
 	}
 
 	if len(envs) == 0 {
-		return *address
+		return "(passive device)" + passiveDeviceServerAddress(&device)
 	}
 
 	for _, value := range envs {
@@ -220,4 +222,26 @@ func getRealDeviceAddress(device k8s.Device) string {
 	}
 
 	return "N/A"
+}
+
+func passiveDeviceServerAddress(device *k8s.Device) string {
+	for _, service := range device.Services.Items {
+		if service.Spec.Type != "NodePort" {
+			continue
+		}
+
+		for _, port := range service.Spec.Ports {
+			if port.NodePort == 0 {
+				continue
+			} else if port.TargetPort.IntVal == 8080 {
+				continue
+			}
+
+			return fmt.Sprintf("localhost:%d", port.NodePort)
+		}
+	}
+
+	service := device.Services.Items[0]
+
+	return fmt.Sprintf("%s.%s.svc.cluster.local:%d", service.Name, service.Namespace, service.Spec.Ports[0].TargetPort.IntVal)
 }
