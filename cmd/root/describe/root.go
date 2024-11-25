@@ -2,10 +2,10 @@ package describe
 
 import (
 	"fmt"
+	"net"
 	"strings"
 
 	"github.com/rhoninl/shifucli/cmd/k8s"
-	"github.com/rhoninl/shifucli/cmd/utils/logger"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 )
@@ -45,7 +45,6 @@ var DescribeCmd = &cobra.Command{
 			}
 		}
 
-		fmt.Println(logger.WithColor(logger.Blue, "************Device*************"))
 		fmt.Println("Name: ", device.EdgeDevice.Name)
 		var protocol string = string(*device.EdgeDevice.Spec.Protocol)
 		if gatewaySettings != nil {
@@ -53,7 +52,7 @@ var DescribeCmd = &cobra.Command{
 		}
 
 		fmt.Println("Protocol: ", protocol)
-		fmt.Println("Address: ", *device.EdgeDevice.Spec.Address)
+		fmt.Println("Address: ", getRealDeviceAddress(*device))
 
 		var gatewayInfo, deviceInfo string
 		if len(connectionSettings) != 0 {
@@ -81,7 +80,6 @@ var DescribeCmd = &cobra.Command{
 		fmt.Println("==============API==============")
 		fmt.Print(device.ConfigMap.Data["instructions"])
 		fmt.Print(device.ConfigMap.Data["telemetries"])
-		fmt.Println(logger.WithColor(logger.Purple, "**************END**************"))
 	},
 	ValidArgs: func() []string {
 		edgedevices, err := k8s.GetEdgedevices()
@@ -144,4 +142,82 @@ func alignMultiLineStrings(blocks ...string) {
 		// Join the aligned lines with separators and print
 		fmt.Println(strings.Join(row, " | "))
 	}
+}
+
+var internalHost = []string{
+	"localhost",
+	"0.0.0.0",
+	"",
+}
+
+var addressHallmark = []string{
+	"IP",
+	"HOST",
+	"Address",
+}
+
+func containsAny(arr []string, str string) bool {
+	for _, v := range arr {
+		if strings.Contains(str, v) {
+			return true
+		}
+	}
+	return false
+}
+
+func getRealDeviceAddress(device k8s.Device) string {
+	address := device.EdgeDevice.Spec.Address
+
+	if address == nil {
+		return "N/A"
+	} else if *address == "" {
+		return "N/A"
+	}
+
+	host, port, err := net.SplitHostPort(*address)
+	if err != nil {
+		return *address
+	}
+
+	if !containsAny(internalHost, host) {
+		return *address
+	}
+
+	envs := make(map[string]string)
+
+	// Find the container that exposes the port
+	for _, container := range device.Deployment.Spec.Template.Spec.Containers {
+		var mark bool
+		if container.Ports != nil {
+			for _, containerPort := range container.Ports {
+				if string(containerPort.ContainerPort) == port {
+					clear(envs)
+					mark = true
+				}
+			}
+		}
+		for _, env := range container.Env {
+			envs[env.Name] = env.Value
+		}
+
+		if mark {
+			break
+		}
+	}
+
+	for key := range envs {
+		if !containsAny(addressHallmark, key) {
+			delete(envs, key)
+		}
+	}
+
+	if len(envs) == 0 {
+		return *address
+	}
+
+	for _, value := range envs {
+		return value
+	}
+
+	return "N/A"
 }
