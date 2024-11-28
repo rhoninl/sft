@@ -23,7 +23,7 @@ func PortForwardPod(namespace, podName, localPort, remotePort string) error {
 
 	transport, upgrader, err := spdy.RoundTripperFor(config)
 	if err != nil {
-		return fmt.Errorf("failed to create spdy roundtripper: %v", err)
+		return fmt.Errorf("failed to create spdy roundtripper: %w", err)
 	}
 
 	dialer := spdy.NewDialer(upgrader, &http.Client{Transport: transport}, "POST", req.URL())
@@ -34,7 +34,7 @@ func PortForwardPod(namespace, podName, localPort, remotePort string) error {
 
 	forwarder, err := portforward.New(dialer, ports, stopChan, readyChan, os.Stdout, os.Stderr)
 	if err != nil {
-		return fmt.Errorf("failed to create port forwarder: %v", err)
+		return fmt.Errorf("failed to create port forwarder: %w", err)
 	}
 
 	go func() {
@@ -42,9 +42,8 @@ func PortForwardPod(namespace, podName, localPort, remotePort string) error {
 		fmt.Printf("Port-forward to pod %s on localhost:%s -> remote port %s is ready.\n", podName, localPort, remotePort)
 	}()
 
-	err = forwarder.ForwardPorts()
-	if err != nil {
-		return fmt.Errorf("failed to forward ports: %v", err)
+	if err := forwarder.ForwardPorts(); err != nil {
+		return fmt.Errorf("failed to forward ports: %w", err)
 	}
 
 	return nil

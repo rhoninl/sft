@@ -1,3 +1,4 @@
+// Package edgedevices provides functionality to manage edge devices in a Kubernetes cluster.
 package edgedevices
 
 import (
@@ -7,15 +8,18 @@ import (
 
 	"github.com/olekukonko/tablewriter"
 	"github.com/rhoninl/shifucli/cmd/k8s"
+	"github.com/rhoninl/shifucli/cmd/utils/address"
 	"github.com/rhoninl/shifucli/cmd/utils/logger"
 	"github.com/spf13/cobra"
 )
 
 var (
-	edgedeviceLogTemplate = "%s\t%s\t%s\t%s\t%s\n"
-	protocol              string
-	status                string
-	headers               = []string{"\rName", "Protocol", "Address", "Status", "AGE"}
+	// protocol is the flag value for filtering edge devices by protocol
+	protocol string
+	// status is the flag value for filtering edge devices by status
+	status string
+	// headers defines the column headers for the edge device list table
+	headers = []string{"\rName", "Protocol", "Address", "Status", "AGE"}
 )
 
 func init() {
@@ -46,10 +50,13 @@ var listCmd = &cobra.Command{
 				continue
 			}
 
-			address := "N/A"
-			if edgedevice.Spec.Address != nil {
-				address = *edgedevice.Spec.Address
+			device, err := k8s.GetAllByDeviceName(edgedevice.Name)
+			if err != nil {
+				fmt.Printf("Error retrieving device: %v\n", err)
+				return
 			}
+
+			address := address.GetRealDeviceAddress(*device)
 
 			phase := "N/A"
 			if edgedevice.Status.EdgeDevicePhase != nil {
@@ -69,10 +76,13 @@ var listCmd = &cobra.Command{
 	},
 }
 
+// TimeToAge converts a creation timestamp to a human-readable age string
 func TimeToAge(createTime time.Time) string {
 	return DurationToMaxUnitString(time.Since(createTime).Round(time.Second))
 }
 
+// DurationToMaxUnitString converts a duration to a human-readable string using the largest suitable unit
+// Returns a string in the format of "Xd", "Xh", "Xm", or "Xs" where X is the number of days, hours, minutes, or seconds
 func DurationToMaxUnitString(d time.Duration) string {
 	switch {
 	case d >= 24*time.Hour:

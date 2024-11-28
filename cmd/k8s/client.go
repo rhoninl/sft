@@ -201,13 +201,13 @@ func GetDeploymentPods(namespace string, deploymentName string) ([]v1.Pod, error
 		return nil, fmt.Errorf("failed to create clientset: %w", err)
 	}
 
-	// 1. 获取 Deployment 资源
+	// 1. Get the Deployment resource
 	deployment, err := clientset.AppsV1().Deployments(namespace).Get(context.TODO(), deploymentName, metav1.GetOptions{})
 	if err != nil {
 		return nil, fmt.Errorf("failed to get deployment: %v", err)
 	}
 
-	// 2. 获取与 Deployment 关联的 Pod 列表
+	// 2. Get the list of Pods associated with the Deployment
 	labelSelector := deployment.Spec.Selector.MatchLabels
 	labelSelectorStr := metav1.FormatLabelSelector(&metav1.LabelSelector{MatchLabels: labelSelector})
 	pods, err := clientset.CoreV1().Pods(namespace).List(context.TODO(), metav1.ListOptions{

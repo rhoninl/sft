@@ -31,11 +31,7 @@ var UninstallShifuCmd = &cobra.Command{
 			fmt.Println("Failed to install shifu component")
 			return
 		}
-		// kcmd := exec.Command("kubectl", "apply", "-f", yamlFile)
-		// if err := kcmd.Run(); err != nil {x
-		// 	fmt.Println("Failed to install shifu component")
-		// 	return
-		// }
+
 		fmt.Println("Shifu component installed successfully")
 	},
 }

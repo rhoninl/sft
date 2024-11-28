@@ -4,32 +4,21 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"os"
 	"strings"
 
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
-	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/kubernetes"
-	"k8s.io/client-go/tools/clientcmd"
 )
 
 func GetDeploymentLogs(namespace, deploymentName, containerName string, follow bool) error {
-	// Load kubeconfig
-	kubeconfig := os.Getenv("HOME") + "/.kube/config"
-	config, err := clientcmd.BuildConfigFromFlags("", kubeconfig)
+	dynamicClient, err := NewDynamicClient()
 	if err != nil {
-		return fmt.Errorf("failed to build kubeconfig: %w", err)
+		return fmt.Errorf("failed to create clientset: %w", err)
 	}
 
-	// Create dynamic client and core clientset
-	dynamicClient, err := dynamic.NewForConfig(config)
-	if err != nil {
-		return fmt.Errorf("failed to create dynamic client: %w", err)
-	}
-
-	clientset, err := kubernetes.NewForConfig(config)
+	clientset, _, err := NewClientSet()
 	if err != nil {
 		return fmt.Errorf("failed to create clientset: %w", err)
 	}
