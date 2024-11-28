@@ -105,3 +105,18 @@ func GetServiceLinkedDeployment(name string) (*corev1.ServiceList, error) {
 
 	return obj, nil
 }
+
+func GetValidDeviceNames() []string {
+	edgedevices, err := GetEdgedevices()
+	if err != nil {
+		fmt.Printf("Error retrieving edgedevices: %v\n", err)
+		return nil
+	}
+
+	deviceNames := make([]string, len(edgedevices))
+	for i, edgedevice := range edgedevices {
+		deviceNames[i] = edgedevice.Name
+	}
+
+	return deviceNames
+}

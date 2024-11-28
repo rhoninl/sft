@@ -37,7 +37,7 @@ var DescribeCmd = &cobra.Command{
 
 		printDeviceDetails(device)
 	},
-	ValidArgs: getValidDeviceNames(),
+	ValidArgs: k8s.GetValidDeviceNames(),
 }
 
 func printDeviceDetails(device *k8s.Device) {
@@ -114,21 +114,6 @@ func printAPIInfo(device *k8s.Device) {
 		fmt.Println(line)
 	}
 	fmt.Print(device.ConfigMap.Data["telemetries"])
-}
-
-func getValidDeviceNames() []string {
-	edgedevices, err := k8s.GetEdgedevices()
-	if err != nil {
-		fmt.Printf("Error retrieving edgedevices: %v\n", err)
-		return nil
-	}
-
-	deviceNames := make([]string, len(edgedevices))
-	for i, edgedevice := range edgedevices {
-		deviceNames[i] = edgedevice.Name
-	}
-
-	return deviceNames
 }
 
 // Align multiple strings and print them as blocks

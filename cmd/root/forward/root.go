@@ -2,6 +2,7 @@ package forward
 
 import (
 	"fmt"
+	"net"
 	"strings"
 
 	"github.com/rhoninl/shifucli/cmd/k8s"
@@ -18,11 +19,9 @@ var ForwardCmd = &cobra.Command{
 	Long:    `forward deviceshifu api to local`,
 	Run: func(cmd *cobra.Command, args []string) {
 		edgeDeviceName := args[0]
-		forwardPort := args[1]
-		ports := strings.Split(forwardPort, ":")
-		if len(ports) != 2 {
-			fmt.Println("invalid port")
-			return
+		var forwardPort string
+		if len(args) > 1 {
+			forwardPort = args[1]
 		}
 
 		deployments, err := k8s.GetDeployByEnv("EDGEDEVICE_NAME", edgeDeviceName)
@@ -36,6 +35,28 @@ var ForwardCmd = &cobra.Command{
 			return
 		}
 
+		if forwardPort == "" {
+			if len(deployments[0].Spec.Template.Spec.Containers) == 0 || len(deployments[0].Spec.Template.Spec.Containers[0].Ports) == 0 {
+				fmt.Println("no container ports found")
+				return
+			}
+			containerPort := deployments[0].Spec.Template.Spec.Containers[0].Ports[0].ContainerPort
+			localPort := 3000
+			for {
+				if !isPortInUse(localPort) {
+					forwardPort = fmt.Sprintf("%d:%d", localPort, containerPort)
+					break
+				}
+				localPort++
+			}
+		}
+
+		ports := strings.Split(forwardPort, ":")
+		if len(ports) != 2 {
+			fmt.Println("invalid port")
+			return
+		}
+
 		pods, err := k8s.GetPodsByDeployment("deviceshifu", deployments[0].Name)
 		if err != nil {
 			fmt.Println("failed to get pod", err)
@@ -44,4 +65,15 @@ var ForwardCmd = &cobra.Command{
 
 		k8s.PortForwardPod("deviceshifu", pods[0].Name, ports[0], ports[1])
 	},
+
+	ValidArgs: k8s.GetValidDeviceNames(),
+}
+
+func isPortInUse(port int) bool {
+	conn, err := net.Dial("tcp", fmt.Sprintf("localhost:%d", port))
+	if err != nil {
+		return false
+	}
+	conn.Close()
+	return true
 }

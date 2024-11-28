@@ -39,7 +39,7 @@ func PortForwardPod(namespace, podName, localPort, remotePort string) error {
 
 	go func() {
 		<-readyChan
-		fmt.Printf("Port-forward to pod %s on local port %s -> remote port %s is ready.\n", podName, localPort, remotePort)
+		fmt.Printf("Port-forward to pod %s on localhost:%s -> remote port %s is ready.\n", podName, localPort, remotePort)
 	}()
 
 	err = forwarder.ForwardPorts()
