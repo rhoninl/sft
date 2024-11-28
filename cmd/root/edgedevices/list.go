@@ -5,7 +5,6 @@ import (
 	"os"
 	"time"
 
-	"github.com/edgenesis/shifu/pkg/k8s/api/v1alpha1"
 	"github.com/olekukonko/tablewriter"
 	"github.com/rhoninl/shifucli/cmd/k8s"
 	"github.com/rhoninl/shifucli/cmd/utils/logger"
@@ -20,16 +19,16 @@ var (
 )
 
 func init() {
-	listCmd.Flags().StringVarP(&protocol, "protocol", "p", "", "filter by protocol")
-	listCmd.Flags().StringVarP(&status, "status", "s", "", "filter by status")
+	listCmd.Flags().StringVarP(&protocol, "protocol", "p", "", "Filter by protocol")
+	listCmd.Flags().StringVarP(&status, "status", "s", "", "Filter by status")
 	EdgedeviceCmd.AddCommand(listCmd)
 }
 
 var listCmd = &cobra.Command{
 	Use:     "list",
 	Aliases: []string{"ls"},
-	Short:   "edgedevice info in current kubernetes cluster",
-	Long:    `show edgedevice info in current kubernetes cluster`,
+	Short:   "Display edgedevice info in the current Kubernetes cluster",
+	Long:    "Show detailed edgedevice information in the current Kubernetes cluster",
 	Run: func(cmd *cobra.Command, args []string) {
 		edgedevices, err := k8s.GetEdgedevices()
 		if err != nil {
@@ -43,25 +42,27 @@ var listCmd = &cobra.Command{
 		table.SetColumnSeparator("")
 
 		for _, edgedevice := range edgedevices {
-			if protocol != "" && string(*edgedevice.Spec.Protocol) != protocol {
+			if protocol != "" && edgedevice.Spec.Protocol != nil && string(*edgedevice.Spec.Protocol) != protocol {
 				continue
 			}
 
-			var address string
+			address := "N/A"
 			if edgedevice.Spec.Address != nil {
 				address = *edgedevice.Spec.Address
-			} else {
-				address = "N/A"
 			}
 
-			var phase v1alpha1.EdgeDevicePhase
+			phase := "N/A"
 			if edgedevice.Status.EdgeDevicePhase != nil {
-				phase = *edgedevice.Status.EdgeDevicePhase
-			} else {
-				phase = "N/A"
+				phase = string(*edgedevice.Status.EdgeDevicePhase)
 			}
 
-			table.Append([]string{"\r" + edgedevice.Name, string(*edgedevice.Spec.Protocol), address, logger.StatusWithColor(string(phase)), TimeToAge(edgedevice.CreationTimestamp.Time)})
+			table.Append([]string{
+				"\r" + edgedevice.Name,
+				string(*edgedevice.Spec.Protocol),
+				address,
+				logger.StatusWithColor(phase),
+				TimeToAge(edgedevice.CreationTimestamp.Time),
+			})
 		}
 
 		table.Render()
@@ -73,20 +74,14 @@ func TimeToAge(createTime time.Time) string {
 }
 
 func DurationToMaxUnitString(d time.Duration) string {
-	// Calculate the individual units
-	days := d / (24 * time.Hour)
-	hours := d / time.Hour
-	minutes := d / time.Minute
-	seconds := d / time.Second
-
-	// Return the largest unit representation
-	if days > 0 {
-		return fmt.Sprintf("%dd", days)
-	} else if hours > 0 {
-		return fmt.Sprintf("%dh", hours)
-	} else if minutes > 0 {
-		return fmt.Sprintf("%dm", minutes)
-	} else {
-		return fmt.Sprintf("%ds", seconds)
+	switch {
+	case d >= 24*time.Hour:
+		return fmt.Sprintf("%dd", d/(24*time.Hour))
+	case d >= time.Hour:
+		return fmt.Sprintf("%dh", d/time.Hour)
+	case d >= time.Minute:
+		return fmt.Sprintf("%dm", d/time.Minute)
+	default:
+		return fmt.Sprintf("%ds", d/time.Second)
 	}
 }
