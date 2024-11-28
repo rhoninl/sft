@@ -20,24 +20,32 @@ func init() {
 var LogsCmd = &cobra.Command{
 	Use:     "logs",
 	Aliases: []string{"log"},
-	Short:   "way to show logs of shifu component in kubernetes cluster",
-	Long:    "way to show logs of shifu component in kubernetes cluster",
+	Short:   "Display logs of the Shifu component in the Kubernetes cluster",
+	Long:    "Display logs of the Shifu component in the Kubernetes cluster",
 	Run: func(cmd *cobra.Command, args []string) {
+		if len(args) < 1 {
+			fmt.Println("Device name is required")
+			return
+		}
+
 		deviceName := args[0]
 		deployments, err := k8s.GetDeployByEnv("EDGEDEVICE_NAME", deviceName)
 		if err != nil {
-			fmt.Println(err)
+			fmt.Printf("Error retrieving deployments: %v\n", err)
 			return
 		}
 
 		if len(deployments) == 0 {
-			fmt.Println("invalid device name")
+			fmt.Println("Invalid device name or no deployments found")
 			return
 		}
 
 		containerName := GetContainerName(deployments[0], container)
-		k8s.GetDeploymentLogs("deviceshifu", deployments[0].Name, containerName, follow)
+		if err := k8s.GetDeploymentLogs("deviceshifu", deployments[0].Name, containerName, follow); err != nil {
+			fmt.Printf("Error retrieving logs: %v\n", err)
+		}
 	},
+	ValidArgs: k8s.GetValidDeviceNames(),
 }
 
 func GetContainerName(deployments appv1.Deployment, flag string) string {

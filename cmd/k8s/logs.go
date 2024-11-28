@@ -48,7 +48,6 @@ func GetDeploymentLogs(namespace, deploymentName, containerName string, follow b
 	}
 
 	// Extract the label selector from the deployment spec
-	// Extract the label selector from the deployment spec
 	spec, ok := deployment.Object["spec"].(map[string]interface{})
 	if !ok {
 		return fmt.Errorf("failed to get spec from deployment")
@@ -65,11 +64,7 @@ func GetDeploymentLogs(namespace, deploymentName, containerName string, follow b
 	}
 
 	// Convert matchLabels to a label selector string
-	labelSelector := ""
-	for key, value := range matchLabels {
-		labelSelector += fmt.Sprintf("%s=%s,", key, value)
-	}
-	labelSelector = strings.TrimSuffix(labelSelector, ",")
+	labelSelector := buildLabelSelector(matchLabels)
 
 	// List Pods associated with the deployment
 	pods, err := clientset.CoreV1().Pods(namespace).List(context.TODO(), metav1.ListOptions{
@@ -86,31 +81,52 @@ func GetDeploymentLogs(namespace, deploymentName, containerName string, follow b
 
 	// Get logs for each pod and container (if specified)
 	for _, pod := range pods.Items {
-		fmt.Printf("Logs for Pod: %s\n", pod.Name)
-
-		// Prepare PodLogOptions (filter by container if needed)
-		logOptions := &v1.PodLogOptions{
-			Follow: follow,
-		}
-		if containerName != "" {
-			logOptions.Container = containerName
-		}
-
-		// Get the logs for the pod (and container)
-		req := clientset.CoreV1().Pods(namespace).GetLogs(pod.Name, logOptions)
-		podLogs, err := req.Stream(context.TODO())
-		if err != nil {
-			fmt.Printf("Error retrieving logs for pod %s: %v\n", pod.Name, err)
-			continue
-		}
-		defer podLogs.Close()
-
-		// Read and print logs
-		// Stream logs from the pod
-		_, err = io.Copy(os.Stdout, podLogs)
-		if err != nil && err != io.EOF {
+		if err := streamPodLogs(clientset, namespace, pod.Name, containerName, follow); err != nil {
 			fmt.Printf("Error streaming logs for pod %s: %v\n", pod.Name, err)
 		}
+	}
+
+	return nil
+}
+
+func buildLabelSelector(matchLabels map[string]interface{}) string {
+	var labelSelector strings.Builder
+	for key, value := range matchLabels {
+		labelSelector.WriteString(fmt.Sprintf("%s=%s,", key, value))
+	}
+	return strings.TrimSuffix(labelSelector.String(), ",")
+}
+
+func streamPodLogs(clientset *kubernetes.Clientset, namespace, podName, containerName string, follow bool) error {
+	// Prepare PodLogOptions (filter by container if needed)
+	logOptions := &v1.PodLogOptions{
+		Follow: follow,
+	}
+	if containerName != "" {
+		logOptions.Container = containerName
+	}
+
+	// Get the logs for the pod (and container)
+	req := clientset.CoreV1().Pods(namespace).GetLogs(podName, logOptions)
+	podLogs, err := req.Stream(context.TODO())
+	if err != nil {
+		return fmt.Errorf("error retrieving logs for pod %s: %w", podName, err)
+	}
+	defer podLogs.Close()
+
+	// Stream logs from the pod
+	var logBuffer strings.Builder
+	if _, err := io.Copy(&logBuffer, podLogs); err != nil && err != io.EOF {
+		return fmt.Errorf("error streaming logs for pod %s: %w", podName, err)
+	}
+
+	// Split logs into lines and print the last 100 lines if too long
+	logLines := strings.Split(logBuffer.String(), "\n")
+	if len(logLines) > 100 {
+		logLines = logLines[len(logLines)-100:]
+	}
+	for _, line := range logLines {
+		fmt.Println(line)
 	}
 
 	return nil

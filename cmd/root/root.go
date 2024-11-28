@@ -29,7 +29,6 @@ func init() {
 	RootCmd.CompletionOptions.DisableDefaultCmd = false
 	RootCmd.PersistentFlags().StringVar(&k8s.KubeConfigPath, "config", "", "kubeconfig file (default use KUBECONFIG env or ~/.kube/config)")
 	RootCmd.AddCommand(edgedevices.EdgedeviceCmd)
-	RootCmd.AddCommand(serviceCmd)
 	RootCmd.AddCommand(describe.DescribeCmd)
 	RootCmd.AddCommand(statusCmd)
 	RootCmd.AddCommand(forward.ForwardCmd)

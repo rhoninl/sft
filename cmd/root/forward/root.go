@@ -15,8 +15,8 @@ func init() {
 var ForwardCmd = &cobra.Command{
 	Use:     "forward",
 	Aliases: []string{"frd", "f"},
-	Short:   "forward deviceshifu api to local",
-	Long:    `forward deviceshifu api to local`,
+	Short:   "Forward the deviceshifu API to a local port",
+	Long:    `Forward the deviceshifu API to a local port for easier access and testing`,
 	Run: func(cmd *cobra.Command, args []string) {
 		edgeDeviceName := args[0]
 		var forwardPort string
@@ -26,18 +26,18 @@ var ForwardCmd = &cobra.Command{
 
 		deployments, err := k8s.GetDeployByEnv("EDGEDEVICE_NAME", edgeDeviceName)
 		if err != nil {
-			fmt.Println("failed to get deployment", err)
+			fmt.Printf("Error: Failed to retrieve deployment for edge device '%s': %v\n", edgeDeviceName, err)
 			return
 		}
 
 		if len(deployments) == 0 {
-			fmt.Println("no deployment found")
+			fmt.Printf("Error: No deployment found for edge device '%s'\n", edgeDeviceName)
 			return
 		}
 
 		if forwardPort == "" {
 			if len(deployments[0].Spec.Template.Spec.Containers) == 0 || len(deployments[0].Spec.Template.Spec.Containers[0].Ports) == 0 {
-				fmt.Println("no container ports found")
+				fmt.Println("Error: No container ports found in the deployment")
 				return
 			}
 			containerPort := deployments[0].Spec.Template.Spec.Containers[0].Ports[0].ContainerPort
@@ -53,19 +53,22 @@ var ForwardCmd = &cobra.Command{
 
 		ports := strings.Split(forwardPort, ":")
 		if len(ports) != 2 {
-			fmt.Println("invalid port")
+			fmt.Println("Error: Invalid port format. Expected format is 'localPort:remotePort'")
 			return
 		}
 
 		pods, err := k8s.GetPodsByDeployment("deviceshifu", deployments[0].Name)
 		if err != nil {
-			fmt.Println("failed to get pod", err)
+			fmt.Printf("Error: Failed to retrieve pods for deployment '%s': %v\n", deployments[0].Name, err)
 			return
 		}
 
-		k8s.PortForwardPod("deviceshifu", pods[0].Name, ports[0], ports[1])
+		fmt.Printf("Initiating port-forwarding for pod '%s' on ports %s -> %s\n", pods[0].Name, ports[0], ports[1])
+		if err := k8s.PortForwardPod("deviceshifu", pods[0].Name, ports[0], ports[1]); err != nil {
+			fmt.Printf("Error: Failed to port-forward pod '%s': %v\n", pods[0].Name, err)
+			return
+		}
 	},
-
 	ValidArgs: k8s.GetValidDeviceNames(),
 }
 
