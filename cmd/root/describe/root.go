@@ -1,8 +1,10 @@
 package describe
 
 import (
+	"encoding/json"
 	"fmt"
 	"net"
+	"slices"
 	"strings"
 
 	"github.com/rhoninl/shifucli/cmd/k8s"
@@ -18,84 +20,115 @@ func init() {
 var DescribeCmd = &cobra.Command{
 	Use:     "describe",
 	Aliases: []string{"desc"},
-	Short:   "show edgedevice detail info in current kubernetes cluster",
-	Long:    `show edgedevice detail info in current kubernetes cluster`,
+	Short:   "Show detailed information of an edgedevice in the current Kubernetes cluster",
+	Long:    `Show detailed information of an edgedevice in the current Kubernetes cluster`,
 	Run: func(cmd *cobra.Command, args []string) {
-		deviceName := args[0]
-		device, err := k8s.GetAllByDeviceName(deviceName)
-		if err != nil {
-			fmt.Println(err)
+		if len(args) < 1 {
+			fmt.Println("Error: Device name is required")
 			return
 		}
 
-		var connectionSettings []byte
-		if device.EdgeDevice.Spec.ProtocolSettings != nil {
-			connectionSettings, err = yaml.Marshal(device.EdgeDevice.Spec.ProtocolSettings)
-			if err != nil {
-				fmt.Println(err)
-				return
-			}
-		}
-
-		var gatewaySettings []byte
-		if device.EdgeDevice.Spec.GatewaySettings != nil {
-			gatewaySettings, err = yaml.Marshal(device.EdgeDevice.Spec.GatewaySettings)
-			if err != nil {
-				fmt.Println(err)
-				return
-			}
-		}
-
-		fmt.Println("Name: ", device.EdgeDevice.Name)
-		var protocol string = string(*device.EdgeDevice.Spec.Protocol)
-		if gatewaySettings != nil {
-			protocol += " -> " + *device.EdgeDevice.Spec.GatewaySettings.Protocol
-		}
-
-		fmt.Println("Status: ", logger.StatusWithColor(string(*device.EdgeDevice.Status.EdgeDevicePhase)))
-		fmt.Println("Address: ", getRealDeviceAddress(*device))
-		fmt.Println("Protocol: ", protocol)
-
-		var gatewayInfo, deviceInfo string
-		if len(connectionSettings) != 0 {
-			deviceInfo += string(connectionSettings)
-		}
-		if len(gatewaySettings) != 0 {
-			gatewayInfo += string(gatewaySettings)
-		}
-
-		alignMultiLineStrings(deviceInfo, gatewayInfo)
-		fmt.Println("===========Container===========")
-		var contianerSettings []string
-		for _, container := range device.Deployment.Spec.Template.Spec.Containers {
-			var containerSetting string
-			containerSetting += fmt.Sprintf("Name: %s\n", container.Name)
-			containerSetting += fmt.Sprintf("Image: %s\n", container.Image)
-			for _, env := range container.Env {
-				containerSetting += fmt.Sprintf("\tEnv: %s: %s\n", env.Name, env.Value)
-			}
-
-			contianerSettings = append(contianerSettings, containerSetting)
-		}
-
-		alignMultiLineStrings(contianerSettings...)
-		fmt.Println("==============API==============")
-		fmt.Print(device.ConfigMap.Data["instructions"])
-		fmt.Print(device.ConfigMap.Data["telemetries"])
-	},
-	ValidArgs: func() []string {
-		edgedevices, err := k8s.GetEdgedevices()
+		deviceName := args[0]
+		device, err := k8s.GetAllByDeviceName(deviceName)
 		if err != nil {
-			return nil
+			fmt.Printf("Error retrieving device: %v\n", err)
+			return
 		}
 
-		var deviceNames []string
-		for _, edgedevice := range edgedevices {
-			deviceNames = append(deviceNames, edgedevice.Name)
-		}
+		printDeviceDetails(device)
+	},
+	ValidArgs: getValidDeviceNames(),
+}
 
-		return deviceNames
-	}(),
+func printDeviceDetails(device *k8s.Device) {
+	fmt.Println("Name:", device.EdgeDevice.Name)
+	fmt.Println("Status:", logger.StatusWithColor(string(*device.EdgeDevice.Status.EdgeDevicePhase)))
+	fmt.Println("Address:", getRealDeviceAddress(*device))
+	fmt.Println("Protocol:", getProtocol(device))
+
+	connectionSettings, err := marshalSettings(device.EdgeDevice.Spec.ProtocolSettings)
+	if err != nil {
+		fmt.Printf("Error marshalling protocol settings: %v\n", err)
+		return
+	}
+
+	gatewaySettings, err := marshalSettings(device.EdgeDevice.Spec.GatewaySettings)
+	if err != nil {
+		fmt.Printf("Error marshalling gateway settings: %v\n", err)
+		return
+	}
+
+	alignMultiLineStrings(string(connectionSettings), string(gatewaySettings))
+	printContainerSettings(device)
+	printAPIInfo(device)
+}
+
+func getProtocol(device *k8s.Device) string {
+	protocol := string(*device.EdgeDevice.Spec.Protocol)
+	if device.EdgeDevice.Spec.GatewaySettings != nil {
+		protocol += " -> " + *device.EdgeDevice.Spec.GatewaySettings.Protocol
+	}
+	return protocol
+}
+
+func marshalSettings(settings interface{}) ([]byte, error) {
+	var tmpSettings = map[string]interface{}{}
+
+	data, err := json.Marshal(settings)
+	if err != nil {
+		return nil, err
+	}
+
+	err = json.Unmarshal(data, &tmpSettings)
+	if err != nil {
+		return nil, err
+	}
+
+	if settings == nil {
+		return nil, nil
+	}
+	return yaml.Marshal(tmpSettings)
+}
+
+func printContainerSettings(device *k8s.Device) {
+	fmt.Println("===========Container===========")
+	var containerSettings []string
+	for _, container := range device.Deployment.Spec.Template.Spec.Containers {
+		containerSetting := fmt.Sprintf("Name: %s\nImage: %s\n", container.Name, container.Image)
+		for _, env := range container.Env {
+			containerSetting += fmt.Sprintf("\tEnv: %s: %s\n", env.Name, env.Value)
+		}
+		containerSettings = append(containerSettings, containerSetting)
+	}
+	alignMultiLineStrings(containerSettings...)
+}
+
+func printAPIInfo(device *k8s.Device) {
+	fmt.Println("==============API==============")
+	instructions := strings.Split(device.ConfigMap.Data["instructions"], "\n")
+	for i, line := range instructions {
+		if i >= 10 {
+			fmt.Println("......")
+			break
+		}
+		fmt.Println(line)
+	}
+	fmt.Print(device.ConfigMap.Data["telemetries"])
+}
+
+func getValidDeviceNames() []string {
+	edgedevices, err := k8s.GetEdgedevices()
+	if err != nil {
+		fmt.Printf("Error retrieving edgedevices: %v\n", err)
+		return nil
+	}
+
+	deviceNames := make([]string, len(edgedevices))
+	for i, edgedevice := range edgedevices {
+		deviceNames[i] = edgedevice.Name
+	}
+
+	return deviceNames
 }
 
 // Align multiple strings and print them as blocks
@@ -167,8 +200,16 @@ func containsAny(arr []string, str string) bool {
 	return false
 }
 
+var passiveProtocol = []string{
+	"LwM2M",
+}
+
 func getRealDeviceAddress(device k8s.Device) string {
 	address := device.EdgeDevice.Spec.Address
+
+	if slices.Contains(passiveProtocol, string(*device.EdgeDevice.Spec.Protocol)) {
+		return "(passive device)" + passiveDeviceServerAddress(&device)
+	}
 
 	if address == nil {
 		return "N/A"
