@@ -127,6 +127,9 @@ func alignMultiLineStrings(blocks ...string) {
 	maxWidths := make([]int, len(blocks)) // To store the maximum width of each block
 
 	for i := range blocks {
+		if blocks[i] == "" {
+			continue
+		}
 		blocks[i] = strings.ReplaceAll(blocks[i], "\t", "  ")
 		block := blocks[i]
 		// Split into lines and trim spaces
