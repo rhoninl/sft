@@ -6,6 +6,7 @@ toolchain go1.23.2
 
 require (
 	github.com/edgenesis/shifu v0.56.0
+	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da
 	github.com/google/go-github v17.0.0+incompatible
 	github.com/google/go-github/v50 v50.2.0
 	github.com/olekukonko/tablewriter v0.0.5
