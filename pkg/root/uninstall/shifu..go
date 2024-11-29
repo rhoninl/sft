@@ -3,8 +3,8 @@ package uninstall
 import (
 	"fmt"
 
-	"github.com/rhoninl/shifucli/cmd/k8s"
-	"github.com/rhoninl/shifucli/cmd/utils/shifu"
+	"github.com/rhoninl/sft/pkg/k8s"
+	"github.com/rhoninl/sft/pkg/utils/shifu"
 	"github.com/spf13/cobra"
 )
 

@@ -6,7 +6,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/rhoninl/shifucli/cmd/k8s"
+	"github.com/rhoninl/sft/pkg/k8s"
 )
 
 var internalHost = []string{

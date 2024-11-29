@@ -1,13 +1,13 @@
 package root
 
 import (
-	"github.com/rhoninl/shifucli/cmd/k8s"
-	"github.com/rhoninl/shifucli/cmd/root/describe"
-	"github.com/rhoninl/shifucli/cmd/root/edgedevices"
-	"github.com/rhoninl/shifucli/cmd/root/forward"
-	"github.com/rhoninl/shifucli/cmd/root/install"
-	"github.com/rhoninl/shifucli/cmd/root/logs"
-	"github.com/rhoninl/shifucli/cmd/root/uninstall"
+	"github.com/rhoninl/sft/pkg/k8s"
+	"github.com/rhoninl/sft/pkg/root/describe"
+	"github.com/rhoninl/sft/pkg/root/edgedevices"
+	"github.com/rhoninl/sft/pkg/root/forward"
+	"github.com/rhoninl/sft/pkg/root/install"
+	"github.com/rhoninl/sft/pkg/root/logs"
+	"github.com/rhoninl/sft/pkg/root/uninstall"
 	"github.com/spf13/cobra"
 )
 

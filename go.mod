@@ -1,4 +1,4 @@
-module github.com/rhoninl/shifucli
+module github.com/rhoninl/sft
 
 go 1.23.1
 

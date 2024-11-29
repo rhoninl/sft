@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"github.com/google/go-github/v50/github"
-	"github.com/rhoninl/shifucli/cmd/k8s"
+	"github.com/rhoninl/sft/pkg/k8s"
 	"github.com/spf13/cobra"
 )
 

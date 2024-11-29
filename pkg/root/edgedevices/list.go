@@ -7,9 +7,9 @@ import (
 	"time"
 
 	"github.com/olekukonko/tablewriter"
-	"github.com/rhoninl/shifucli/cmd/k8s"
-	"github.com/rhoninl/shifucli/cmd/utils/address"
-	"github.com/rhoninl/shifucli/cmd/utils/logger"
+	"github.com/rhoninl/sft/pkg/k8s"
+	"github.com/rhoninl/sft/pkg/utils/address"
+	"github.com/rhoninl/sft/pkg/utils/logger"
 	"github.com/spf13/cobra"
 )
 

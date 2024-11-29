@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/rhoninl/shifucli/cmd/root"
+	"github.com/rhoninl/sft/pkg/root"
 )
 
 func main() {

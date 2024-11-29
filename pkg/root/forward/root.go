@@ -5,7 +5,7 @@ import (
 	"net"
 	"strings"
 
-	"github.com/rhoninl/shifucli/cmd/k8s"
+	"github.com/rhoninl/sft/pkg/k8s"
 	"github.com/spf13/cobra"
 )
 

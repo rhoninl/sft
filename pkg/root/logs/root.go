@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/rhoninl/shifucli/cmd/k8s"
+	"github.com/rhoninl/sft/pkg/k8s"
 	"github.com/spf13/cobra"
 	appv1 "k8s.io/api/apps/v1"
 )
