@@ -23,7 +23,6 @@ var (
 func Execute() error {
 	return RootCmd.Execute()
 }
-
 func init() {
 	cobra.EnableCommandSorting = false
 	RootCmd.CompletionOptions.DisableDefaultCmd = false
@@ -36,4 +35,5 @@ func init() {
 	RootCmd.AddCommand(install.InstallCmd)
 	RootCmd.AddCommand(uninstall.UninstallCmd)
 	RootCmd.AddCommand(versionCmd)
+	RootCmd.AddCommand(webCmd) // Added online command
 }
