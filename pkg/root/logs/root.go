@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/rhoninl/sft/pkg/k8s"
+	"github.com/rhoninl/sft/pkg/utils/logger"
 	"github.com/spf13/cobra"
 	appv1 "k8s.io/api/apps/v1"
 )
@@ -24,7 +25,7 @@ var LogsCmd = &cobra.Command{
 	Long:    "Display logs of the Shifu component in the Kubernetes cluster",
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) < 1 {
-			fmt.Println("Device name is required")
+			logger.Println("Device name is required")
 			return
 		}
 
@@ -36,13 +37,13 @@ var LogsCmd = &cobra.Command{
 		}
 
 		if len(deployments) == 0 {
-			fmt.Println("Invalid device name or no deployments found")
+			logger.Println("Invalid device name or no deployments found")
 			return
 		}
 
 		containerName := GetContainerName(deployments[0], container)
 		if err := k8s.GetDeploymentLogs("deviceshifu", deployments[0].Name, containerName, follow); err != nil {
-			fmt.Printf("Error retrieving logs: %v\n", err)
+			logger.Printf("Error retrieving logs: %v\n", err)
 		}
 	},
 	ValidArgs: k8s.GetValidDeviceNames(),

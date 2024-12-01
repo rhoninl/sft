@@ -1,9 +1,9 @@
 package install
 
 import (
-	"fmt"
 	"os/exec"
 
+	"github.com/rhoninl/sft/pkg/utils/logger"
 	"github.com/spf13/cobra"
 )
 
@@ -20,9 +20,9 @@ var installTelemetryServiceCmd = &cobra.Command{
 		yamlFile := "https://gitee.com/edgenesis/shifu/raw/" + getLatestShifuVersion() + "/pkg/telemetryservice/install/telemetryservice_install.yaml"
 		kcmd := exec.Command("kubectl", "apply", "-f", yamlFile)
 		if err := kcmd.Run(); err != nil {
-			fmt.Println("Failed to install telemetryservice component, please install shifu component first")
+			logger.Println("Failed to install telemetryservice component, please install shifu component first")
 			return
 		}
-		fmt.Println("TelemetryService component installed successfully")
+		logger.Println("TelemetryService component installed successfully")
 	},
 }

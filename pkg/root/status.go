@@ -1,7 +1,6 @@
 package root
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/rhoninl/sft/pkg/k8s"
@@ -27,26 +26,26 @@ var statusCmd = &cobra.Command{
 			message = version + " " + logger.StatusWithColor(status)
 		}
 
-		fmt.Println("Shifu: ", message)
+		logger.Println("Shifu: ", message)
 	},
 }
 
 func GetShifuInfo() (string, string, error) {
 	deployment, err := k8s.GetResource("shifu-crd-controller-manager", "shifu-crd-system", "apps", "v1", "deployments")
 	if err != nil {
-		fmt.Println("Failed to get shifu-crd-controller-manager deployment", err)
+		logger.Debugf("Failed to get shifu-crd-controller-manager deployment: %v", err)
 		return "", "", err
 	}
 
 	shifuVersion, err := getShifuVersionFromDeployment(deployment)
 	if err != nil {
-		fmt.Println("Failed to get shifu version", err)
+		logger.Debugf("Failed to get shifu version: %v", err)
 		return "", "", err
 	}
 
 	status, err := k8s.GetDeploymentFirstReplicaStatus("shifu-crd-system", "shifu-crd-controller-manager")
 	if err != nil {
-		fmt.Println("Failed to get shifu status", err)
+		logger.Debugf("Failed to get shifu status: %v", err)
 		return "", "", err
 	}
 
@@ -56,25 +55,25 @@ func GetShifuInfo() (string, string, error) {
 func getShifuVersionFromDeployment(deployment *unstructured.Unstructured) (string, error) {
 	containers, found, err := unstructured.NestedSlice(deployment.Object, "spec", "template", "spec", "containers")
 	if !found || err != nil {
-		fmt.Printf("Error retrieving containers: %v\n", err)
+		logger.Debugf("Error retrieving containers: %v\n", err)
 		return "", err
 	}
 	// Ensure that there is at least one container
 	if len(containers) == 0 {
-		fmt.Println("No containers found in the deployment")
+		logger.Debugf("No containers found in the deployment")
 		return "", nil
 	}
 
 	// Get the second container (it's of type map[string]interface{})
 	firstContainer, ok := containers[1].(map[string]interface{})
 	if !ok {
-		fmt.Println("Error casting first container")
+		logger.Debugf("Error casting first container")
 		return "", nil
 	}
 
 	image, found, err := unstructured.NestedString(firstContainer, "image")
 	if !found || err != nil {
-		fmt.Printf("Error retrieving image: %v\n", err)
+		logger.Debugf("Error retrieving image: %v\n", err)
 		return "", err
 	}
 

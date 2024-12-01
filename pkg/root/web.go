@@ -6,6 +6,7 @@ import (
 
 	"github.com/rhoninl/sft/pkg/k8s"
 	"github.com/rhoninl/sft/pkg/utils/browser"
+	"github.com/rhoninl/sft/pkg/utils/logger"
 	"github.com/rhoninl/sft/template"
 	"github.com/spf13/cobra"
 )
@@ -37,18 +38,18 @@ var webCmd = &cobra.Command{
 			template.RenderDetailTemplate(w, device)
 		})
 
-		fmt.Printf("Starting web server on localhost:%s\n", port)
+		logger.Printf("Starting web server on localhost:%s\n", port)
 
 		go func() {
 			if err := http.ListenAndServe(":"+port, nil); err != nil {
-				fmt.Printf("Failed to start web server: localhost:%v\n", err)
+				logger.Printf("Failed to start web server: localhost:%v\n", err)
 			}
 		}()
 
 		// Open the browser to localhost:port
 		url := fmt.Sprintf("http://localhost:%s/device", port)
 		if err := browser.Open(url); err != nil {
-			fmt.Printf("Failed to open browser: %v\n", err)
+			logger.Printf("Failed to open browser: %v\n", err)
 		}
 
 		select {}

@@ -23,14 +23,14 @@ var DescribeCmd = &cobra.Command{
 	Long:    `Show detailed information of an edgedevice in the current Kubernetes cluster`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) < 1 {
-			fmt.Println("Error: Device name is required")
+			logger.Println("Error: Device name is required")
 			return
 		}
 
 		deviceName := args[0]
 		device, err := k8s.GetAllByDeviceName(deviceName)
 		if err != nil {
-			fmt.Printf("Error retrieving device: %v\n", err)
+			logger.Printf("Error retrieving device: %v\n", err)
 			return
 		}
 
@@ -40,20 +40,20 @@ var DescribeCmd = &cobra.Command{
 }
 
 func printDeviceDetails(device *k8s.Device) {
-	fmt.Println("Name:", device.EdgeDevice.Name)
-	fmt.Println("Status:", logger.StatusWithColor(string(*device.EdgeDevice.Status.EdgeDevicePhase)))
-	fmt.Println("Address:", address.GetRealDeviceAddress(*device))
-	fmt.Println("Protocol:", getProtocol(device))
+	logger.Println("Name:", device.EdgeDevice.Name)
+	logger.Println("Status:", logger.StatusWithColor(string(*device.EdgeDevice.Status.EdgeDevicePhase)))
+	logger.Println("Address:", address.GetRealDeviceAddress(*device))
+	logger.Println("Protocol:", getProtocol(device))
 
 	connectionSettings, err := marshalSettings(device.EdgeDevice.Spec.ProtocolSettings)
 	if err != nil {
-		fmt.Printf("Error marshalling protocol settings: %v\n", err)
+		logger.Printf("Error marshalling protocol settings: %v\n", err)
 		return
 	}
 
 	gatewaySettings, err := marshalSettings(device.EdgeDevice.Spec.GatewaySettings)
 	if err != nil {
-		fmt.Printf("Error marshalling gateway settings: %v\n", err)
+		logger.Printf("Error marshalling gateway settings: %v\n", err)
 		return
 	}
 
@@ -95,7 +95,7 @@ func marshalSettings(settings interface{}) ([]byte, error) {
 }
 
 func printContainerSettings(device *k8s.Device) {
-	fmt.Println("===========Container===========")
+	logger.Println("===========Container===========")
 	var containerSettings []string
 	for _, container := range device.Deployment.Spec.Template.Spec.Containers {
 		containerSetting := fmt.Sprintf("Name: %s\nImage: %s\n", container.Name, container.Image)
@@ -108,16 +108,16 @@ func printContainerSettings(device *k8s.Device) {
 }
 
 func printAPIInfo(device *k8s.Device) {
-	fmt.Println("==============API==============")
+	logger.Println("==============API==============")
 	instructions := strings.Split(device.ConfigMap.Data["instructions"], "\n")
 	for i, line := range instructions {
 		if i >= 10 {
-			fmt.Println("......")
+			logger.Println("......")
 			break
 		}
-		fmt.Println(line)
+		logger.Println(line)
 	}
-	fmt.Print(device.ConfigMap.Data["telemetries"])
+	logger.Println(device.ConfigMap.Data["telemetries"])
 }
 
 // Align multiple strings and print them as blocks
@@ -167,6 +167,6 @@ func alignMultiLineStrings(blocks ...string) {
 		}
 
 		// Join the aligned lines with separators and print
-		fmt.Println(strings.Join(row, " | "))
+		logger.Println(strings.Join(row, " | "))
 	}
 }

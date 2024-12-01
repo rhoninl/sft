@@ -1,8 +1,7 @@
 package root
 
 import (
-	"fmt"
-
+	"github.com/rhoninl/sft/pkg/utils/logger"
 	"github.com/spf13/cobra"
 )
 
@@ -14,6 +13,6 @@ var versionCmd = &cobra.Command{
 	Short: "Show sft version",
 	Long:  `All software has versions. This is ShifuTool's`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("v0.0.1")
+		logger.Println("v0.0.1")
 	},
 }

@@ -19,7 +19,7 @@ var (
 	// status is the flag value for filtering edge devices by status
 	status string
 	// headers defines the column headers for the edge device list table
-	headers = []string{"\rName", "Protocol", "Address", "Status", "AGE"}
+	headers = []string{"\rName", "Protocol", "Address", "Status", "Age"}
 )
 
 func init() {
@@ -52,7 +52,7 @@ var listCmd = &cobra.Command{
 
 			device, err := k8s.GetAllByDeviceName(edgedevice.Name)
 			if err != nil {
-				fmt.Printf("Error retrieving device: %v\n", err)
+				logger.Printf("Error retrieving device: %v\n", err)
 				return
 			}
 

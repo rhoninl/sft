@@ -8,6 +8,7 @@ import (
 	"github.com/rhoninl/sft/pkg/root/install"
 	"github.com/rhoninl/sft/pkg/root/logs"
 	"github.com/rhoninl/sft/pkg/root/uninstall"
+	"github.com/rhoninl/sft/pkg/utils/logger"
 	"github.com/spf13/cobra"
 )
 
@@ -27,6 +28,7 @@ func init() {
 	cobra.EnableCommandSorting = false
 	RootCmd.CompletionOptions.DisableDefaultCmd = false
 	RootCmd.PersistentFlags().StringVar(&k8s.KubeConfigPath, "config", "", "kubeconfig file (default use KUBECONFIG env or ~/.kube/config)")
+	RootCmd.PersistentFlags().BoolVarP(&logger.DebugLog, "debug", "d", false, "debug log")
 	RootCmd.AddCommand(edgedevices.EdgedeviceCmd)
 	RootCmd.AddCommand(describe.DescribeCmd)
 	RootCmd.AddCommand(statusCmd)
