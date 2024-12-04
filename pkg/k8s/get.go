@@ -38,8 +38,11 @@ func GetAllByDeviceName(deviceName string) (*Device, error) {
 
 	edgedeviceRow, err := client.Resource(gvr).Namespace(namespace).Get(context.TODO(), deviceName, metav1.GetOptions{})
 	if errors.IsNotFound(err) {
-		return nil, fmt.Errorf("edgedevice %s not found", deviceName)
+		return nil, nil
+	} else if err != nil {
+		return nil, err
 	}
+
 	var edgedevice v1alpha1.EdgeDevice
 	edgedeviceByte, err := json.Marshal(edgedeviceRow.Object)
 	if err != nil {

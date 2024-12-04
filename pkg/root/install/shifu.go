@@ -9,6 +9,7 @@ import (
 	"github.com/google/go-github/v50/github"
 	"github.com/rhoninl/sft/pkg/k8s"
 	"github.com/rhoninl/sft/pkg/utils/logger"
+	"github.com/rhoninl/sft/pkg/utils/shifu"
 	"github.com/spf13/cobra"
 )
 
@@ -22,7 +23,7 @@ var installShifuCmd = &cobra.Command{
 	Short:   "install shifu component in kubernetes cluster",
 	Long:    "install shifu component in kubernetes cluster",
 	Run: func(cmd *cobra.Command, args []string) {
-		yamlURL := "https://gitee.com/edgenesis/shifu/raw/" + getLatestShifuVersion() + "/pkg/k8s/crd/install/shifu_install.yml"
+		yamlURL := "https://raw.githubusercontent.com/Edgenesis/shifu/" + shifu.GetLatestShifuVersion() + "/pkg/k8s/crd/install/shifu_install.yml"
 		resp, err := http.Get(yamlURL)
 		if err != nil {
 			logger.Debug(err)
