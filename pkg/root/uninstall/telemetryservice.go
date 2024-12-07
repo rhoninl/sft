@@ -1,4 +1,4 @@
-package install
+package uninstall
 
 import (
 	"github.com/rhoninl/sft/pkg/k8s"
@@ -8,16 +8,15 @@ import (
 )
 
 func init() {
-	InstallCmd.AddCommand(installTelemetryServiceCmd)
+	UninstallCmd.AddCommand(uninstallTelemetryServiceCmd)
 }
 
-var installTelemetryServiceCmd = &cobra.Command{
+var uninstallTelemetryServiceCmd = &cobra.Command{
 	Use:     "telemetryservice",
 	Aliases: []string{"ts"},
-	Short:   "install telemetryservice component in kubernetes cluster",
-	Long:    "install telemetryservice component in kubernetes cluster",
+	Short:   "uninstall telemetryservice component in kubernetes cluster",
+	Long:    "uninstall telemetryservice component in kubernetes cluster",
 	Run: func(cmd *cobra.Command, args []string) {
-		// TODO: Need to check telemetryserivce had installed or not
 		yamlContent, err := shifu.Resource(shifu.TypeShifu).GetDeployYaml()
 		if err != nil {
 			logger.Debug(err)
@@ -25,13 +24,13 @@ var installTelemetryServiceCmd = &cobra.Command{
 			return
 		}
 
-		_, err = k8s.ApplyYaml(yamlContent)
+		_, err = k8s.DeleteYaml(yamlContent)
 		if err != nil {
 			logger.Debug(err)
-			logger.Println("Failed to install telemetryservice component")
+			logger.Println("Failed to uninstall telemetryservice component")
 			return
 		}
 
-		logger.Println("TelemetryService component install successfully")
+		logger.Println("TelemetryService component uninstalled successfully")
 	},
 }

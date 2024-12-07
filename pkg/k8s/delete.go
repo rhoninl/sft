@@ -76,7 +76,7 @@ func DeleteYaml(yamlContent string) (bool, error) {
 		if err != nil {
 			return false, fmt.Errorf("failed to delete resource: %v", err)
 		}
-		slog.Info("Deleted resource: %s/%s\n", gvk.Kind, resourceName)
+		slog.Debug("Deleted resource: %s/%s\n", gvk.Kind, resourceName)
 	}
 
 	return true, nil

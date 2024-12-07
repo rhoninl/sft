@@ -1,18 +1,54 @@
 package shifu
 
 import (
-	"context"
 	"fmt"
 	"io"
 	"net/http"
-	"strings"
-
-	"github.com/google/go-github/github"
 )
 
-func GetInstallYaml(version string) (string, error) {
-	yamlURL := "https://raw.githubusercontent.com/Edgenesis/shifu/refs/tags/" + version + "/pkg/k8s/crd/install/shifu_install.yml"
-	resp, err := http.Get(yamlURL)
+const (
+	shifuInstallYamlBaseURL = "https://raw.githubusercontent.com/Edgenesis/shifu/refs/tags/%s/pkg/k8s/crd/install/shifu_install.yml"
+)
+
+type Shifu struct {
+	basedUrl string
+	version  string
+}
+
+func newShifu() Shifu {
+	return Shifu{
+		basedUrl: shifuInstallYamlBaseURL,
+	}
+}
+
+func ShifuVersion(version string) Shifu {
+	return Shifu{}
+}
+
+func (shifu Shifu) Version() string {
+	return GetLatestShifuVersion()
+}
+
+func (shifu Shifu) SetVersion(version string) component {
+	shifu.version = version
+
+	return shifu
+}
+
+func (shifu Shifu) ResourceURL() string {
+	if shifu.version == "" {
+		shifu.version = GetLatestShifuVersion()
+	}
+
+	return fmt.Sprintf(shifu.basedUrl, shifu.version)
+}
+
+func (shifu Shifu) GetDeployYaml() (string, error) {
+	return fetch(shifu.ResourceURL())
+}
+
+func fetch(url string) (string, error) {
+	resp, err := http.Get(string(url))
 	if err != nil {
 		fmt.Println("Failed to install shifu component")
 		return "", err
@@ -26,41 +62,4 @@ func GetInstallYaml(version string) (string, error) {
 	}
 
 	return string(yamlContent), nil
-}
-
-func GetLatestShifuVersion() string {
-	client := github.NewClient(nil)
-	releases, _, err := client.Repositories.ListReleases(context.Background(), "Edgenesis", "shifu", nil)
-	if err != nil {
-		fmt.Println(err)
-		return ""
-	}
-
-	var version string
-	for _, release := range releases {
-		if strings.Contains(*release.Name, "rc") {
-			continue
-		}
-
-		version = *release.Name
-		break
-	}
-	return version
-}
-
-func GetAllAvailableVersions() []string {
-	client := github.NewClient(nil)
-	releases, _, err := client.Repositories.ListReleases(context.Background(), "Edgenesis", "shifu", nil)
-	if err != nil {
-		fmt.Println(err)
-		return nil
-	}
-
-	var version []string
-
-	for _, release := range releases {
-		version = append(version, *release.Name)
-	}
-
-	return version
 }

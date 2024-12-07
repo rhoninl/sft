@@ -7,6 +7,7 @@ import (
 	"github.com/rhoninl/sft/pkg/root/forward"
 	"github.com/rhoninl/sft/pkg/root/install"
 	"github.com/rhoninl/sft/pkg/root/logs"
+	"github.com/rhoninl/sft/pkg/root/restart"
 	"github.com/rhoninl/sft/pkg/root/uninstall"
 	"github.com/rhoninl/sft/pkg/utils/logger"
 	"github.com/spf13/cobra"
@@ -31,6 +32,7 @@ func init() {
 	RootCmd.PersistentFlags().BoolVarP(&logger.DebugLog, "debug", "d", false, "debug log")
 	RootCmd.AddCommand(edgedevices.EdgedeviceCmd)
 	RootCmd.AddCommand(describe.DescribeCmd)
+	RootCmd.AddCommand(restart.RestartCmd)
 	RootCmd.AddCommand(statusCmd)
 	RootCmd.AddCommand(forward.ForwardCmd)
 	RootCmd.AddCommand(logs.LogsCmd)
