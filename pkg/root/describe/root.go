@@ -8,6 +8,7 @@ import (
 	"github.com/rhoninl/sft/pkg/k8s"
 	"github.com/rhoninl/sft/pkg/utils/address"
 	"github.com/rhoninl/sft/pkg/utils/logger"
+	"github.com/rhoninl/sft/pkg/utils/shifu"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 )
@@ -36,7 +37,13 @@ var DescribeCmd = &cobra.Command{
 
 		printDeviceDetails(device)
 	},
-	ValidArgs: k8s.GetValidDeviceNames(),
+	ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+		return k8s.GetValidDeviceNames(), cobra.ShellCompDirectiveNoFileComp
+	},
+
+	PersistentPreRun: func(cmd *cobra.Command, args []string) {
+		cobra.CheckErr(shifu.CheckShifuInstalled())
+	},
 }
 
 func printDeviceDetails(device *k8s.Device) {

@@ -3,6 +3,7 @@ package k8s
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -127,6 +128,10 @@ func GetEdgedevices() ([]v1alpha1.EdgeDevice, error) {
 		return nil, err
 	}
 
+	if err := CheckCRDExists("edgedevices.shifu.edgenesis.io"); err != nil {
+		return nil, err
+	}
+
 	gvr := schema.GroupVersionResource{
 		Group:    "shifu.edgenesis.io",
 		Version:  "v1alpha1",
@@ -226,13 +231,13 @@ func GetDeploymentFirstReplicaStatus(namespace, deploymentName string) (string, 
 		return "", fmt.Errorf("failed to create clientset: %w", err)
 	}
 
-	// 1. 获取 Deployment 资源
+	// 1. Get the Deployment resource
 	deployment, err := clientset.AppsV1().Deployments(namespace).Get(context.TODO(), deploymentName, metav1.GetOptions{})
 	if err != nil {
 		return "", fmt.Errorf("failed to get deployment: %v", err)
 	}
 
-	// 2. 获取与 Deployment 关联的 Pod 列表
+	// 2. Get the list of Pods associated with the Deployment
 	labelSelector := deployment.Spec.Selector.MatchLabels
 	labelSelectorStr := metav1.FormatLabelSelector(&metav1.LabelSelector{MatchLabels: labelSelector})
 	pods, err := clientset.CoreV1().Pods(namespace).List(context.TODO(), metav1.ListOptions{
@@ -338,4 +343,29 @@ func GetPodsByDeployment(namespace, deploymentName string) ([]v1.Pod, error) {
 	}
 
 	return pods.Items, nil
+}
+
+var (
+	ErrorCRDNotFound = errors.New("crd not found")
+)
+
+// check if the crd exists in the cluster
+func CheckCRDExists(crdName string) error {
+	discoveryClient, err := NewDiscoveryClient()
+	if err != nil {
+		return err
+	}
+
+	crds, err := discoveryClient.ServerResourcesForGroupVersion("apiextensions.k8s.io/v1")
+	if err != nil {
+		return err
+	}
+
+	for _, crd := range crds.APIResources {
+		if crd.Name == crdName {
+			return nil
+		}
+	}
+
+	return ErrorCRDNotFound
 }

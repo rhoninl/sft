@@ -1,13 +1,20 @@
 package shifu
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
+
+	"github.com/rhoninl/sft/pkg/k8s"
 )
 
 const (
 	shifuInstallYamlBaseURL = "https://raw.githubusercontent.com/Edgenesis/shifu/refs/tags/%s/pkg/k8s/crd/install/shifu_install.yml"
+)
+
+var (
+	ErrorShifuUninstalled = errors.New("Shifu is not installed in the cluster")
 )
 
 type Shifu struct {
@@ -62,4 +69,12 @@ func fetch(url string) (string, error) {
 	}
 
 	return string(yamlContent), nil
+}
+
+func CheckShifuInstalled() error {
+	if err := k8s.CheckCRDExists("edgedevices.shifu.edgenesis.io"); err != nil {
+		return ErrorShifuUninstalled
+	}
+
+	return nil
 }

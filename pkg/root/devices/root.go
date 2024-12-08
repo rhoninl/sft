@@ -1,6 +1,7 @@
-package edgedevices
+package devices
 
 import (
+	"github.com/rhoninl/sft/pkg/utils/shifu"
 	"github.com/spf13/cobra"
 )
 
@@ -15,5 +16,9 @@ var EdgedeviceCmd = &cobra.Command{
 	Long:    `show edgedevice info in current kubernetes cluster`,
 	Run: func(cmd *cobra.Command, args []string) {
 		listCmd.Run(cmd, args)
+	},
+
+	PersistentPreRun: func(cmd *cobra.Command, args []string) {
+		cobra.CheckErr(shifu.CheckShifuInstalled())
 	},
 }

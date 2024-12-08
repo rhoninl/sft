@@ -7,6 +7,7 @@ import (
 
 	"github.com/rhoninl/sft/pkg/k8s"
 	"github.com/rhoninl/sft/pkg/utils/logger"
+	"github.com/rhoninl/sft/pkg/utils/shifu"
 	"github.com/spf13/cobra"
 )
 
@@ -70,7 +71,14 @@ var ForwardCmd = &cobra.Command{
 			return
 		}
 	},
-	ValidArgs: k8s.GetValidDeviceNames(),
+
+	ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+		return k8s.GetValidDeviceNames(), cobra.ShellCompDirectiveNoFileComp
+	},
+
+	PersistentPreRun: func(cmd *cobra.Command, args []string) {
+		cobra.CheckErr(shifu.CheckShifuInstalled())
+	},
 }
 
 func isPortInUse(port int) bool {

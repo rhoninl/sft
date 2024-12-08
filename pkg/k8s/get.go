@@ -4,10 +4,10 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"log/slog"
 	"sync"
 
 	"github.com/edgenesis/shifu/pkg/k8s/api/v1alpha1"
+	"github.com/rhoninl/sft/pkg/utils/logger"
 	appv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -113,27 +113,24 @@ func GetServiceLinkedDeployment(name string) (*corev1.ServiceList, error) {
 
 var (
 	deviceNames []string
-	once        sync.Once
 	mu          sync.Mutex
 )
 
 func GetValidDeviceNames() []string {
-	once.Do(func() {
-		edgedevices, err := GetEdgedevices()
-		if err != nil {
-			slog.Debug("Error retrieving edgedevices: %v\n", err)
-			return
-		}
+	edgedevices, err := GetEdgedevices()
+	if err != nil {
+		logger.Debugf("Error retrieving edgedevices, errors: %s", err.Error())
+		return []string{}
+	}
 
-		names := make([]string, len(edgedevices))
-		for i, edgedevice := range edgedevices {
-			names[i] = edgedevice.Name
-		}
+	names := make([]string, len(edgedevices))
+	for i, edgedevice := range edgedevices {
+		names[i] = edgedevice.Name
+	}
 
-		mu.Lock()
-		defer mu.Unlock()
-		deviceNames = names
-	})
+	mu.Lock()
+	defer mu.Unlock()
+	deviceNames = names
 
 	mu.Lock()
 	defer mu.Unlock()

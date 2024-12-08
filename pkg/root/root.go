@@ -3,7 +3,7 @@ package root
 import (
 	"github.com/rhoninl/sft/pkg/k8s"
 	"github.com/rhoninl/sft/pkg/root/describe"
-	"github.com/rhoninl/sft/pkg/root/edgedevices"
+	"github.com/rhoninl/sft/pkg/root/devices"
 	"github.com/rhoninl/sft/pkg/root/forward"
 	"github.com/rhoninl/sft/pkg/root/install"
 	"github.com/rhoninl/sft/pkg/root/logs"
@@ -30,7 +30,7 @@ func init() {
 	RootCmd.CompletionOptions.DisableDefaultCmd = false
 	RootCmd.PersistentFlags().StringVar(&k8s.KubeConfigPath, "config", "", "kubeconfig file (default use KUBECONFIG env or ~/.kube/config)")
 	RootCmd.PersistentFlags().BoolVarP(&logger.DebugLog, "debug", "d", false, "debug log")
-	RootCmd.AddCommand(edgedevices.EdgedeviceCmd)
+	RootCmd.AddCommand(devices.EdgedeviceCmd)
 	RootCmd.AddCommand(describe.DescribeCmd)
 	RootCmd.AddCommand(restart.RestartCmd)
 	RootCmd.AddCommand(statusCmd)
@@ -39,5 +39,5 @@ func init() {
 	RootCmd.AddCommand(install.InstallCmd)
 	RootCmd.AddCommand(uninstall.UninstallCmd)
 	RootCmd.AddCommand(versionCmd)
-	RootCmd.AddCommand(webCmd) // Added online command
+	RootCmd.AddCommand(webCmd)
 }

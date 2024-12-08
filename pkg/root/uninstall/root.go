@@ -1,6 +1,7 @@
 package uninstall
 
 import (
+	"github.com/rhoninl/sft/pkg/utils/shifu"
 	"github.com/spf13/cobra"
 )
 
@@ -13,4 +14,7 @@ var UninstallCmd = &cobra.Command{
 	Aliases: []string{"ui"},
 	Short:   "way to uninstall shifu component in kubernetes cluster",
 	Long:    "way to uninstall shifu component in kubernetes cluster",
+	PersistentPreRun: func(cmd *cobra.Command, args []string) {
+		cobra.CheckErr(shifu.CheckShifuInstalled())
+	},
 }
