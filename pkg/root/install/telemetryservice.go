@@ -20,14 +20,14 @@ var installTelemetryServiceCmd = &cobra.Command{
 		// TODO: Need to check telemetryserivce had installed or not
 		yamlContent, err := shifu.Resource(shifu.TypeShifu).GetDeployYaml()
 		if err != nil {
-			logger.Debug(err)
+			logger.Debug(logger.Verbose, err)
 			logger.Println("Failed to retrieve telemetryservice YAML")
 			return
 		}
 
 		_, err = k8s.ApplyYaml(yamlContent)
 		if err != nil {
-			logger.Debug(err)
+			logger.Debug(logger.Verbose, err)
 			logger.Println("Failed to install telemetryservice component")
 			return
 		}

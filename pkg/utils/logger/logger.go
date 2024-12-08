@@ -8,7 +8,14 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
-var DebugLog = true
+type debugLogLevel int
+
+const (
+	Verbose debugLogLevel = iota + 1
+	MoreVerbose
+)
+
+var DebugLogLevel int
 
 type Color string
 
@@ -81,11 +88,7 @@ func InitLogger() {
 func NewLogger() *zap.SugaredLogger {
 	atom := zap.NewAtomicLevel()
 
-	if DebugLog {
-		atom.SetLevel(zap.DebugLevel)
-	} else {
-		atom.SetLevel(zap.InfoLevel)
-	}
+	atom.SetLevel(zap.DebugLevel)
 
 	cfg := zap.NewDevelopmentConfig()                                // Plain text format
 	cfg.EncoderConfig.EncodeLevel = zapcore.CapitalColorLevelEncoder // Color output for better readability in terminal
@@ -105,68 +108,29 @@ func GetLogger() *zap.SugaredLogger {
 	return zlog
 }
 
-func Debugf(format string, args ...interface{}) {
+func Debugf(level debugLogLevel, format string, args ...interface{}) {
+	if int(level) > DebugLogLevel {
+		return
+	}
 	GetLogger().Debugf(format, args...)
-}
-
-func Infof(format string, args ...interface{}) {
-	GetLogger().Infof(format, args...)
-}
-
-func Warnf(format string, args ...interface{}) {
-	GetLogger().Warnf(format, args...)
-}
-
-func Errorf(format string, args ...interface{}) {
-	GetLogger().Errorf(format, args...)
-}
-
-func Fatalf(format string, args ...interface{}) {
-	GetLogger().Fatalf(format, args...)
 }
 
 func Printf(format string, args ...interface{}) {
 	fmt.Printf(format, args...)
 }
 
-func Debug(args ...interface{}) {
+func Debug(level debugLogLevel, args ...interface{}) {
+	if int(level) > DebugLogLevel {
+		return
+	}
 	GetLogger().Debug(args...)
 }
 
-func Info(args ...interface{}) {
-	GetLogger().Info(args...)
-}
-
-func Warn(args ...interface{}) {
-	GetLogger().Warn(args...)
-}
-
-func Error(args ...interface{}) {
-	GetLogger().Error(args...)
-}
-
-func Fatal(args ...interface{}) {
-	GetLogger().Fatal(args...)
-}
-
-func Debugln(args ...interface{}) {
+func Debugln(level debugLogLevel, args ...interface{}) {
+	if int(level) > DebugLogLevel {
+		return
+	}
 	GetLogger().Debugln(args...)
-}
-
-func Infoln(args ...interface{}) {
-	GetLogger().Infoln(args...)
-}
-
-func Warnln(args ...interface{}) {
-	GetLogger().Warnln(args...)
-}
-
-func Errorln(args ...interface{}) {
-	GetLogger().Errorln(args...)
-}
-
-func Fatalln(args ...interface{}) {
-	GetLogger().Fatal(args...)
 }
 
 func Println(args ...interface{}) {

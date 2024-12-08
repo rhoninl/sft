@@ -2,7 +2,6 @@
 package devices
 
 import (
-	"errors"
 	"fmt"
 	"os"
 	"time"
@@ -37,10 +36,6 @@ var listCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		edgedevices, err := k8s.GetEdgedevices()
 		if err != nil {
-			if errors.Is(err, k8s.ErrorCRDNotFound) {
-				logger.Println(logger.WithColor(logger.Red, err.Error()))
-				return
-			}
 			cobra.CheckErr(err)
 			return
 		}

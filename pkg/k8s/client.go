@@ -7,8 +7,10 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/edgenesis/shifu/pkg/k8s/api/v1alpha1"
+	"github.com/rhoninl/sft/pkg/utils/logger"
 	appv1 "k8s.io/api/apps/v1"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -128,7 +130,7 @@ func GetEdgedevices() ([]v1alpha1.EdgeDevice, error) {
 		return nil, err
 	}
 
-	if err := CheckCRDExists("edgedevices.shifu.edgenesis.io"); err != nil {
+	if err := CheckCRDExists("edgedevices.shifu.edgenesis.io", "v1alpha1"); err != nil {
 		return nil, err
 	}
 
@@ -350,19 +352,27 @@ var (
 )
 
 // check if the crd exists in the cluster
-func CheckCRDExists(crdName string) error {
+func CheckCRDExists(crdName string, version string) error {
 	discoveryClient, err := NewDiscoveryClient()
 	if err != nil {
 		return err
 	}
 
-	crds, err := discoveryClient.ServerResourcesForGroupVersion("apiextensions.k8s.io/v1")
+	resourceName := strings.Split(crdName, ".")[0]
+	groupName := strings.Join(strings.Split(crdName, ".")[1:], ".")
+	groupVersion := fmt.Sprintf("%s/%s", groupName, version)
+
+	resources, err := discoveryClient.ServerResourcesForGroupVersion(groupVersion)
 	if err != nil {
+		logger.Debugf(logger.Verbose, "error getting crds: %v", err)
 		return err
 	}
 
-	for _, crd := range crds.APIResources {
-		if crd.Name == crdName {
+	logger.Debugf(logger.Verbose, "resources: %v", resources)
+
+	for _, resource := range resources.APIResources {
+		if resource.Name == resourceName {
+			logger.Debugf(logger.Verbose, "crd %s found", crdName)
 			return nil
 		}
 	}

@@ -4,12 +4,14 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/rhoninl/sft/pkg/utils/logger"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 )
 
 // RestartDeployment restarts a Kubernetes deployment by scaling it down to zero and then back to its original size.
 func RestartDeployment(deploymentName, namespace string) error {
+	logger.Debugf(logger.MoreVerbose, "restarting deployment: %s/%s", deploymentName, namespace)
 	clientset, _, err := NewClientSet()
 	if err != nil {
 		return fmt.Errorf("failed to create clientset: %w", err)
@@ -22,5 +24,6 @@ func RestartDeployment(deploymentName, namespace string) error {
 		return fmt.Errorf("failed to restart deployment: %w", err)
 	}
 
+	logger.Debugf(logger.Verbose, "restarted deployment: %s/%s", deploymentName, namespace)
 	return nil
 }

@@ -3,9 +3,9 @@ package k8s
 import (
 	"context"
 	"fmt"
-	"log/slog"
 	"strings"
 
+	"github.com/rhoninl/sft/pkg/utils/logger"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime/serializer/yaml"
@@ -76,7 +76,8 @@ func DeleteYaml(yamlContent string) (bool, error) {
 		if err != nil {
 			return false, fmt.Errorf("failed to delete resource: %v", err)
 		}
-		slog.Debug("Deleted resource: %s/%s\n", gvk.Kind, resourceName)
+
+		logger.Debugf(logger.Verbose, "deleted resource: %s/%s", gvk.Kind, resourceName)
 	}
 
 	return true, nil

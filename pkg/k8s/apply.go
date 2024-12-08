@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/rhoninl/sft/pkg/utils/logger"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime/serializer/yaml"
@@ -70,6 +71,7 @@ func ApplyYaml(yamlContent string) (bool, error) {
 			return false, fmt.Errorf("failed to apply resource: %v", err)
 		}
 
+		logger.Debugf(logger.Verbose, "applied resource: %s", obj.GetName())
 	}
 
 	return true, nil

@@ -2,10 +2,12 @@ package shifu
 
 import (
 	"context"
-	"fmt"
 	"strings"
+	"time"
 
 	"github.com/google/go-github/github"
+	"github.com/rhoninl/sft/pkg/utils/cache"
+	"github.com/rhoninl/sft/pkg/utils/logger"
 )
 
 type ResourceType uint8
@@ -33,38 +35,46 @@ func Resource(resourceType ResourceType) component {
 }
 
 func GetLatestShifuVersion() string {
-	client := github.NewClient(nil)
-	releases, _, err := client.Repositories.ListReleases(context.Background(), "Edgenesis", "shifu", nil)
-	if err != nil {
-		fmt.Println(err)
-		return ""
-	}
+	releases := GetAllAvailableVersions()
+
+	logger.Debugf(logger.MoreVerbose, "got shifu releases: %v", releases)
 
 	var version string
 	for _, release := range releases {
-		if strings.Contains(*release.Name, "rc") {
+		if strings.Contains(release, "rc") {
 			continue
 		}
 
-		version = *release.Name
+		version = release
 		break
 	}
+
+	logger.Debugf(logger.MoreVerbose, "latest shifu version: %s", version)
 	return version
 }
 
 func GetAllAvailableVersions() []string {
-	client := github.NewClient(nil)
-	releases, _, err := client.Repositories.ListReleases(context.Background(), "Edgenesis", "shifu", nil)
+	versions, err := cache.DoWithExpire("shifu_releases", time.Minute, func() ([]byte, error) {
+		client := github.NewClient(nil)
+		releases, _, err := client.Repositories.ListReleases(context.Background(), "Edgenesis", "shifu", nil)
+		if err != nil {
+			logger.Debugf(logger.Verbose, "Failed to get shifu releases: %v", err)
+			return nil, err
+		}
+
+		var version []string
+
+		for _, release := range releases {
+			version = append(version, *release.Name)
+		}
+
+		return []byte(strings.Join(version, ",")), nil
+	})
+
 	if err != nil {
-		fmt.Println(err)
+		logger.Debugf(logger.Verbose, "Failed to get shifu releases: %v", err)
 		return nil
 	}
 
-	var version []string
-
-	for _, release := range releases {
-		version = append(version, *release.Name)
-	}
-
-	return version
+	return strings.Split(string(versions), ",")
 }

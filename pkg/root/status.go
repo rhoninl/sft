@@ -33,19 +33,19 @@ var statusCmd = &cobra.Command{
 func GetShifuInfo() (string, string, error) {
 	deployment, err := k8s.GetResource("shifu-crd-controller-manager", "shifu-crd-system", "apps", "v1", "deployments")
 	if err != nil {
-		logger.Debugf("Failed to get shifu-crd-controller-manager deployment: %v", err)
+		logger.Debugf(logger.Verbose, "Failed to get shifu-crd-controller-manager deployment: %v", err)
 		return "", "", err
 	}
 
 	shifuVersion, err := getShifuVersionFromDeployment(deployment)
 	if err != nil {
-		logger.Debugf("Failed to get shifu version: %v", err)
+		logger.Debugf(logger.Verbose, "Failed to get shifu version: %v", err)
 		return "", "", err
 	}
 
 	status, err := k8s.GetDeploymentFirstReplicaStatus("shifu-crd-system", "shifu-crd-controller-manager")
 	if err != nil {
-		logger.Debugf("Failed to get shifu status: %v", err)
+		logger.Debugf(logger.Verbose, "Failed to get shifu status: %v", err)
 		return "", "", err
 	}
 
@@ -55,25 +55,25 @@ func GetShifuInfo() (string, string, error) {
 func getShifuVersionFromDeployment(deployment *unstructured.Unstructured) (string, error) {
 	containers, found, err := unstructured.NestedSlice(deployment.Object, "spec", "template", "spec", "containers")
 	if !found || err != nil {
-		logger.Debugf("Error retrieving containers: %v\n", err)
+		logger.Debugf(logger.Verbose, "Error retrieving containers: %v\n", err)
 		return "", err
 	}
 	// Ensure that there is at least one container
 	if len(containers) == 0 {
-		logger.Debugf("No containers found in the deployment")
+		logger.Debugf(logger.Verbose, "No containers found in the deployment")
 		return "", nil
 	}
 
 	// Get the second container (it's of type map[string]interface{})
 	firstContainer, ok := containers[1].(map[string]interface{})
 	if !ok {
-		logger.Debugf("Error casting first container")
+		logger.Debugf(logger.Verbose, "Error casting first container")
 		return "", nil
 	}
 
 	image, found, err := unstructured.NestedString(firstContainer, "image")
 	if !found || err != nil {
-		logger.Debugf("Error retrieving image: %v\n", err)
+		logger.Debugf(logger.Verbose, "Error retrieving image: %v\n", err)
 		return "", err
 	}
 

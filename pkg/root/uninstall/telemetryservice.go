@@ -19,14 +19,14 @@ var uninstallTelemetryServiceCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		yamlContent, err := shifu.Resource(shifu.TypeShifu).GetDeployYaml()
 		if err != nil {
-			logger.Debug(err)
+			logger.Debug(logger.Verbose, err)
 			logger.Println("Failed to retrieve telemetryservice YAML")
 			return
 		}
 
 		_, err = k8s.DeleteYaml(yamlContent)
 		if err != nil {
-			logger.Debug(err)
+			logger.Debug(logger.Verbose, err)
 			logger.Println("Failed to uninstall telemetryservice component")
 			return
 		}

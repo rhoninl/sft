@@ -7,6 +7,8 @@ import (
 	"net/http"
 
 	"github.com/rhoninl/sft/pkg/k8s"
+	"github.com/rhoninl/sft/pkg/utils/cache"
+	"github.com/rhoninl/sft/pkg/utils/logger"
 )
 
 const (
@@ -33,7 +35,8 @@ func ShifuVersion(version string) Shifu {
 }
 
 func (shifu Shifu) Version() string {
-	return GetLatestShifuVersion()
+	logger.Debugf(logger.Verbose, "using shifu version: %s", shifu.version)
+	return shifu.version
 }
 
 func (shifu Shifu) SetVersion(version string) component {
@@ -42,7 +45,7 @@ func (shifu Shifu) SetVersion(version string) component {
 	return shifu
 }
 
-func (shifu Shifu) ResourceURL() string {
+func (shifu *Shifu) ResourceURL() string {
 	if shifu.version == "" {
 		shifu.version = GetLatestShifuVersion()
 	}
@@ -51,30 +54,39 @@ func (shifu Shifu) ResourceURL() string {
 }
 
 func (shifu Shifu) GetDeployYaml() (string, error) {
-	return fetch(shifu.ResourceURL())
+	url := shifu.ResourceURL()
+	cacherName := fmt.Sprintf("%s.%s", "shifu", shifu.Version())
+	data, err := cache.GetOrDoAndCache(cacherName, func() ([]byte, error) {
+		return fetch(url)
+	})
+
+	return string(data), err
 }
 
-func fetch(url string) (string, error) {
+func fetch(url string) ([]byte, error) {
 	resp, err := http.Get(string(url))
 	if err != nil {
-		fmt.Println("Failed to install shifu component")
-		return "", err
+		logger.Debugf(logger.Verbose, "Failed to install shifu component: %v", err)
+		return nil, err
 	}
 	defer resp.Body.Close()
 
 	yamlContent, err := io.ReadAll(resp.Body)
 	if err != nil {
-		fmt.Println("Failed to install shifu component")
-		return "", err
+		logger.Debugf(logger.Verbose, "Failed to install shifu component: %v", err)
+		return nil, err
 	}
 
-	return string(yamlContent), nil
+	logger.Debugf(logger.MoreVerbose, "fetched shifu yaml: %s", string(yamlContent))
+
+	return yamlContent, nil
 }
 
 func CheckShifuInstalled() error {
-	if err := k8s.CheckCRDExists("edgedevices.shifu.edgenesis.io"); err != nil {
+	if err := k8s.CheckCRDExists("edgedevices.shifu.edgenesis.io", "v1alpha1"); err != nil {
 		return ErrorShifuUninstalled
 	}
 
+	logger.Debugf(logger.MoreVerbose, "shifu is installed")
 	return nil
 }

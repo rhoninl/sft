@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/rhoninl/sft/pkg/k8s"
+	"github.com/rhoninl/sft/pkg/utils/logger"
 )
 
 var internalHost = []string{
@@ -48,25 +49,29 @@ var passiveProtocol = []string{
 
 func GetRealDeviceAddress(device k8s.Device) string {
 	address := device.EdgeDevice.Spec.Address
-
-	if slices.Contains(passiveProtocol, string(*device.EdgeDevice.Spec.Protocol)) {
+	var protocol = *device.EdgeDevice.Spec.Protocol
+	if slices.Contains(passiveProtocol, string(protocol)) {
+		logger.Debugf(logger.Verbose, "device %s is a passive device, which is hit by %s protocol", device.EdgeDevice.Name, protocol)
 		return "[P]" + passiveDeviceServerAddress(&device)
 	}
 
-	if address == nil {
-		return "N/A"
-	} else if *address == "" {
+	if address == nil || *address == "" {
+		logger.Debugf(logger.Verbose, "device %s has no address", device.EdgeDevice.Name)
 		return "N/A"
 	}
 
 	host, port, err := net.SplitHostPort(*address)
 	if err != nil {
+		logger.Debugf(logger.Verbose, "device %s has invalid address: %s, using it as fallback", device.EdgeDevice.Name, *address)
 		return *address
 	}
 
 	if !containsAny(internalHost, host) {
+		logger.Debugf(logger.Verbose, "device %s has external address: %s", device.EdgeDevice.Name, *address)
 		return *address
 	}
+
+	logger.Debugf(logger.Verbose, "device %s is using a driver, find the driver container", device.EdgeDevice.Name)
 
 	envs := make(map[string]string)
 
@@ -104,9 +109,11 @@ func GetRealDeviceAddress(device k8s.Device) string {
 		}
 	}
 	if maxKeyN == 0 {
+		logger.Debugf(logger.Verbose, "device %s has no valid address, using passive device server address", device.EdgeDevice.Name)
 		return "[P]" + passiveDeviceServerAddress(&device)
 	}
 
+	logger.Debugf(logger.Verbose, "device %s has valid address: %s", device.EdgeDevice.Name, envs[maxKey])
 	return envs[maxKey]
 }
 

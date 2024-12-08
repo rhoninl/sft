@@ -29,7 +29,8 @@ func init() {
 	cobra.EnableCommandSorting = false
 	RootCmd.CompletionOptions.DisableDefaultCmd = false
 	RootCmd.PersistentFlags().StringVar(&k8s.KubeConfigPath, "config", "", "kubeconfig file (default use KUBECONFIG env or ~/.kube/config)")
-	RootCmd.PersistentFlags().BoolVarP(&logger.DebugLog, "debug", "d", false, "debug log")
+	RootCmd.PersistentFlags().IntVarP(&logger.DebugLogLevel, "verbose", "v", 0, "debug level, availables: 1, 2")
+
 	RootCmd.AddCommand(devices.EdgedeviceCmd)
 	RootCmd.AddCommand(describe.DescribeCmd)
 	RootCmd.AddCommand(restart.RestartCmd)

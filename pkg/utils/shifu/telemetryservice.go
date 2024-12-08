@@ -1,6 +1,11 @@
 package shifu
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/rhoninl/sft/pkg/utils/cache"
+	"github.com/rhoninl/sft/pkg/utils/logger"
+)
 
 const (
 	telemetryServiceInstallYamlBaseURL = "https://raw.githubusercontent.com/Edgenesis/shifu/refs/tags/%s/pkg/telemetryservice/install/telemetryservice_install.yaml"
@@ -18,6 +23,7 @@ func newTelemetryService() TelemetryService {
 }
 
 func (telemetryService TelemetryService) Version() string {
+	logger.Debugf(logger.MoreVerbose, "using telemetryservice version: %s", telemetryService.version)
 	return GetLatestShifuVersion()
 }
 
@@ -27,7 +33,7 @@ func (telemetryService TelemetryService) SetVersion(version string) component {
 	return telemetryService
 }
 
-func (telemetryService TelemetryService) ResourceURL() string {
+func (telemetryService *TelemetryService) ResourceURL() string {
 	if telemetryService.version == "" {
 		telemetryService.version = GetLatestShifuVersion()
 	}
@@ -36,5 +42,12 @@ func (telemetryService TelemetryService) ResourceURL() string {
 }
 
 func (telemetryService TelemetryService) GetDeployYaml() (string, error) {
-	return fetch(telemetryService.ResourceURL())
+	cacherName := fmt.Sprintf("%s.%s", "ts", telemetryService.Version())
+	data, err := cache.GetOrDoAndCache(cacherName, func() ([]byte, error) {
+		return fetch(telemetryService.ResourceURL())
+	})
+
+	logger.Debugf(logger.MoreVerbose, "fetched telemetryservice yaml: %s", string(data))
+
+	return string(data), err
 }

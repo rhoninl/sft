@@ -119,7 +119,7 @@ var (
 func GetValidDeviceNames() []string {
 	edgedevices, err := GetEdgedevices()
 	if err != nil {
-		logger.Debugf("Error retrieving edgedevices, errors: %s", err.Error())
+		logger.Debugf(logger.Verbose, "Error retrieving edgedevices, errors: %s", err.Error())
 		return []string{}
 	}
 
