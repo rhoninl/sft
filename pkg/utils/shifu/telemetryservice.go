@@ -1,14 +1,20 @@
 package shifu
 
 import (
+	"errors"
 	"fmt"
 
+	"github.com/rhoninl/sft/pkg/k8s"
 	"github.com/rhoninl/sft/pkg/utils/cache"
 	"github.com/rhoninl/sft/pkg/utils/logger"
 )
 
 const (
 	telemetryServiceInstallYamlBaseURL = "https://raw.githubusercontent.com/Edgenesis/shifu/refs/tags/%s/pkg/telemetryservice/install/telemetryservice_install.yaml"
+)
+
+var (
+	ErrorTelemetryServiceUninstalled = errors.New("telemetryservice is not installed")
 )
 
 type TelemetryService struct {
@@ -50,4 +56,18 @@ func (telemetryService TelemetryService) GetDeployYaml() (string, error) {
 	logger.Debugf(logger.MoreVerbose, "fetched telemetryservice yaml: %s", string(data))
 
 	return string(data), err
+}
+
+func CheckTelemetryServiceInstalled() error {
+	pods, err := k8s.GetPodsByDeployment("shifu-service", "telemetryservice")
+	if err != nil {
+		return err
+	}
+
+	if len(pods) == 0 {
+		return ErrorTelemetryServiceUninstalled
+	}
+
+	logger.Debugf(logger.MoreVerbose, "telemetryservice is installed")
+	return nil
 }

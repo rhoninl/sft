@@ -40,7 +40,9 @@ func (shifu Shifu) Version() string {
 }
 
 func (shifu Shifu) SetVersion(version string) component {
-	shifu.version = version
+	if len(version) > 0 {
+		shifu.version = version
+	}
 
 	return shifu
 }

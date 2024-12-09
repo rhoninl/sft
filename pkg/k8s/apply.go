@@ -71,7 +71,7 @@ func ApplyYaml(yamlContent string) (bool, error) {
 			return false, fmt.Errorf("failed to apply resource: %v", err)
 		}
 
-		logger.Debugf(logger.Verbose, "applied resource: %s", obj.GetName())
+		logger.Debugf(logger.Verbose, "applied resource: %s/%s", gvk.Kind, obj.GetName())
 	}
 
 	return true, nil

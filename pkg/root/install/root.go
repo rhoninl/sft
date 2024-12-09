@@ -4,8 +4,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func init() {
+var (
+	version string
+)
 
+const (
+	EmptyVersion = ""
+)
+
+func init() {
+	installAllCmd.Flags().StringVar(&version, "version", EmptyVersion, "install all components")
 }
 
 var InstallCmd = &cobra.Command{

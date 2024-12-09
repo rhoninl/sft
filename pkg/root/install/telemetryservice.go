@@ -17,8 +17,7 @@ var installTelemetryServiceCmd = &cobra.Command{
 	Short:   "install telemetryservice component in kubernetes cluster",
 	Long:    "install telemetryservice component in kubernetes cluster",
 	Run: func(cmd *cobra.Command, args []string) {
-		// TODO: Need to check telemetryserivce had installed or not
-		yamlContent, err := shifu.Resource(shifu.TypeShifu).GetDeployYaml()
+		yamlContent, err := shifu.Resource(shifu.TypeTelemetryService).SetVersion(version).GetDeployYaml()
 		if err != nil {
 			logger.Debug(logger.Verbose, err)
 			logger.Println("Failed to retrieve telemetryservice YAML")
@@ -33,5 +32,10 @@ var installTelemetryServiceCmd = &cobra.Command{
 		}
 
 		logger.Println("TelemetryService component install successfully")
+	},
+	PreRun: func(cmd *cobra.Command, args []string) {
+		if err := shifu.CheckTelemetryServiceInstalled(); err != nil {
+			cobra.CheckErr(err)
+		}
 	},
 }

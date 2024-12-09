@@ -17,6 +17,10 @@ var UninstallShifuCmd = &cobra.Command{
 	Short:   "uninstall shifu component in kubernetes cluster",
 	Long:    "uninstall shifu component in kubernetes cluster",
 	Run: func(cmd *cobra.Command, args []string) {
+		if shifu.CheckTelemetryServiceInstalled() == nil {
+			uninstallTelemetryServiceCmd.Run(cmd, args)
+		}
+
 		yamlContent, err := shifu.Resource(shifu.TypeShifu).GetDeployYaml()
 		if err != nil {
 			logger.Debug(logger.Verbose, err)

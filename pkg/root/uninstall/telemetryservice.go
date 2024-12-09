@@ -17,7 +17,7 @@ var uninstallTelemetryServiceCmd = &cobra.Command{
 	Short:   "uninstall telemetryservice component in kubernetes cluster",
 	Long:    "uninstall telemetryservice component in kubernetes cluster",
 	Run: func(cmd *cobra.Command, args []string) {
-		yamlContent, err := shifu.Resource(shifu.TypeShifu).GetDeployYaml()
+		yamlContent, err := shifu.Resource(shifu.TypeTelemetryService).GetDeployYaml()
 		if err != nil {
 			logger.Debug(logger.Verbose, err)
 			logger.Println("Failed to retrieve telemetryservice YAML")
