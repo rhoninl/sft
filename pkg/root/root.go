@@ -9,6 +9,7 @@ import (
 	"github.com/rhoninl/sft/pkg/root/logs"
 	"github.com/rhoninl/sft/pkg/root/restart"
 	"github.com/rhoninl/sft/pkg/root/uninstall"
+	"github.com/rhoninl/sft/pkg/root/web"
 	"github.com/rhoninl/sft/pkg/utils/logger"
 	"github.com/spf13/cobra"
 )
@@ -40,5 +41,5 @@ func init() {
 	RootCmd.AddCommand(install.InstallCmd)
 	RootCmd.AddCommand(uninstall.UninstallCmd)
 	RootCmd.AddCommand(versionCmd)
-	RootCmd.AddCommand(webCmd)
+	RootCmd.AddCommand(web.WebCmd)
 }

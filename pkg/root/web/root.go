@@ -1,0 +1,58 @@
+package web
+
+import (
+	"fmt"
+	"net/http"
+
+	"github.com/rhoninl/sft/pkg/root/web/devices"
+	"github.com/rhoninl/sft/pkg/root/web/install"
+	"github.com/rhoninl/sft/pkg/root/web/middleware"
+	"github.com/rhoninl/sft/pkg/utils/browser"
+	"github.com/rhoninl/sft/pkg/utils/logger"
+	"github.com/spf13/cobra"
+)
+
+var (
+	port       string
+	serverOnly bool
+)
+
+func init() {
+	WebCmd.Flags().BoolVarP(&serverOnly, "server-only", "s", false, "Only run the server")
+	WebCmd.Flags().StringVarP(&port, "port", "p", "34550", "Port to run the web server on")
+}
+
+var WebCmd = &cobra.Command{
+	Use:   "web",
+	Short: "Run a web server",
+	Long:  `Run a web server that listens on a specified port`,
+	Run: func(cmd *cobra.Command, args []string) {
+		mux := http.NewServeMux()
+		muxNeedInstallShifu := http.NewServeMux()
+
+		muxNeedInstallShifu.HandleFunc("/", HomeHandler)
+		muxNeedInstallShifu.HandleFunc("/device", devices.DevicesHandler)
+		muxNeedInstallShifu.HandleFunc("/device/{device_name}", devices.DetailHandler)
+
+		mux.Handle("/", middleware.InstallChecker(muxNeedInstallShifu))
+		mux.HandleFunc("/install/shifu", install.InstallHandler)
+
+		logger.Printf("Starting web server on localhost:%s\n", port)
+
+		go func() {
+			if err := http.ListenAndServe(":"+port, mux); err != nil {
+				logger.Printf("Failed to start web server: localhost:%v\n", err)
+			}
+		}()
+
+		if !serverOnly {
+			// Open the browser to localhost:port
+			url := fmt.Sprintf("http://localhost:%s/device", port)
+			if err := browser.Open(url); err != nil {
+				logger.Printf("Failed to open browser: %v\n", err)
+			}
+		}
+
+		select {}
+	},
+}
