@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"sync"
 
 	"github.com/edgenesis/shifu/pkg/k8s/api/v1alpha1"
 	"github.com/rhoninl/sft/pkg/utils/logger"
@@ -111,11 +110,6 @@ func GetServiceLinkedDeployment(name string) (*corev1.ServiceList, error) {
 	return obj, nil
 }
 
-var (
-	deviceNames []string
-	mu          sync.Mutex
-)
-
 func GetValidDeviceNames() []string {
 	edgedevices, err := GetEdgedevices()
 	if err != nil {
@@ -128,11 +122,5 @@ func GetValidDeviceNames() []string {
 		names[i] = edgedevice.Name
 	}
 
-	mu.Lock()
-	defer mu.Unlock()
-	deviceNames = names
-
-	mu.Lock()
-	defer mu.Unlock()
-	return deviceNames
+	return names
 }

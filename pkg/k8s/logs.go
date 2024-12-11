@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"os"
 	"strings"
 
 	v1 "k8s.io/api/core/v1"
@@ -103,19 +104,8 @@ func streamPodLogs(clientset *kubernetes.Clientset, namespace, podName, containe
 	}
 	defer podLogs.Close()
 
-	// Stream logs from the pod
-	var logBuffer strings.Builder
-	if _, err := io.Copy(&logBuffer, podLogs); err != nil && err != io.EOF {
+	if _, err := io.Copy(os.Stdout, podLogs); err != nil && err != io.EOF {
 		return fmt.Errorf("error streaming logs for pod %s: %w", podName, err)
-	}
-
-	// Split logs into lines and print the last 100 lines if too long
-	logLines := strings.Split(logBuffer.String(), "\n")
-	if len(logLines) > 100 {
-		logLines = logLines[len(logLines)-100:]
-	}
-	for _, line := range logLines {
-		fmt.Println(line)
 	}
 
 	return nil
