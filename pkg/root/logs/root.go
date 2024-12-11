@@ -49,8 +49,12 @@ var LogsCmd = &cobra.Command{
 	},
 
 	ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
-		devices := k8s.GetValidDeviceNames()
-		return devices, cobra.ShellCompDirectiveNoFileComp
+		if len(args) != 0 {
+			return nil, cobra.ShellCompDirectiveNoFileComp
+		}
+
+		deviceNames := k8s.GetValidDeviceNames()
+		return deviceNames, cobra.ShellCompDirectiveNoFileComp
 	},
 
 	PreRun: func(cmd *cobra.Command, args []string) {

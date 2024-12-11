@@ -73,7 +73,12 @@ var ForwardCmd = &cobra.Command{
 	},
 
 	ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
-		return k8s.GetValidDeviceNames(), cobra.ShellCompDirectiveNoFileComp
+		if len(args) != 0 {
+			return nil, cobra.ShellCompDirectiveNoFileComp
+		}
+
+		deviceNames := k8s.GetValidDeviceNames()
+		return deviceNames, cobra.ShellCompDirectiveNoFileComp
 	},
 
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
