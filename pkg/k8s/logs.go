@@ -13,6 +13,8 @@ import (
 	"k8s.io/client-go/kubernetes"
 )
 
+var LogLine int64
+
 func GetDeploymentLogs(namespace, deploymentName, containerName string, follow bool) error {
 	dynamicClient, err := NewDynamicClient()
 	if err != nil {
@@ -90,7 +92,8 @@ func buildLabelSelector(matchLabels map[string]interface{}) string {
 func streamPodLogs(clientset *kubernetes.Clientset, namespace, podName, containerName string, follow bool) error {
 	// Prepare PodLogOptions (filter by container if needed)
 	logOptions := &v1.PodLogOptions{
-		Follow: follow,
+		Follow:    follow,
+		TailLines: &LogLine,
 	}
 	if containerName != "" {
 		logOptions.Container = containerName

@@ -17,6 +17,7 @@ var container string
 func init() {
 	LogsCmd.Flags().BoolVarP(&follow, "follow", "f", false, "Specify if the logs should be streamed.")
 	LogsCmd.Flags().StringVarP(&container, "container", "c", "1", "Specify which container will log")
+	LogsCmd.Flags().Int64VarP(&k8s.LogLine, "lines", "l", 100, "Specify the number of lines to display")
 }
 
 var LogsCmd = &cobra.Command{
