@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/rhoninl/sft/pkg/root/web/apis/shifu"
 	"github.com/rhoninl/sft/pkg/root/web/devices"
-	"github.com/rhoninl/sft/pkg/root/web/install"
 	"github.com/rhoninl/sft/pkg/root/web/middleware"
 	"github.com/rhoninl/sft/pkg/utils/browser"
 	"github.com/rhoninl/sft/pkg/utils/logger"
@@ -35,7 +35,8 @@ var WebCmd = &cobra.Command{
 		muxNeedInstallShifu.HandleFunc("/device/{device_name}", devices.DetailHandler)
 
 		mux.Handle("/", middleware.InstallChecker(muxNeedInstallShifu))
-		mux.HandleFunc("/install/shifu", install.InstallHandler)
+		mux.HandleFunc("/api/shifu/checker", shifu.InstallChecker)
+		mux.HandleFunc("/api/shifu/install", shifu.InstallShifu)
 
 		logger.Printf("Starting web server on localhost:%s\n", port)
 

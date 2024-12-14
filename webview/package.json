@@ -2,6 +2,7 @@
   "name": "webview",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:34550",
   "dependencies": {
     "@nextui-org/react": "^2.6.7",
     "@testing-library/jest-dom": "^5.17.0",
@@ -12,6 +13,7 @@
     "@types/react": "^18.3.14",
     "@types/react-dom": "^18.3.3",
     "ajv": "^8.17.1",
+    "axios": "^1.7.9",
     "framer-motion": "^11.13.5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

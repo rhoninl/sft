@@ -21,20 +21,21 @@ var installShifuCmd = &cobra.Command{
 	},
 }
 
-func InstallShifu(version string) {
+func InstallShifu(version string) error {
 	yamlContent, err := shifu.Resource(shifu.TypeShifu).SetVersion(version).GetDeployYaml()
 	if err != nil {
 		logger.Debugf(logger.Verbose, "Failed to install shifu component: %v", err)
 		logger.Println("Failed to install shifu component")
-		return
+		return err
 	}
 
 	_, err = k8s.ApplyYaml(string(yamlContent))
 	if err != nil {
 		logger.Debugf(logger.Verbose, "Failed to install shifu component: %v", err)
 		logger.Println("Failed to install shifu component")
-		return
+		return err
 	}
 
 	logger.Println("Shifu component installed successfully")
+	return nil
 }

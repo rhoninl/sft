@@ -11,8 +11,10 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <NextUIProvider>
-      <RouterProvider router={router} />
+    <NextUIProvider className='h-full w-full flex justify-center'>
+      <div className="container">
+        <RouterProvider router={router} />
+      </div>
     </NextUIProvider>
   </React.StrictMode>
 );

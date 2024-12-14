@@ -1,0 +1,20 @@
+.title {
+  font-size: 40px;
+}
+
+.shifu-install-button {
+  animation: pulse 1s infinite;
+}
+
+.shifu-install-button.installing {
+  animation-play-state: paused;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
