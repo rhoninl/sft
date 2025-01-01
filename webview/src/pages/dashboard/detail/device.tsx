@@ -6,12 +6,12 @@ export default function Device() {
     const navigate = useNavigate()
 
     return (
-        <div className="flex flex-col gap-3 w-full">
-            <div className="flex flex-row gap-3">
-                <button onClick={() => navigate(-1)} className="title">☜</button>
-                <h1 className='title'>{id}</h1>
+        <div className="flex flex-col w-full p-5">
+            <div className="flex flex-row gap-3 mb-3">
+                <button onClick={() => navigate(-1)} className="title text-2xl font-bold text-blue-600">☜</button>
+                <h1 className='title text-2xl font-bold text-blue-600'>{id}</h1>
             </div>
-            <Divider className='mt-3' />
+            <Divider className='' />
             <h1> Status : Running </h1>
             <h1> Address: 192.168.1.1 </h1>
             <h1> Protocol: HTTP </h1>

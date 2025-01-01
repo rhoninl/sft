@@ -1,8 +1,8 @@
 import { createBrowserRouter } from "react-router-dom";
 import ErrorPage from "./component/error/error";
 import App from "./App";
-import Devices from "./pages/devices/devices";
-import Device from "./pages/devices/detail/device";
+import Dashboard from "./pages/dashboard/dashboard";
+import Device from "./pages/dashboard/detail/device";
 
 export const router = createBrowserRouter([
     {
@@ -12,10 +12,18 @@ export const router = createBrowserRouter([
     },
     {
         path: "/devices",
-        element: <Devices />,
+        element: <Dashboard />,
     },
     {
         path: "/devices/:id",
         element: <Device />,
+    },
+    {
+        path: "/telemetryservices",
+        element: <Dashboard />,
+    },
+    {
+        path: "/dashboard",
+        element: <Dashboard />,
     }
 ]);

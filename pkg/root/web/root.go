@@ -3,11 +3,12 @@ package web
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/rhoninl/sft/pkg/root/web/apis/shifu"
 	"github.com/rhoninl/sft/pkg/root/web/devices"
 	"github.com/rhoninl/sft/pkg/root/web/middleware"
-	"github.com/rhoninl/sft/pkg/utils/browser"
+	"github.com/rhoninl/sft/pkg/root/web/server"
 	"github.com/rhoninl/sft/pkg/utils/logger"
 	"github.com/spf13/cobra"
 )
@@ -41,17 +42,23 @@ var WebCmd = &cobra.Command{
 		logger.Printf("Starting web server on localhost:%s\n", port)
 
 		go func() {
-			if err := http.ListenAndServe(":"+port, mux); err != nil {
-				logger.Printf("Failed to start web server: localhost:%v\n", err)
+			portInt, err := strconv.Atoi(port)
+			if err != nil {
+				logger.Printf("Failed to convert port to int: %v\n", err)
 			}
+			// if err := http.ListenAndServe(":"+port, mux); err != nil {
+			// 	logger.Printf("Failed to start web server: localhost:%v\n", err)
+			// }
+			server.StartGRPCServer(portInt)
 		}()
 
 		if !serverOnly {
 			// Open the browser to localhost:port
 			url := fmt.Sprintf("http://localhost:%s/device", port)
-			if err := browser.Open(url); err != nil {
-				logger.Printf("Failed to open browser: %v\n", err)
-			}
+			// if err := browser.Open(url); err != nil {
+			// 	logger.Printf("Failed to open browser: %v\n", err)
+			// }
+			fmt.Println(url)
 		}
 
 		select {}

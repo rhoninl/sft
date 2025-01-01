@@ -1,0 +1,19 @@
+.button-group {
+  display: flex;
+  overflow: hidden;
+}
+
+.group-button {
+  min-width: 120px;
+  border-radius: 0;
+  margin: 0;
+}
+
+.group-button:hover {
+  opacity: 0.8;
+  scale: 1.01;
+}
+
+.group-button:not(:last-child) {
+  border-right: none;
+}

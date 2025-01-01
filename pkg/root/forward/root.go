@@ -77,6 +77,10 @@ var ForwardCmd = &cobra.Command{
 			return nil, cobra.ShellCompDirectiveNoFileComp
 		}
 
+		if err := shifu.CheckShifuInstalled(); err != nil {
+			return nil, cobra.ShellCompDirectiveNoFileComp
+		}
+
 		deviceNames := k8s.GetValidDeviceNames()
 		return deviceNames, cobra.ShellCompDirectiveNoFileComp
 	},

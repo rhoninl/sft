@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package shifu;
+
+option go_package = "github.com/rhoninl/sft/pkg/root/web/proto/shifu";
+
+service ShifuService {
+  // Check if Shifu is installed
+  rpc CheckInstallation(CheckInstallationRequest) returns (CheckInstallationResponse) {}
+  
+  // Install Shifu with specific version
+  rpc InstallShifu(InstallShifuRequest) returns (InstallShifuResponse) {}
+}
+
+message CheckInstallationRequest {}
+
+message CheckInstallationResponse {
+  bool installed = 1;
+}
+
+message InstallShifuRequest {
+  string version = 1;
+}
+
+message InstallShifuResponse {
+  bool success = 1;
+  string error = 2;
+} 

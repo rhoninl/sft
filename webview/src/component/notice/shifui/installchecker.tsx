@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 
 import "./installchecker.css"
 import { InstallChecker, InstallShifu } from "../../../apis/shifu/checker";
+import Loading from "../../loading/loading";
 
 export default function ShifuInstallChecker() {
 
@@ -27,19 +28,28 @@ export default function ShifuInstallChecker() {
                     Install
                 </Button>
             } />
-        }</>
+
+        }
+        {installing && <div className="z-50 fixed top-0 left-0 w-full h-full bg-white bg-opacity-50 flex justify-center items-center">
+            <Loading />
+        </div>}
+    </>
 
     function installShifu(e: React.MouseEvent<HTMLButtonElement>) {
         setInstalling(true)
 
-        InstallShifu("latest").then(() => {
-            InstallChecker().then((installed) => {
-                setShifuInstalled(installed)
-            }).catch((error) => {
-                console.error("Failed to install Shifu:", error)
-            }).finally(() => {
-                setInstalling(false)
-            })
-        })
+        // InstallShifu("latest").then(() => {
+        //     InstallChecker().then((installed) => {
+        //         setShifuInstalled(installed)
+        //     }).catch((error) => {
+        //         console.error("Failed to install Shifu:", error)
+        //     }).finally(() => {
+        //         setInstalling(false)
+        //     })
+        // })
+
+        setTimeout(() => {
+            setInstalling(false)
+        }, 3000)
     }
 }
