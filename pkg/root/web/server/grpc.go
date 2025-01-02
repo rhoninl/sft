@@ -5,8 +5,8 @@ import (
 	"net/http"
 
 	"github.com/improbable-eng/grpc-web/go/grpcweb"
-	pb "github.com/rhoninl/sft/pkg/root/web/proto/shifu"
 	"github.com/rhoninl/sft/pkg/root/web/service/shifu"
+	pb "github.com/rhoninl/sft/proto/shifu"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )

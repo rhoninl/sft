@@ -48,7 +48,7 @@ func (shifu Shifu) SetVersion(version string) component {
 }
 
 func (shifu *Shifu) ResourceURL() string {
-	if shifu.version == "" {
+	if shifu.version == "" || shifu.version == "latest" {
 		shifu.version = GetLatestShifuVersion()
 	}
 
@@ -61,6 +61,7 @@ func (shifu Shifu) GetDeployYaml() (string, error) {
 	data, err := cache.GetOrDoAndCache(cacherName, func() ([]byte, error) {
 		return fetch(url)
 	})
+	logger.Debugf(logger.MoreVerbose, "fetched shifu yaml from %s: %s", url, string(data))
 
 	return string(data), err
 }

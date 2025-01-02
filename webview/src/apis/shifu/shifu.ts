@@ -1,7 +1,9 @@
 import { ShifuServiceClient } from "../../proto/proto/shifu/ShifuServiceClientPb";
 import {
   CheckInstallationRequest,
+  GetAllAvailableVersionsRequest,
   InstallShifuRequest,
+  UninstallShifuRequest,
 } from "../../proto/proto/shifu/shifu_pb";
 
 const client = new ShifuServiceClient("http://localhost:34550", null, {
@@ -39,6 +41,33 @@ export function InstallShifu(version: string): Promise<void> {
       }
       if (!response.getSuccess()) {
         reject(new Error(response.getError()));
+        return;
+      }
+      resolve();
+    });
+  });
+}
+
+export function GetAllAvailableVersions(): Promise<string[]> {
+  return new Promise((resolve, reject) => {
+    const request = new GetAllAvailableVersionsRequest();
+    client.getAllAvailableVersions(request, {}, (err, response) => {
+      if (err) {
+        console.error("Failed to get all available versions:", err);
+        reject(err);
+        return;
+      }
+      resolve(response.getVersionsList());
+    });
+  });
+}
+
+export function UninstallShifu(): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const request = new UninstallShifuRequest();
+    client.uninstallShifu(request, {}, (err, response) => {
+      if (err) {
+        reject(err);
         return;
       }
       resolve();

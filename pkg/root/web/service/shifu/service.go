@@ -4,8 +4,9 @@ import (
 	"context"
 
 	"github.com/rhoninl/sft/pkg/root/install"
-	pb "github.com/rhoninl/sft/pkg/root/web/proto/shifu"
+	"github.com/rhoninl/sft/pkg/root/uninstall"
 	"github.com/rhoninl/sft/pkg/utils/shifu"
+	pb "github.com/rhoninl/sft/proto/shifu"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -40,6 +41,23 @@ func (s *ShifuServer) InstallShifu(ctx context.Context, req *pb.InstallShifuRequ
 	}
 
 	return &pb.InstallShifuResponse{
+		Success: true,
+	}, nil
+}
+
+func (s *ShifuServer) GetAllAvailableVersions(ctx context.Context, req *pb.GetAllAvailableVersionsRequest) (*pb.GetAllAvailableVersionsResponse, error) {
+	versions := shifu.GetAllAvailableVersions()
+	return &pb.GetAllAvailableVersionsResponse{
+		Versions: versions,
+	}, nil
+}
+
+func (s *ShifuServer) UninstallShifu(ctx context.Context, req *pb.UninstallShifuRequest) (*pb.UninstallShifuResponse, error) {
+	if err := uninstall.UninstallShifu(); err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to uninstall shifu: %v", err)
+	}
+
+	return &pb.UninstallShifuResponse{
 		Success: true,
 	}, nil
 }

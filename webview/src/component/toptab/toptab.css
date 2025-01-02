@@ -10,10 +10,21 @@
 }
 
 .group-button:hover {
-  opacity: 0.8;
-  scale: 1.01;
+  opacity: 1 !important;
+  scale: 1 !important;
+  transform: none !important;
 }
 
-.group-button:not(:last-child) {
-  border-right: none;
+.button-setting {
+  opacity: 1;
+  transform: rotate(0deg);
+  transition: all 0.3s ease-in-out !important;
+  will-change: transform;
+}
+
+.button-setting:hover {
+  opacity: 1 !important;
+  scale: 1 !important;
+  transform: rotate(90deg) !important;
+  background: transparent !important;
 }

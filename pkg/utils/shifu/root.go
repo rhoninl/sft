@@ -54,7 +54,7 @@ func GetLatestShifuVersion() string {
 }
 
 func GetAllAvailableVersions() []string {
-	versions, err := cache.DoWithExpire("shifu_releases", time.Minute, func() ([]byte, error) {
+	versions, err := cache.DoWithExpire("shifu_releases", time.Hour, func() ([]byte, error) {
 		client := github.NewClient(nil)
 		releases, _, err := client.Repositories.ListReleases(context.Background(), "Edgenesis", "shifu", nil)
 		if err != nil {

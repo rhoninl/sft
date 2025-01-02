@@ -3,7 +3,7 @@ import ErrorPage from "./component/error/error";
 import App from "./App";
 import Dashboard from "./pages/dashboard/dashboard";
 import Device from "./pages/dashboard/detail/device";
-
+import Settings from "./pages/settings/settings";
 export const router = createBrowserRouter([
     {
         path: "/*",
@@ -25,5 +25,9 @@ export const router = createBrowserRouter([
     {
         path: "/dashboard",
         element: <Dashboard />,
-    }
+    },
+    {
+        path: "/settings",
+        element: <Settings />,
+    },
 ]);

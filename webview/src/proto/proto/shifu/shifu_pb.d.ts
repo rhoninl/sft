@@ -74,3 +74,73 @@ export namespace InstallShifuResponse {
   }
 }
 
+export class GetAllAvailableVersionsRequest extends jspb.Message {
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetAllAvailableVersionsRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: GetAllAvailableVersionsRequest): GetAllAvailableVersionsRequest.AsObject;
+  static serializeBinaryToWriter(message: GetAllAvailableVersionsRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetAllAvailableVersionsRequest;
+  static deserializeBinaryFromReader(message: GetAllAvailableVersionsRequest, reader: jspb.BinaryReader): GetAllAvailableVersionsRequest;
+}
+
+export namespace GetAllAvailableVersionsRequest {
+  export type AsObject = {
+  }
+}
+
+export class GetAllAvailableVersionsResponse extends jspb.Message {
+  getVersionsList(): Array<string>;
+  setVersionsList(value: Array<string>): GetAllAvailableVersionsResponse;
+  clearVersionsList(): GetAllAvailableVersionsResponse;
+  addVersions(value: string, index?: number): GetAllAvailableVersionsResponse;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetAllAvailableVersionsResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: GetAllAvailableVersionsResponse): GetAllAvailableVersionsResponse.AsObject;
+  static serializeBinaryToWriter(message: GetAllAvailableVersionsResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetAllAvailableVersionsResponse;
+  static deserializeBinaryFromReader(message: GetAllAvailableVersionsResponse, reader: jspb.BinaryReader): GetAllAvailableVersionsResponse;
+}
+
+export namespace GetAllAvailableVersionsResponse {
+  export type AsObject = {
+    versionsList: Array<string>,
+  }
+}
+
+export class UninstallShifuRequest extends jspb.Message {
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): UninstallShifuRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: UninstallShifuRequest): UninstallShifuRequest.AsObject;
+  static serializeBinaryToWriter(message: UninstallShifuRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): UninstallShifuRequest;
+  static deserializeBinaryFromReader(message: UninstallShifuRequest, reader: jspb.BinaryReader): UninstallShifuRequest;
+}
+
+export namespace UninstallShifuRequest {
+  export type AsObject = {
+  }
+}
+
+export class UninstallShifuResponse extends jspb.Message {
+  getSuccess(): boolean;
+  setSuccess(value: boolean): UninstallShifuResponse;
+
+  getError(): string;
+  setError(value: string): UninstallShifuResponse;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): UninstallShifuResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: UninstallShifuResponse): UninstallShifuResponse.AsObject;
+  static serializeBinaryToWriter(message: UninstallShifuResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): UninstallShifuResponse;
+  static deserializeBinaryFromReader(message: UninstallShifuResponse, reader: jspb.BinaryReader): UninstallShifuResponse;
+}
+
+export namespace UninstallShifuResponse {
+  export type AsObject = {
+    success: boolean,
+    error: string,
+  }
+}
+

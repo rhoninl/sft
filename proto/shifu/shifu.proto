@@ -10,6 +10,12 @@ service ShifuService {
   
   // Install Shifu with specific version
   rpc InstallShifu(InstallShifuRequest) returns (InstallShifuResponse) {}
+
+  // Uninstall Shifu
+  rpc UninstallShifu(UninstallShifuRequest) returns (UninstallShifuResponse) {}
+
+  // Get All Available Versions
+  rpc GetAllAvailableVersions(GetAllAvailableVersionsRequest) returns (GetAllAvailableVersionsResponse) {}
 }
 
 message CheckInstallationRequest {}
@@ -26,3 +32,16 @@ message InstallShifuResponse {
   bool success = 1;
   string error = 2;
 } 
+
+message GetAllAvailableVersionsRequest {}
+
+message GetAllAvailableVersionsResponse {
+  repeated string versions = 1;
+}
+
+message UninstallShifuRequest {}
+
+message UninstallShifuResponse {
+  bool success = 1;
+  string error = 2;
+}

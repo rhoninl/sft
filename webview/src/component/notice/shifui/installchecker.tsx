@@ -2,7 +2,7 @@ import { Alert, Button } from "@nextui-org/react";
 import { useEffect, useState } from "react"
 
 import "./installchecker.css"
-import { InstallChecker, InstallShifu } from "../../../apis/shifu/checker";
+import { InstallChecker, InstallShifu } from "../../../apis/shifu/shifu";
 import Loading from "../../loading/loading";
 
 export default function ShifuInstallChecker() {
@@ -38,15 +38,15 @@ export default function ShifuInstallChecker() {
     function installShifu(e: React.MouseEvent<HTMLButtonElement>) {
         setInstalling(true)
 
-        // InstallShifu("latest").then(() => {
-        //     InstallChecker().then((installed) => {
-        //         setShifuInstalled(installed)
-        //     }).catch((error) => {
-        //         console.error("Failed to install Shifu:", error)
-        //     }).finally(() => {
-        //         setInstalling(false)
-        //     })
-        // })
+        InstallShifu("latest").then(() => {
+            InstallChecker().then((installed) => {
+                setShifuInstalled(installed)
+            }).catch((error) => {
+                console.error("Failed to install Shifu:", error)
+            }).finally(() => {
+                setInstalling(false)
+            })
+        })
 
         setTimeout(() => {
             setInstalling(false)

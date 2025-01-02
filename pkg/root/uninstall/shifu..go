@@ -21,20 +21,26 @@ var UninstallShifuCmd = &cobra.Command{
 			uninstallTelemetryServiceCmd.Run(cmd, args)
 		}
 
-		yamlContent, err := shifu.Resource(shifu.TypeShifu).GetDeployYaml()
-		if err != nil {
+		if err := UninstallShifu(); err != nil {
 			logger.Debug(logger.Verbose, err)
-			logger.Println("Failed to install shifu component")
+			logger.Println("Failed to uninstall shifu component")
 			return
 		}
 
-		_, err = k8s.DeleteYaml(string(yamlContent))
-		if err != nil {
-			logger.Debug(logger.Verbose, err)
-			logger.Println("Failed to install shifu component")
-			return
-		}
-
-		logger.Println("Shifu component installed successfully")
+		logger.Println("Shifu component uninstalled successfully")
 	},
+}
+
+func UninstallShifu() error {
+	yamlContent, err := shifu.Resource(shifu.TypeShifu).GetDeployYaml()
+	if err != nil {
+		return err
+	}
+
+	_, err = k8s.DeleteYaml(string(yamlContent))
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

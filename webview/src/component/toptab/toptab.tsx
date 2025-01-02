@@ -1,5 +1,6 @@
 import { Button, Navbar, NavbarContent, NavbarItem } from '@nextui-org/react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { IoSettingsSharp } from "react-icons/io5";
 import "./toptab.css";
 
 const pageList = [
@@ -10,10 +11,11 @@ const pageList = [
 export default function TopTab() {
   const location = useLocation();
   const pathname = location.pathname.split('/')[1];
+  const navigate = useNavigate();
 
   return (
     <div>
-      <Navbar>
+      <Navbar classNames={{ wrapper: "px-0 py-0" }}>
         <NavbarContent className="hidden sm:flex" justify="center">
           <div className="button-group">
             {pageList.map((item, index) => (
@@ -32,7 +34,13 @@ export default function TopTab() {
             ))}
           </div>
         </NavbarContent>
+        <NavbarContent className="hidden sm:flex" justify="end">
+          <Button variant='light' isIconOnly disableRipple disableAnimation className='button-setting' onClick={() => navigate("/settings")}>
+            <IoSettingsSharp className='h-full w-full' />
+          </Button>
+        </NavbarContent>
       </Navbar>
     </div>
   );
 }
+

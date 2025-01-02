@@ -125,5 +125,91 @@ export class ShifuServiceClient {
     this.methodDescriptorInstallShifu);
   }
 
+  methodDescriptorUninstallShifu = new grpcWeb.MethodDescriptor(
+    '/shifu.ShifuService/UninstallShifu',
+    grpcWeb.MethodType.UNARY,
+    proto_shifu_shifu_pb.UninstallShifuRequest,
+    proto_shifu_shifu_pb.UninstallShifuResponse,
+    (request: proto_shifu_shifu_pb.UninstallShifuRequest) => {
+      return request.serializeBinary();
+    },
+    proto_shifu_shifu_pb.UninstallShifuResponse.deserializeBinary
+  );
+
+  uninstallShifu(
+    request: proto_shifu_shifu_pb.UninstallShifuRequest,
+    metadata?: grpcWeb.Metadata | null): Promise<proto_shifu_shifu_pb.UninstallShifuResponse>;
+
+  uninstallShifu(
+    request: proto_shifu_shifu_pb.UninstallShifuRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback: (err: grpcWeb.RpcError,
+               response: proto_shifu_shifu_pb.UninstallShifuResponse) => void): grpcWeb.ClientReadableStream<proto_shifu_shifu_pb.UninstallShifuResponse>;
+
+  uninstallShifu(
+    request: proto_shifu_shifu_pb.UninstallShifuRequest,
+    metadata?: grpcWeb.Metadata | null,
+    callback?: (err: grpcWeb.RpcError,
+               response: proto_shifu_shifu_pb.UninstallShifuResponse) => void) {
+    if (callback !== undefined) {
+      return this.client_.rpcCall(
+        this.hostname_ +
+          '/shifu.ShifuService/UninstallShifu',
+        request,
+        metadata || {},
+        this.methodDescriptorUninstallShifu,
+        callback);
+    }
+    return this.client_.unaryCall(
+    this.hostname_ +
+      '/shifu.ShifuService/UninstallShifu',
+    request,
+    metadata || {},
+    this.methodDescriptorUninstallShifu);
+  }
+
+  methodDescriptorGetAllAvailableVersions = new grpcWeb.MethodDescriptor(
+    '/shifu.ShifuService/GetAllAvailableVersions',
+    grpcWeb.MethodType.UNARY,
+    proto_shifu_shifu_pb.GetAllAvailableVersionsRequest,
+    proto_shifu_shifu_pb.GetAllAvailableVersionsResponse,
+    (request: proto_shifu_shifu_pb.GetAllAvailableVersionsRequest) => {
+      return request.serializeBinary();
+    },
+    proto_shifu_shifu_pb.GetAllAvailableVersionsResponse.deserializeBinary
+  );
+
+  getAllAvailableVersions(
+    request: proto_shifu_shifu_pb.GetAllAvailableVersionsRequest,
+    metadata?: grpcWeb.Metadata | null): Promise<proto_shifu_shifu_pb.GetAllAvailableVersionsResponse>;
+
+  getAllAvailableVersions(
+    request: proto_shifu_shifu_pb.GetAllAvailableVersionsRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback: (err: grpcWeb.RpcError,
+               response: proto_shifu_shifu_pb.GetAllAvailableVersionsResponse) => void): grpcWeb.ClientReadableStream<proto_shifu_shifu_pb.GetAllAvailableVersionsResponse>;
+
+  getAllAvailableVersions(
+    request: proto_shifu_shifu_pb.GetAllAvailableVersionsRequest,
+    metadata?: grpcWeb.Metadata | null,
+    callback?: (err: grpcWeb.RpcError,
+               response: proto_shifu_shifu_pb.GetAllAvailableVersionsResponse) => void) {
+    if (callback !== undefined) {
+      return this.client_.rpcCall(
+        this.hostname_ +
+          '/shifu.ShifuService/GetAllAvailableVersions',
+        request,
+        metadata || {},
+        this.methodDescriptorGetAllAvailableVersions,
+        callback);
+    }
+    return this.client_.unaryCall(
+    this.hostname_ +
+      '/shifu.ShifuService/GetAllAvailableVersions',
+    request,
+    metadata || {},
+    this.methodDescriptorGetAllAvailableVersions);
+  }
+
 }
 

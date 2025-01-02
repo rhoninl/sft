@@ -19,8 +19,10 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	ShifuService_CheckInstallation_FullMethodName = "/shifu.ShifuService/CheckInstallation"
-	ShifuService_InstallShifu_FullMethodName      = "/shifu.ShifuService/InstallShifu"
+	ShifuService_CheckInstallation_FullMethodName       = "/shifu.ShifuService/CheckInstallation"
+	ShifuService_InstallShifu_FullMethodName            = "/shifu.ShifuService/InstallShifu"
+	ShifuService_UninstallShifu_FullMethodName          = "/shifu.ShifuService/UninstallShifu"
+	ShifuService_GetAllAvailableVersions_FullMethodName = "/shifu.ShifuService/GetAllAvailableVersions"
 )
 
 // ShifuServiceClient is the client API for ShifuService service.
@@ -31,6 +33,10 @@ type ShifuServiceClient interface {
 	CheckInstallation(ctx context.Context, in *CheckInstallationRequest, opts ...grpc.CallOption) (*CheckInstallationResponse, error)
 	// Install Shifu with specific version
 	InstallShifu(ctx context.Context, in *InstallShifuRequest, opts ...grpc.CallOption) (*InstallShifuResponse, error)
+	// Uninstall Shifu
+	UninstallShifu(ctx context.Context, in *UninstallShifuRequest, opts ...grpc.CallOption) (*UninstallShifuResponse, error)
+	// Get All Available Versions
+	GetAllAvailableVersions(ctx context.Context, in *GetAllAvailableVersionsRequest, opts ...grpc.CallOption) (*GetAllAvailableVersionsResponse, error)
 }
 
 type shifuServiceClient struct {
@@ -61,6 +67,26 @@ func (c *shifuServiceClient) InstallShifu(ctx context.Context, in *InstallShifuR
 	return out, nil
 }
 
+func (c *shifuServiceClient) UninstallShifu(ctx context.Context, in *UninstallShifuRequest, opts ...grpc.CallOption) (*UninstallShifuResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UninstallShifuResponse)
+	err := c.cc.Invoke(ctx, ShifuService_UninstallShifu_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *shifuServiceClient) GetAllAvailableVersions(ctx context.Context, in *GetAllAvailableVersionsRequest, opts ...grpc.CallOption) (*GetAllAvailableVersionsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetAllAvailableVersionsResponse)
+	err := c.cc.Invoke(ctx, ShifuService_GetAllAvailableVersions_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ShifuServiceServer is the server API for ShifuService service.
 // All implementations must embed UnimplementedShifuServiceServer
 // for forward compatibility.
@@ -69,6 +95,10 @@ type ShifuServiceServer interface {
 	CheckInstallation(context.Context, *CheckInstallationRequest) (*CheckInstallationResponse, error)
 	// Install Shifu with specific version
 	InstallShifu(context.Context, *InstallShifuRequest) (*InstallShifuResponse, error)
+	// Uninstall Shifu
+	UninstallShifu(context.Context, *UninstallShifuRequest) (*UninstallShifuResponse, error)
+	// Get All Available Versions
+	GetAllAvailableVersions(context.Context, *GetAllAvailableVersionsRequest) (*GetAllAvailableVersionsResponse, error)
 	mustEmbedUnimplementedShifuServiceServer()
 }
 
@@ -84,6 +114,12 @@ func (UnimplementedShifuServiceServer) CheckInstallation(context.Context, *Check
 }
 func (UnimplementedShifuServiceServer) InstallShifu(context.Context, *InstallShifuRequest) (*InstallShifuResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method InstallShifu not implemented")
+}
+func (UnimplementedShifuServiceServer) UninstallShifu(context.Context, *UninstallShifuRequest) (*UninstallShifuResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UninstallShifu not implemented")
+}
+func (UnimplementedShifuServiceServer) GetAllAvailableVersions(context.Context, *GetAllAvailableVersionsRequest) (*GetAllAvailableVersionsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAllAvailableVersions not implemented")
 }
 func (UnimplementedShifuServiceServer) mustEmbedUnimplementedShifuServiceServer() {}
 func (UnimplementedShifuServiceServer) testEmbeddedByValue()                      {}
@@ -142,6 +178,42 @@ func _ShifuService_InstallShifu_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ShifuService_UninstallShifu_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UninstallShifuRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ShifuServiceServer).UninstallShifu(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ShifuService_UninstallShifu_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ShifuServiceServer).UninstallShifu(ctx, req.(*UninstallShifuRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ShifuService_GetAllAvailableVersions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAllAvailableVersionsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ShifuServiceServer).GetAllAvailableVersions(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ShifuService_GetAllAvailableVersions_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ShifuServiceServer).GetAllAvailableVersions(ctx, req.(*GetAllAvailableVersionsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ShifuService_ServiceDesc is the grpc.ServiceDesc for ShifuService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -156,6 +228,14 @@ var ShifuService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "InstallShifu",
 			Handler:    _ShifuService_InstallShifu_Handler,
+		},
+		{
+			MethodName: "UninstallShifu",
+			Handler:    _ShifuService_UninstallShifu_Handler,
+		},
+		{
+			MethodName: "GetAllAvailableVersions",
+			Handler:    _ShifuService_GetAllAvailableVersions_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
