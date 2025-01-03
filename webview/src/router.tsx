@@ -7,27 +7,11 @@ import Settings from "./pages/settings/settings";
 export const router = createBrowserRouter([
     {
         path: "/*",
-        element: <App />,
-        errorElement: <ErrorPage />,
-    },
-    {
-        path: "/devices",
         element: <Dashboard />,
+        errorElement: <ErrorPage />,
     },
     {
         path: "/devices/:id",
         element: <Device />,
-    },
-    {
-        path: "/telemetryservices",
-        element: <Dashboard />,
-    },
-    {
-        path: "/dashboard",
-        element: <Dashboard />,
-    },
-    {
-        path: "/settings",
-        element: <Settings />,
     },
 ]);

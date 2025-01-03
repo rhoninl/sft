@@ -6,21 +6,25 @@ import { RouterProvider, } from "react-router-dom";
 import { router } from './router';
 import { NextUIProvider } from "@nextui-org/react";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
+import { Provider } from 'react-redux';
+import { store } from './store/store';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <NextUIProvider>
-      <NextThemesProvider attribute="class" defaultTheme="system">
-        <main className="min-h-screen text-foreground bg-background">
-          <div className='h-full w-full flex justify-center'>
-            <RouterProvider router={router} />
-          </div>
-        </main>
-      </NextThemesProvider>
-    </NextUIProvider>
+    <Provider store={store}>
+      <NextUIProvider>
+        <NextThemesProvider attribute="class" defaultTheme="system">
+          <main className="min-h-screen text-foreground bg-background">
+            <div className='h-full w-full flex justify-center'>
+              <RouterProvider router={router} />
+            </div>
+          </main>
+        </NextThemesProvider>
+      </NextUIProvider>
+    </Provider>
   </React.StrictMode>
 );
 

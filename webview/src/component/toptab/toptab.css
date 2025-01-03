@@ -17,13 +17,23 @@
 .button-setting {
   opacity: 1;
   transform: rotate(0deg);
-  transition: all 0.3s ease-in-out !important;
+  transition: all 1s ease-in-out !important;
   will-change: transform;
 }
 
 .button-setting:hover {
   opacity: 1 !important;
   scale: 1 !important;
-  transform: rotate(90deg) !important;
   background: transparent !important;
+  animation: rotate-infinite 1s ease-in-out infinite !important;
+}
+
+@keyframes rotate-infinite {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }

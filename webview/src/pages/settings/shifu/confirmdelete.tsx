@@ -5,15 +5,15 @@ import { UninstallShifu } from "src/apis/shifu/shifu";
 interface ConfirmDeleteProps {
     isOpen: boolean;
     setIsOpen: (isOpen: boolean) => void;
-    setUninstalledShifu: (uninstalledShifu: boolean) => void;
+    onUninstalled: () => void;
 }
 
-export function ConfirmDelete({ isOpen, setIsOpen, setUninstalledShifu }: ConfirmDeleteProps) {
+export function ConfirmDelete({ isOpen, setIsOpen, onUninstalled }: ConfirmDeleteProps) {
     const [confirmText, setConfirmText] = useState("");
 
     function uninstallShifu() {
         UninstallShifu().then(() => {
-            setUninstalledShifu(true);
+            onUninstalled();
             setIsOpen(false);
         }).catch((error) => {
             console.error(error);

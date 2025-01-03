@@ -1,60 +1,56 @@
 import { Alert, Button } from "@nextui-org/react";
-import { useEffect, useState } from "react"
-
-import "./installchecker.css"
-import { InstallChecker, InstallShifu } from "../../../apis/shifu/shifu";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from 'react-redux';
+import "./installchecker.css";
 import Loading from "../../loading/loading";
+import { RootState } from "../../../store/store";
+import { checkShifuInstallation } from "../../../store/shifuSlice";
+import { AppDispatch } from "../../../store/store";
 
 export default function ShifuInstallChecker() {
-
-    var [shifuInstalled, setShifuInstalled] = useState(true)
-    var [installing, setInstalling] = useState(false)
-
+    const [installing, setInstalling] = useState(false);
+    const navigate = useNavigate();
+    const dispatch = useDispatch<AppDispatch>();
+    const { isInstalled, isLoading, error } = useSelector((state: RootState) => state.shifu);
 
     useEffect(() => {
-        InstallChecker().then((installed) => {
-            setShifuInstalled(installed)
-        })
-    }, [shifuInstalled])
+        dispatch(checkShifuInstallation());
+    }, [dispatch]);
 
-    return <>
-        {!shifuInstalled &&
-            <Alert
-                color="warning"
-                title="Shifu is not installed"
-                description="Shifu is not installed in this cluster, please install Shifu first."
-                endContent={
-                    <Button className={`shifu-install-button ${installing ? 'installing' : ''}`}
-                        color="warning"
-                        isLoading={installing}
-                        variant="flat"
-                        onClick={installShifu}>
-                        Install
-                    </Button>
-                }
-            />
-
-        }
-        {installing && <div className="z-50 fixed top-0 left-0 w-full h-full bg-white bg-opacity-50 flex justify-center items-center">
-            <Loading />
-        </div>}
-    </>
-
-    function installShifu(e: React.MouseEvent<HTMLButtonElement>) {
-        setInstalling(true)
-
-        InstallShifu("latest").then(() => {
-            InstallChecker().then((installed) => {
-                setShifuInstalled(installed)
-            }).catch((error) => {
-                console.error("Failed to install Shifu:", error)
-            }).finally(() => {
-                setInstalling(false)
-            })
-        })
-
-        setTimeout(() => {
-            setInstalling(false)
-        }, 3000)
+    if (isLoading) {
+        return <Loading />;
     }
+
+    if (error) {
+        return <Alert color="danger" title="Error" description={error} />;
+    }
+
+    return (
+        <>
+            {!isInstalled && (
+                <Alert
+                    color="warning"
+                    title="Shifu is not installed"
+                    description="Shifu is not installed in this cluster, please install Shifu first."
+                    endContent={
+                        <Button
+                            className={`shifu-install-button ${installing ? 'installing' : ''}`}
+                            color="warning"
+                            isLoading={installing}
+                            variant="flat"
+                            onClick={() => navigate("/settings")}
+                        >
+                            Install
+                        </Button>
+                    }
+                />
+            )}
+            {installing && (
+                <div className="z-50 fixed top-0 left-0 w-full h-full bg-white bg-opacity-50 flex justify-center items-center">
+                    <Loading />
+                </div>
+            )}
+        </>
+    );
 }

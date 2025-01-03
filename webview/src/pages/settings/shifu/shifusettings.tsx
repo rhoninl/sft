@@ -1,51 +1,37 @@
-import { AccordionItem, Accordion, Button, Checkbox, Select, SelectItem } from "@nextui-org/react";
+import { AccordionItem, Accordion, Button, Checkbox, Select, SelectItem, Divider } from "@nextui-org/react";
 import { useEffect, useState } from "react";
-import { GetAllAvailableVersions, InstallChecker, InstallShifu, UninstallShifu } from "src/apis/shifu/shifu";
+import { GetAllAvailableVersions, InstallShifu } from "src/apis/shifu/shifu";
 import { ConfirmDelete } from "./confirmdelete";
+import { useShifu } from "../../../hooks/useShifu";
 
 export default function ShifuSettings() {
     const [versionList, setVersionList] = useState<string[]>(["latest"]);
     const [version, setVersion] = useState("latest");
     const [hiddenRCVersion, setHiddenRCVersion] = useState(true);
-    const [isShifuInstalled, setIsShifuInstalled] = useState(false);
     const [loading, setLoading] = useState(false);
     const [isDeleteShifuOpen, setIsDeleteShifuOpen] = useState(false);
-    const [statusChanged, setStatusChanged] = useState(false);
+    
+    const { isInstalled, checkInstallation } = useShifu();
 
     useEffect(() => {
         setLoading(true);
         GetAllAvailableVersions().then((versions) => {
-            setVersionList(["latest", ...versions.filter((version) => version.length > 0 && (!hiddenRCVersion || !version.includes("rc")))]);
+            setVersionList(["latest", ...versions.filter((version) => 
+                version.length > 0 && (!hiddenRCVersion || !version.includes("rc")))
+            ]);
         }).finally(() => {
             setLoading(false);
         });
     }, [hiddenRCVersion]);
 
     useEffect(() => {
-        setLoading(true);
-        InstallChecker().then((installed) => {
-            setIsShifuInstalled(installed);
-        }).finally(() => {
-            setLoading(false);
-        });
+        checkInstallation();
     }, []);
-
-    useEffect(() => {
-        if (statusChanged) {
-            setLoading(true);
-            InstallChecker().then((installed) => {
-                setIsShifuInstalled(installed);
-            }).finally(() => {
-                setLoading(false);
-                setStatusChanged(false);
-            });
-        }
-    }, [statusChanged]);
 
     function installShifu() {
         setLoading(true);
         InstallShifu(version).then(() => {
-            setStatusChanged(true);
+            checkInstallation();
         }).catch((error) => {
             console.error(error);
         }).finally(() => {
@@ -73,15 +59,40 @@ export default function ShifuSettings() {
                         </SelectItem>
                     ))}
                 </Select>
-                {isShifuInstalled ?
-                    <Button color="danger" onClick={() => setIsDeleteShifuOpen(true)} isDisabled={loading}> Uninstall </Button> :
-                    <Button color="primary" onClick={() => installShifu()} isDisabled={loading}> Install </Button>}
+
+                {isInstalled ?
+                    <Button 
+                        color="danger" 
+                        onClick={() => setIsDeleteShifuOpen(true)} 
+                        isDisabled={loading}
+                    > 
+                        Uninstall 
+                    </Button> :
+                    <Button 
+                        color="primary" 
+                        onClick={() => installShifu()} 
+                        isDisabled={loading}
+                    > 
+                        Install 
+                    </Button>
+                }
             </div>
-            <ConfirmDelete isOpen={isDeleteShifuOpen} setIsOpen={setIsDeleteShifuOpen} setUninstalledShifu={setStatusChanged} />
+            <ConfirmDelete 
+                isOpen={isDeleteShifuOpen} 
+                setIsOpen={setIsDeleteShifuOpen} 
+                onUninstalled={checkInstallation} 
+            />
+            <Divider orientation="vertical" />
             <div>
                 <Accordion>
                     <AccordionItem key="1" title="Advanced Settings">
-                        <Checkbox isSelected={hiddenRCVersion} onValueChange={setHiddenRCVersion} isDisabled={loading}> Hide RC versions</Checkbox>
+                        <Checkbox 
+                            isSelected={hiddenRCVersion} 
+                            onValueChange={setHiddenRCVersion} 
+                            isDisabled={loading}
+                        > 
+                            Hide RC versions
+                        </Checkbox>
                     </AccordionItem>
                 </Accordion>
             </div>
