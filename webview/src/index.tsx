@@ -5,16 +5,21 @@ import reportWebVitals from './reportWebVitals';
 import { RouterProvider, } from "react-router-dom";
 import { router } from './router';
 import { NextUIProvider } from "@nextui-org/react";
+import { ThemeProvider as NextThemesProvider } from "next-themes";
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <NextUIProvider className='h-full w-full flex justify-center'>
-      <div className="container">
-        <RouterProvider router={router} />
-      </div>
+    <NextUIProvider>
+      <NextThemesProvider attribute="class" defaultTheme="system">
+        <main className="min-h-screen text-foreground bg-background">
+          <div className='h-full w-full flex justify-center'>
+            <RouterProvider router={router} />
+          </div>
+        </main>
+      </NextThemesProvider>
     </NextUIProvider>
   </React.StrictMode>
 );

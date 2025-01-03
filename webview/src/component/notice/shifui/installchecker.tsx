@@ -19,15 +19,20 @@ export default function ShifuInstallChecker() {
 
     return <>
         {!shifuInstalled &&
-            <Alert color="warning" title="Shifu is not installed in this cluster, please install Shifu first." endContent={
-                <Button className={`shifu-install-button ${installing ? 'installing' : ''}`}
-                    color="warning"
-                    isLoading={installing}
-                    variant="flat"
-                    onClick={installShifu}>
-                    Install
-                </Button>
-            } />
+            <Alert
+                color="warning"
+                title="Shifu is not installed"
+                description="Shifu is not installed in this cluster, please install Shifu first."
+                endContent={
+                    <Button className={`shifu-install-button ${installing ? 'installing' : ''}`}
+                        color="warning"
+                        isLoading={installing}
+                        variant="flat"
+                        onClick={installShifu}>
+                        Install
+                    </Button>
+                }
+            />
 
         }
         {installing && <div className="z-50 fixed top-0 left-0 w-full h-full bg-white bg-opacity-50 flex justify-center items-center">

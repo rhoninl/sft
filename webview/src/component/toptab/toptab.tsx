@@ -2,7 +2,7 @@ import { Button, Navbar, NavbarContent, NavbarItem } from '@nextui-org/react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { IoSettingsSharp } from "react-icons/io5";
 import "./toptab.css";
-
+import { ThemeSwitcher } from '../themeswitcher/themeswitcher';
 const pageList = [
   { path: 'devices', label: 'Devices' },
   { path: 'telemetryservices', label: 'Telemetry Services' },
@@ -16,7 +16,7 @@ export default function TopTab() {
   return (
     <div>
       <Navbar classNames={{ wrapper: "px-0 py-0" }}>
-        <NavbarContent className="hidden sm:flex" justify="center">
+        <NavbarContent className="sm:flex" justify="center">
           <div className="button-group">
             {pageList.map((item, index) => (
               <Button
@@ -34,7 +34,8 @@ export default function TopTab() {
             ))}
           </div>
         </NavbarContent>
-        <NavbarContent className="hidden sm:flex" justify="end">
+        <NavbarContent className="sm:flex" justify="end">
+          <ThemeSwitcher />
           <Button variant='light' isIconOnly disableRipple disableAnimation className='button-setting' onClick={() => navigate("/settings")}>
             <IoSettingsSharp className='h-full w-full' />
           </Button>
