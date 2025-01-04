@@ -4,30 +4,42 @@ import { useEffect, useState } from "react";
 import { IoMdSunny, IoIosMoon } from "react-icons/io";
 
 export function ThemeSwitcher() {
-    const [mounted, setMounted] = useState(false)
-    const { theme, setTheme } = useTheme()
+    const [mounted, setMounted] = useState(false);
+    const { resolvedTheme, setTheme } = useTheme();
 
     useEffect(() => {
-        setMounted(true)
-    }, [])
+        setMounted(true);
+        if (!mounted) {
+            setTheme("system")
+        }
+    }, [setTheme, mounted]);
 
     function switchTheme() {
-        if (theme === 'dark') {
-            setTheme('light')
+        if (resolvedTheme === 'dark') {
+            setTheme('light');
         } else {
-            setTheme('dark')
+            setTheme('dark');
         }
     }
 
-    if (!mounted) return null
+    if (!mounted) return null;
 
     return (
         <div>
-            <Button variant='light' isIconOnly disableRipple disableAnimation className='button-setting' onClick={switchTheme}>
-                {theme === 'dark' ?
-                    <IoMdSunny className='h-full w-full' /> :
-                    <IoIosMoon className='h-full w-full' />}
+            <Button
+                variant='light'
+                isIconOnly
+                disableRipple
+                disableAnimation
+                className='button-setting'
+                onClick={switchTheme}
+            >
+                {resolvedTheme === 'dark' ? (
+                    <IoMdSunny className='h-full w-full' />
+                ) : (
+                    <IoIosMoon className='h-full w-full' />
+                )}
             </Button>
         </div>
-    )
-};
+    );
+}

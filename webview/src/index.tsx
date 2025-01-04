@@ -15,15 +15,15 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <NextUIProvider>
-        <NextThemesProvider attribute="class" defaultTheme="system">
+      <NextThemesProvider attribute="class" defaultTheme="system" enableSystem>
+        <NextUIProvider>
           <main className="min-h-screen text-foreground bg-background">
             <div className='h-full w-full flex justify-center'>
               <RouterProvider router={router} />
             </div>
           </main>
-        </NextThemesProvider>
-      </NextUIProvider>
+        </NextUIProvider>
+      </NextThemesProvider>
     </Provider>
   </React.StrictMode>
 );
