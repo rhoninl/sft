@@ -15,6 +15,8 @@
 }
 
 .button-setting {
+  width: 30px;
+  height: 30px;
   opacity: 1;
   transform: rotate(0deg);
   transition: all 1s ease-in-out !important;

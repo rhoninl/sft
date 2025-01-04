@@ -7,7 +7,7 @@ import Settings from '../settings/settings';
 
 export default function Dashboard() {
     const path = useLocation().pathname.split("/")[1];
-    
+
     return (
         <div className='w-full p-2 dashboard'>
             <TopTab />

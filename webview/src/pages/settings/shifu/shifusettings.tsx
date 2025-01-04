@@ -10,13 +10,13 @@ export default function ShifuSettings() {
     const [hiddenRCVersion, setHiddenRCVersion] = useState(true);
     const [loading, setLoading] = useState(false);
     const [isDeleteShifuOpen, setIsDeleteShifuOpen] = useState(false);
-    
+
     const { isInstalled, checkInstallation } = useShifu();
 
     useEffect(() => {
         setLoading(true);
         GetAllAvailableVersions().then((versions) => {
-            setVersionList(["latest", ...versions.filter((version) => 
+            setVersionList(["latest", ...versions.filter((version) =>
                 version.length > 0 && (!hiddenRCVersion || !version.includes("rc")))
             ]);
         }).finally(() => {
@@ -40,7 +40,7 @@ export default function ShifuSettings() {
     }
 
     return <div className="w-full p-2">
-        <p className="text-lg font-bold">Shifu</p>
+        <p className="text-3xl font-bold">Shifu</p>
         <div className="w-fit">
             <div className="flex flex-row items-center gap-4">
                 <Select
@@ -48,6 +48,7 @@ export default function ShifuSettings() {
                     variant="underlined"
                     label="Version"
                     className="w-32"
+                    size="lg"
                 >
                     {versionList.map((version) => (
                         <SelectItem
@@ -61,36 +62,36 @@ export default function ShifuSettings() {
                 </Select>
 
                 {isInstalled ?
-                    <Button 
-                        color="danger" 
-                        onClick={() => setIsDeleteShifuOpen(true)} 
+                    <Button
+                        color="danger"
+                        onClick={() => setIsDeleteShifuOpen(true)}
                         isDisabled={loading}
-                    > 
-                        Uninstall 
+                    >
+                        Uninstall
                     </Button> :
-                    <Button 
-                        color="primary" 
-                        onClick={() => installShifu()} 
+                    <Button
+                        color="primary"
+                        onClick={() => installShifu()}
                         isDisabled={loading}
-                    > 
-                        Install 
+                    >
+                        Install
                     </Button>
                 }
             </div>
-            <ConfirmDelete 
-                isOpen={isDeleteShifuOpen} 
-                setIsOpen={setIsDeleteShifuOpen} 
-                onUninstalled={checkInstallation} 
+            <ConfirmDelete
+                isOpen={isDeleteShifuOpen}
+                setIsOpen={setIsDeleteShifuOpen}
+                onUninstalled={checkInstallation}
             />
             <Divider orientation="vertical" />
             <div>
                 <Accordion>
                     <AccordionItem key="1" title="Advanced Settings">
-                        <Checkbox 
-                            isSelected={hiddenRCVersion} 
-                            onValueChange={setHiddenRCVersion} 
+                        <Checkbox
+                            isSelected={hiddenRCVersion}
+                            onValueChange={setHiddenRCVersion}
                             isDisabled={loading}
-                        > 
+                        >
                             Hide RC versions
                         </Checkbox>
                     </AccordionItem>

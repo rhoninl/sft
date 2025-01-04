@@ -25,21 +25,19 @@ export function ThemeSwitcher() {
     if (!mounted) return null;
 
     return (
-        <div>
-            <Button
-                variant='light'
-                isIconOnly
-                disableRipple
-                disableAnimation
-                className='button-setting'
-                onClick={switchTheme}
-            >
-                {resolvedTheme === 'dark' ? (
-                    <IoMdSunny className='h-full w-full' />
-                ) : (
-                    <IoIosMoon className='h-full w-full' />
-                )}
-            </Button>
-        </div>
+        <Button
+            variant='light'
+            isIconOnly
+            disableRipple
+            disableAnimation
+            className='button-setting'
+            onClick={switchTheme}
+        >
+            {resolvedTheme === 'dark' ? (
+                <IoMdSunny className='h-full w-full' />
+            ) : (
+                <IoIosMoon className='h-full w-full' />
+            )}
+        </Button>
     );
 }
