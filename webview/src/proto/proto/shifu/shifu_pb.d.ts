@@ -144,3 +144,71 @@ export namespace UninstallShifuResponse {
   }
 }
 
+export class ListDevicesRequest extends jspb.Message {
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): ListDevicesRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: ListDevicesRequest): ListDevicesRequest.AsObject;
+  static serializeBinaryToWriter(message: ListDevicesRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ListDevicesRequest;
+  static deserializeBinaryFromReader(message: ListDevicesRequest, reader: jspb.BinaryReader): ListDevicesRequest;
+}
+
+export namespace ListDevicesRequest {
+  export type AsObject = {
+  }
+}
+
+export class ListDevicesResponse extends jspb.Message {
+  getDevicesList(): Array<Device>;
+  setDevicesList(value: Array<Device>): ListDevicesResponse;
+  clearDevicesList(): ListDevicesResponse;
+  addDevices(value?: Device, index?: number): Device;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): ListDevicesResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: ListDevicesResponse): ListDevicesResponse.AsObject;
+  static serializeBinaryToWriter(message: ListDevicesResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ListDevicesResponse;
+  static deserializeBinaryFromReader(message: ListDevicesResponse, reader: jspb.BinaryReader): ListDevicesResponse;
+}
+
+export namespace ListDevicesResponse {
+  export type AsObject = {
+    devicesList: Array<Device.AsObject>,
+  }
+}
+
+export class Device extends jspb.Message {
+  getName(): string;
+  setName(value: string): Device;
+
+  getProtocol(): string;
+  setProtocol(value: string): Device;
+
+  getAddress(): string;
+  setAddress(value: string): Device;
+
+  getStatus(): string;
+  setStatus(value: string): Device;
+
+  getAge(): string;
+  setAge(value: string): Device;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): Device.AsObject;
+  static toObject(includeInstance: boolean, msg: Device): Device.AsObject;
+  static serializeBinaryToWriter(message: Device, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): Device;
+  static deserializeBinaryFromReader(message: Device, reader: jspb.BinaryReader): Device;
+}
+
+export namespace Device {
+  export type AsObject = {
+    name: string,
+    protocol: string,
+    address: string,
+    status: string,
+    age: string,
+  }
+}
+

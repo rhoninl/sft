@@ -39,6 +39,49 @@ export class ShifuServiceClient {
     this.options_ = options;
   }
 
+  methodDescriptorGetAllAvailableVersions = new grpcWeb.MethodDescriptor(
+    '/shifu.ShifuService/GetAllAvailableVersions',
+    grpcWeb.MethodType.UNARY,
+    proto_shifu_shifu_pb.GetAllAvailableVersionsRequest,
+    proto_shifu_shifu_pb.GetAllAvailableVersionsResponse,
+    (request: proto_shifu_shifu_pb.GetAllAvailableVersionsRequest) => {
+      return request.serializeBinary();
+    },
+    proto_shifu_shifu_pb.GetAllAvailableVersionsResponse.deserializeBinary
+  );
+
+  getAllAvailableVersions(
+    request: proto_shifu_shifu_pb.GetAllAvailableVersionsRequest,
+    metadata?: grpcWeb.Metadata | null): Promise<proto_shifu_shifu_pb.GetAllAvailableVersionsResponse>;
+
+  getAllAvailableVersions(
+    request: proto_shifu_shifu_pb.GetAllAvailableVersionsRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback: (err: grpcWeb.RpcError,
+               response: proto_shifu_shifu_pb.GetAllAvailableVersionsResponse) => void): grpcWeb.ClientReadableStream<proto_shifu_shifu_pb.GetAllAvailableVersionsResponse>;
+
+  getAllAvailableVersions(
+    request: proto_shifu_shifu_pb.GetAllAvailableVersionsRequest,
+    metadata?: grpcWeb.Metadata | null,
+    callback?: (err: grpcWeb.RpcError,
+               response: proto_shifu_shifu_pb.GetAllAvailableVersionsResponse) => void) {
+    if (callback !== undefined) {
+      return this.client_.rpcCall(
+        this.hostname_ +
+          '/shifu.ShifuService/GetAllAvailableVersions',
+        request,
+        metadata || {},
+        this.methodDescriptorGetAllAvailableVersions,
+        callback);
+    }
+    return this.client_.unaryCall(
+    this.hostname_ +
+      '/shifu.ShifuService/GetAllAvailableVersions',
+    request,
+    metadata || {},
+    this.methodDescriptorGetAllAvailableVersions);
+  }
+
   methodDescriptorCheckInstallation = new grpcWeb.MethodDescriptor(
     '/shifu.ShifuService/CheckInstallation',
     grpcWeb.MethodType.UNARY,
@@ -168,47 +211,47 @@ export class ShifuServiceClient {
     this.methodDescriptorUninstallShifu);
   }
 
-  methodDescriptorGetAllAvailableVersions = new grpcWeb.MethodDescriptor(
-    '/shifu.ShifuService/GetAllAvailableVersions',
+  methodDescriptorListDevices = new grpcWeb.MethodDescriptor(
+    '/shifu.ShifuService/ListDevices',
     grpcWeb.MethodType.UNARY,
-    proto_shifu_shifu_pb.GetAllAvailableVersionsRequest,
-    proto_shifu_shifu_pb.GetAllAvailableVersionsResponse,
-    (request: proto_shifu_shifu_pb.GetAllAvailableVersionsRequest) => {
+    proto_shifu_shifu_pb.ListDevicesRequest,
+    proto_shifu_shifu_pb.ListDevicesResponse,
+    (request: proto_shifu_shifu_pb.ListDevicesRequest) => {
       return request.serializeBinary();
     },
-    proto_shifu_shifu_pb.GetAllAvailableVersionsResponse.deserializeBinary
+    proto_shifu_shifu_pb.ListDevicesResponse.deserializeBinary
   );
 
-  getAllAvailableVersions(
-    request: proto_shifu_shifu_pb.GetAllAvailableVersionsRequest,
-    metadata?: grpcWeb.Metadata | null): Promise<proto_shifu_shifu_pb.GetAllAvailableVersionsResponse>;
+  listDevices(
+    request: proto_shifu_shifu_pb.ListDevicesRequest,
+    metadata?: grpcWeb.Metadata | null): Promise<proto_shifu_shifu_pb.ListDevicesResponse>;
 
-  getAllAvailableVersions(
-    request: proto_shifu_shifu_pb.GetAllAvailableVersionsRequest,
+  listDevices(
+    request: proto_shifu_shifu_pb.ListDevicesRequest,
     metadata: grpcWeb.Metadata | null,
     callback: (err: grpcWeb.RpcError,
-               response: proto_shifu_shifu_pb.GetAllAvailableVersionsResponse) => void): grpcWeb.ClientReadableStream<proto_shifu_shifu_pb.GetAllAvailableVersionsResponse>;
+               response: proto_shifu_shifu_pb.ListDevicesResponse) => void): grpcWeb.ClientReadableStream<proto_shifu_shifu_pb.ListDevicesResponse>;
 
-  getAllAvailableVersions(
-    request: proto_shifu_shifu_pb.GetAllAvailableVersionsRequest,
+  listDevices(
+    request: proto_shifu_shifu_pb.ListDevicesRequest,
     metadata?: grpcWeb.Metadata | null,
     callback?: (err: grpcWeb.RpcError,
-               response: proto_shifu_shifu_pb.GetAllAvailableVersionsResponse) => void) {
+               response: proto_shifu_shifu_pb.ListDevicesResponse) => void) {
     if (callback !== undefined) {
       return this.client_.rpcCall(
         this.hostname_ +
-          '/shifu.ShifuService/GetAllAvailableVersions',
+          '/shifu.ShifuService/ListDevices',
         request,
         metadata || {},
-        this.methodDescriptorGetAllAvailableVersions,
+        this.methodDescriptorListDevices,
         callback);
     }
     return this.client_.unaryCall(
     this.hostname_ +
-      '/shifu.ShifuService/GetAllAvailableVersions',
+      '/shifu.ShifuService/ListDevices',
     request,
     metadata || {},
-    this.methodDescriptorGetAllAvailableVersions);
+    this.methodDescriptorListDevices);
   }
 
 }

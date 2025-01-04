@@ -4,6 +4,7 @@ import { Divider } from '@nextui-org/react';
 import TopTab from '../../component/toptab/toptab';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import Settings from '../settings/settings';
+import DevicePage from './device/device';
 
 export default function Dashboard() {
     const path = useLocation().pathname.split("/")[1];
@@ -19,7 +20,7 @@ export default function Dashboard() {
             )}
 
             <Routes>
-                <Route path="/devices" element={<div>Devices</div>} />
+                <Route path="/devices" element={<DevicePage />} />
                 <Route path="/telemetryservices" element={<div>Telemetry Services</div>} />
                 <Route path="/settings" element={<Settings />} />
             </Routes>

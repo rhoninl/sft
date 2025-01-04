@@ -3,6 +3,7 @@ package shifu
 import (
 	"context"
 
+	"github.com/rhoninl/sft/pkg/root/devices"
 	"github.com/rhoninl/sft/pkg/root/install"
 	"github.com/rhoninl/sft/pkg/root/uninstall"
 	"github.com/rhoninl/sft/pkg/utils/shifu"
@@ -59,5 +60,27 @@ func (s *ShifuServer) UninstallShifu(ctx context.Context, req *pb.UninstallShifu
 
 	return &pb.UninstallShifuResponse{
 		Success: true,
+	}, nil
+}
+
+func (s *ShifuServer) ListDevices(ctx context.Context, req *pb.ListDevicesRequest) (*pb.ListDevicesResponse, error) {
+	devices, err := devices.ListDevices()
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to list devices: %v", err)
+	}
+
+	protoDevices := make([]*pb.Device, 0)
+	for _, device := range devices {
+		protoDevices = append(protoDevices, &pb.Device{
+			Name:     device.Name,
+			Protocol: device.Protocol,
+			Address:  device.Address,
+			Status:   device.Status,
+			Age:      device.Age,
+		})
+	}
+
+	return &pb.ListDevicesResponse{
+		Devices: protoDevices,
 	}, nil
 }

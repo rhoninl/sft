@@ -5,17 +5,20 @@ package shifu;
 option go_package = "github.com/rhoninl/sft/pkg/root/web/proto/shifu";
 
 service ShifuService {
+  // Get All Available Versions
+  rpc GetAllAvailableVersions(GetAllAvailableVersionsRequest) returns (GetAllAvailableVersionsResponse) {}
+  
   // Check if Shifu is installed
   rpc CheckInstallation(CheckInstallationRequest) returns (CheckInstallationResponse) {}
-  
+    
   // Install Shifu with specific version
   rpc InstallShifu(InstallShifuRequest) returns (InstallShifuResponse) {}
 
   // Uninstall Shifu
   rpc UninstallShifu(UninstallShifuRequest) returns (UninstallShifuResponse) {}
-
-  // Get All Available Versions
-  rpc GetAllAvailableVersions(GetAllAvailableVersionsRequest) returns (GetAllAvailableVersionsResponse) {}
+  
+  // List devices in the cluster
+  rpc ListDevices(ListDevicesRequest) returns (ListDevicesResponse) {}
 }
 
 message CheckInstallationRequest {}
@@ -44,4 +47,18 @@ message UninstallShifuRequest {}
 message UninstallShifuResponse {
   bool success = 1;
   string error = 2;
+}
+
+message ListDevicesRequest {}
+
+message ListDevicesResponse {
+  repeated Device devices = 1;
+}
+
+message Device {
+    string name = 1;
+    string protocol = 2;
+    string address = 3;
+    string status = 4;
+    string age = 5;
 }
