@@ -19,6 +19,9 @@ service ShifuService {
   
   // List devices in the cluster
   rpc ListDevices(ListDevicesRequest) returns (ListDevicesResponse) {}
+
+  // Get device details
+  rpc GetDeviceDetails(GetDeviceDetailsRequest) returns (GetDeviceDetailsResponse) {}
 }
 
 message CheckInstallationRequest {}
@@ -55,10 +58,57 @@ message ListDevicesResponse {
   repeated Device devices = 1;
 }
 
+message GetDeviceDetailsRequest {
+  string name = 1;
+}
+
+message GetDeviceDetailsResponse {
+  Edgedevice edgedevice = 1;
+}
+
 message Device {
-    string name = 1;
-    string protocol = 2;
-    string address = 3;
-    string status = 4;
-    string age = 5;
+  string name = 1;
+  string protocol = 2;
+  string address = 3;
+  string status = 4;
+  string age = 5;
+}
+
+message Edgedevice {
+  string sku = 1;
+  string connection = 2;
+  string address = 3;
+  string protocol = 4;
+  string status = 5;
+  string age = 6;
+
+  DeviceSettings setting = 7;
+  optional GatewaySettings gateway = 8;
+}
+
+message DeviceSettings {
+  oneof settings {
+    MQTTSettings mqtt = 1;
+    OPCUASettings opcua = 2;
+  }
+}
+
+message GatewaySettings {
+  string protocol = 1;
+
+  oneof settings {
+    LwM2MSettings lwm2m = 2;
+  }
+}
+
+message LwM2MSettings {
+  string endpointName = 1;
+}
+
+message MQTTSettings {
+  string mqttTopic = 1;
+}
+
+message OPCUASettings {
+  string opcuaNodeId = 1;
 }

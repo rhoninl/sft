@@ -1,5 +1,9 @@
 import { client } from "./shifu";
-import { Device } from "src/proto/proto/shifu/shifu_pb";
+import {
+  Device,
+  GetDeviceDetailsResponse,
+  GetDeviceDetailsRequest,
+} from "src/proto/proto/shifu/shifu_pb";
 import { ListDevicesRequest } from "src/proto/proto/shifu/shifu_pb";
 
 export function ListDevices(): Promise<Device[]> {
@@ -13,4 +17,12 @@ export function ListDevices(): Promise<Device[]> {
       resolve(response.getDevicesList());
     });
   });
+}
+
+export function GetDeviceDetails(
+  name: string
+): Promise<GetDeviceDetailsResponse> {
+  const request = new GetDeviceDetailsRequest();
+  request.setName(name);
+  return client.getDeviceDetails(request, {});
 }

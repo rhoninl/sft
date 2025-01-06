@@ -24,6 +24,7 @@ const (
 	ShifuService_InstallShifu_FullMethodName            = "/shifu.ShifuService/InstallShifu"
 	ShifuService_UninstallShifu_FullMethodName          = "/shifu.ShifuService/UninstallShifu"
 	ShifuService_ListDevices_FullMethodName             = "/shifu.ShifuService/ListDevices"
+	ShifuService_GetDeviceDetails_FullMethodName        = "/shifu.ShifuService/GetDeviceDetails"
 )
 
 // ShifuServiceClient is the client API for ShifuService service.
@@ -40,6 +41,8 @@ type ShifuServiceClient interface {
 	UninstallShifu(ctx context.Context, in *UninstallShifuRequest, opts ...grpc.CallOption) (*UninstallShifuResponse, error)
 	// List devices in the cluster
 	ListDevices(ctx context.Context, in *ListDevicesRequest, opts ...grpc.CallOption) (*ListDevicesResponse, error)
+	// Get device details
+	GetDeviceDetails(ctx context.Context, in *GetDeviceDetailsRequest, opts ...grpc.CallOption) (*GetDeviceDetailsResponse, error)
 }
 
 type shifuServiceClient struct {
@@ -100,6 +103,16 @@ func (c *shifuServiceClient) ListDevices(ctx context.Context, in *ListDevicesReq
 	return out, nil
 }
 
+func (c *shifuServiceClient) GetDeviceDetails(ctx context.Context, in *GetDeviceDetailsRequest, opts ...grpc.CallOption) (*GetDeviceDetailsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetDeviceDetailsResponse)
+	err := c.cc.Invoke(ctx, ShifuService_GetDeviceDetails_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ShifuServiceServer is the server API for ShifuService service.
 // All implementations must embed UnimplementedShifuServiceServer
 // for forward compatibility.
@@ -114,6 +127,8 @@ type ShifuServiceServer interface {
 	UninstallShifu(context.Context, *UninstallShifuRequest) (*UninstallShifuResponse, error)
 	// List devices in the cluster
 	ListDevices(context.Context, *ListDevicesRequest) (*ListDevicesResponse, error)
+	// Get device details
+	GetDeviceDetails(context.Context, *GetDeviceDetailsRequest) (*GetDeviceDetailsResponse, error)
 	mustEmbedUnimplementedShifuServiceServer()
 }
 
@@ -138,6 +153,9 @@ func (UnimplementedShifuServiceServer) UninstallShifu(context.Context, *Uninstal
 }
 func (UnimplementedShifuServiceServer) ListDevices(context.Context, *ListDevicesRequest) (*ListDevicesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListDevices not implemented")
+}
+func (UnimplementedShifuServiceServer) GetDeviceDetails(context.Context, *GetDeviceDetailsRequest) (*GetDeviceDetailsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetDeviceDetails not implemented")
 }
 func (UnimplementedShifuServiceServer) mustEmbedUnimplementedShifuServiceServer() {}
 func (UnimplementedShifuServiceServer) testEmbeddedByValue()                      {}
@@ -250,6 +268,24 @@ func _ShifuService_ListDevices_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ShifuService_GetDeviceDetails_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDeviceDetailsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ShifuServiceServer).GetDeviceDetails(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ShifuService_GetDeviceDetails_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ShifuServiceServer).GetDeviceDetails(ctx, req.(*GetDeviceDetailsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ShifuService_ServiceDesc is the grpc.ServiceDesc for ShifuService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -276,6 +312,10 @@ var ShifuService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListDevices",
 			Handler:    _ShifuService_ListDevices_Handler,
+		},
+		{
+			MethodName: "GetDeviceDetails",
+			Handler:    _ShifuService_GetDeviceDetails_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

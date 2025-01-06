@@ -1,0 +1,27 @@
+@keyframes slide {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.arrow-slide {
+  animation: slide 1.5s linear infinite;
+}
+
+.arrows-container {
+  display: flex;
+  position: absolute;
+  animation: scroll 2s linear infinite;
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(-66.66%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}

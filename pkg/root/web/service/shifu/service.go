@@ -3,6 +3,7 @@ package shifu
 import (
 	"context"
 
+	"github.com/rhoninl/sft/pkg/k8s"
 	"github.com/rhoninl/sft/pkg/root/devices"
 	"github.com/rhoninl/sft/pkg/root/install"
 	"github.com/rhoninl/sft/pkg/root/uninstall"
@@ -83,4 +84,21 @@ func (s *ShifuServer) ListDevices(ctx context.Context, req *pb.ListDevicesReques
 	return &pb.ListDevicesResponse{
 		Devices: protoDevices,
 	}, nil
+}
+
+func (s *ShifuServer) GetDeviceDetails(ctx context.Context, req *pb.GetDeviceDetailsRequest) (*pb.GetDeviceDetailsResponse, error) {
+	device, err := k8s.GetAllByDeviceName(req.GetName())
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get device details: %v", err)
+	}
+
+	var resp pb.GetDeviceDetailsResponse
+	var edgedevice pb.Edgedevice
+	edgedevice.Status = string(*device.EdgeDevice.Status.EdgeDevicePhase)
+	edgedevice.Sku = *device.EdgeDevice.Spec.Sku
+	edgedevice.Protocol = string(*device.EdgeDevice.Spec.Protocol)
+	edgedevice.Address = *device.EdgeDevice.Spec.Address
+	edgedevice.Age = devices.TimeToAge(device.EdgeDevice.CreationTimestamp.Time)
+	resp.Edgedevice = &edgedevice
+	return &resp, nil
 }

@@ -254,5 +254,48 @@ export class ShifuServiceClient {
     this.methodDescriptorListDevices);
   }
 
+  methodDescriptorGetDeviceDetails = new grpcWeb.MethodDescriptor(
+    '/shifu.ShifuService/GetDeviceDetails',
+    grpcWeb.MethodType.UNARY,
+    proto_shifu_shifu_pb.GetDeviceDetailsRequest,
+    proto_shifu_shifu_pb.GetDeviceDetailsResponse,
+    (request: proto_shifu_shifu_pb.GetDeviceDetailsRequest) => {
+      return request.serializeBinary();
+    },
+    proto_shifu_shifu_pb.GetDeviceDetailsResponse.deserializeBinary
+  );
+
+  getDeviceDetails(
+    request: proto_shifu_shifu_pb.GetDeviceDetailsRequest,
+    metadata?: grpcWeb.Metadata | null): Promise<proto_shifu_shifu_pb.GetDeviceDetailsResponse>;
+
+  getDeviceDetails(
+    request: proto_shifu_shifu_pb.GetDeviceDetailsRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback: (err: grpcWeb.RpcError,
+               response: proto_shifu_shifu_pb.GetDeviceDetailsResponse) => void): grpcWeb.ClientReadableStream<proto_shifu_shifu_pb.GetDeviceDetailsResponse>;
+
+  getDeviceDetails(
+    request: proto_shifu_shifu_pb.GetDeviceDetailsRequest,
+    metadata?: grpcWeb.Metadata | null,
+    callback?: (err: grpcWeb.RpcError,
+               response: proto_shifu_shifu_pb.GetDeviceDetailsResponse) => void) {
+    if (callback !== undefined) {
+      return this.client_.rpcCall(
+        this.hostname_ +
+          '/shifu.ShifuService/GetDeviceDetails',
+        request,
+        metadata || {},
+        this.methodDescriptorGetDeviceDetails,
+        callback);
+    }
+    return this.client_.unaryCall(
+    this.hostname_ +
+      '/shifu.ShifuService/GetDeviceDetails',
+    request,
+    metadata || {},
+    this.methodDescriptorGetDeviceDetails);
+  }
+
 }
 

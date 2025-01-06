@@ -5,6 +5,7 @@ import TopTab from '../../component/toptab/toptab';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import Settings from '../settings/settings';
 import DevicePage from './device/device';
+import Device from './device/detail/detail';
 
 export default function Dashboard() {
     const path = useLocation().pathname.split("/")[1];
@@ -23,6 +24,7 @@ export default function Dashboard() {
                 <Route path="/devices" element={<DevicePage />} />
                 <Route path="/telemetryservices" element={<div>Telemetry Services</div>} />
                 <Route path="/settings" element={<Settings />} />
+                <Route path="/devices/:name" element={<Device />} />
             </Routes>
         </div>
     );
