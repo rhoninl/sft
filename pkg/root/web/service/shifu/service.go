@@ -95,7 +95,9 @@ func (s *ShifuServer) GetDeviceDetails(ctx context.Context, req *pb.GetDeviceDet
 
 	var resp pb.GetDeviceDetailsResponse
 	var edgedevice pb.Edgedevice
-	edgedevice.Status = string(*device.EdgeDevice.Status.EdgeDevicePhase)
+	if device.EdgeDevice.Status.EdgeDevicePhase != nil {
+		edgedevice.Status = string(*device.EdgeDevice.Status.EdgeDevicePhase)
+	}
 	edgedevice.Sku = *device.EdgeDevice.Spec.Sku
 	edgedevice.Protocol = string(*device.EdgeDevice.Spec.Protocol)
 	edgedevice.Address = *device.EdgeDevice.Spec.Address

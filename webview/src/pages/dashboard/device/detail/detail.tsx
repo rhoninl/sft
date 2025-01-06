@@ -31,7 +31,6 @@ export default function Device() {
             if (device?.getEdgedevice()?.getGateway() === "null") return null;
             const gateway = JSON.parse(device?.getEdgedevice()?.getGateway() || "");
 
-            // 先处理顶层的 protocol 和 address
             const baseSettings = [
                 { label: "Protocol", value: gateway.protocol },
                 { label: "Address", value: gateway.address }
@@ -56,6 +55,26 @@ export default function Device() {
         }
     }, [device]);
 
+    const deviceSettings = useMemo(() => {
+        try {
+            if (device?.getEdgedevice()?.getSetting() === "null") return null;
+            const settings = JSON.parse(device?.getEdgedevice()?.getSetting() || "");
+
+            return Object.entries(settings).reduce((acc: Array<{ label: string, value: any }>, [key, value]) => {
+                if (value && typeof value === 'object' && !Array.isArray(value)) {
+                    const flattenedSettings = Object.entries(value).map(([subKey, subValue]) => ({
+                        label: subKey,
+                        value: Array.isArray(subValue) ? subValue.join(', ') : subValue
+                    }));
+                    return [...acc, ...flattenedSettings];
+                }
+                return acc;
+            }, []);
+        } catch (e) {
+            return null;
+        }
+    }, [device]);
+
     return (
         <div className="flex flex-col w-full p-6 rounded-lg shadow-lg">
             <div className="flex items-center mb-2">
@@ -73,7 +92,7 @@ export default function Device() {
                     <div className="grid grid-cols-2 gap-4 w-full">
                         {deviceDetails.map((detail, index) => (
                             <div key={index} className="flex items-center mx-2">
-                                <div className="w-32 font-medium">{detail.label}:</div>
+                                <div className="min-w-[4rem] whitespace-nowrap font-medium">{detail.label}:</div>
                                 <Input
                                     value={detail.value || '-'}
                                     className="flex-1"
@@ -94,12 +113,29 @@ export default function Device() {
                         </div>
                     </div>
                 </div>
-                {device?.getEdgedevice()?.getSetting() !== "null" && <>
-                    <Divider className="my-4" />
-                    <div className="flex flex-col gap-4">
-                        {device?.getEdgedevice()?.getSetting()}
-                    </div>
-                </>}
+                {device?.getEdgedevice()?.getSetting() !== "null" && deviceSettings && (
+                    <>
+                        <Divider className="my-4" />
+                        <div className="flex flex-col gap-4">
+                            <h2 className="text-xl font-semibold mb-2">Device Settings</h2>
+                            <div className="grid grid-cols-2 gap-4">
+                                {deviceSettings.map((setting, index) => (
+                                    <div key={index} className="flex items-center mx-2">
+                                        <div className="min-w-[8rem] whitespace-nowrap font-medium">{setting.label}:</div>
+                                        <Input
+                                            value={setting.value || '-'}
+                                            className="flex-1"
+                                            variant="bordered"
+                                            size="sm"
+                                            readOnly
+                                            isDisabled
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </>
+                )}
                 {gatewaySettings && (
                     <>
                         <Divider className="my-4" />
@@ -108,10 +144,10 @@ export default function Device() {
                             <div className="grid grid-cols-2 gap-4">
                                 {gatewaySettings.map((setting, index) => (
                                     <div key={index} className="flex items-center mx-2">
-                                        <div className="w-32 font-medium">{setting.label}:</div>
+                                        <div className="min-w-[8rem] whitespace-nowrap font-medium">{setting.label}:</div>
                                         <Input
                                             value={setting.value || '-'}
-                                            className="flex-1"
+                                            className="flex-1 "
                                             variant="bordered"
                                             size="sm"
                                             readOnly
