@@ -269,15 +269,11 @@ export class Edgedevice extends jspb.Message {
   getAge(): string;
   setAge(value: string): Edgedevice;
 
-  getSetting(): DeviceSettings | undefined;
-  setSetting(value?: DeviceSettings): Edgedevice;
-  hasSetting(): boolean;
-  clearSetting(): Edgedevice;
+  getSetting(): string;
+  setSetting(value: string): Edgedevice;
 
-  getGateway(): GatewaySettings | undefined;
-  setGateway(value?: GatewaySettings): Edgedevice;
-  hasGateway(): boolean;
-  clearGateway(): Edgedevice;
+  getGateway(): string;
+  setGateway(value: string): Edgedevice;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Edgedevice.AsObject;
@@ -295,132 +291,8 @@ export namespace Edgedevice {
     protocol: string,
     status: string,
     age: string,
-    setting?: DeviceSettings.AsObject,
-    gateway?: GatewaySettings.AsObject,
-  }
-
-  export enum GatewayCase { 
-    _GATEWAY_NOT_SET = 0,
-    GATEWAY = 8,
-  }
-}
-
-export class DeviceSettings extends jspb.Message {
-  getMqtt(): MQTTSettings | undefined;
-  setMqtt(value?: MQTTSettings): DeviceSettings;
-  hasMqtt(): boolean;
-  clearMqtt(): DeviceSettings;
-
-  getOpcua(): OPCUASettings | undefined;
-  setOpcua(value?: OPCUASettings): DeviceSettings;
-  hasOpcua(): boolean;
-  clearOpcua(): DeviceSettings;
-
-  getSettingsCase(): DeviceSettings.SettingsCase;
-
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): DeviceSettings.AsObject;
-  static toObject(includeInstance: boolean, msg: DeviceSettings): DeviceSettings.AsObject;
-  static serializeBinaryToWriter(message: DeviceSettings, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): DeviceSettings;
-  static deserializeBinaryFromReader(message: DeviceSettings, reader: jspb.BinaryReader): DeviceSettings;
-}
-
-export namespace DeviceSettings {
-  export type AsObject = {
-    mqtt?: MQTTSettings.AsObject,
-    opcua?: OPCUASettings.AsObject,
-  }
-
-  export enum SettingsCase { 
-    SETTINGS_NOT_SET = 0,
-    MQTT = 1,
-    OPCUA = 2,
-  }
-}
-
-export class GatewaySettings extends jspb.Message {
-  getProtocol(): string;
-  setProtocol(value: string): GatewaySettings;
-
-  getLwm2m(): LwM2MSettings | undefined;
-  setLwm2m(value?: LwM2MSettings): GatewaySettings;
-  hasLwm2m(): boolean;
-  clearLwm2m(): GatewaySettings;
-
-  getSettingsCase(): GatewaySettings.SettingsCase;
-
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): GatewaySettings.AsObject;
-  static toObject(includeInstance: boolean, msg: GatewaySettings): GatewaySettings.AsObject;
-  static serializeBinaryToWriter(message: GatewaySettings, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): GatewaySettings;
-  static deserializeBinaryFromReader(message: GatewaySettings, reader: jspb.BinaryReader): GatewaySettings;
-}
-
-export namespace GatewaySettings {
-  export type AsObject = {
-    protocol: string,
-    lwm2m?: LwM2MSettings.AsObject,
-  }
-
-  export enum SettingsCase { 
-    SETTINGS_NOT_SET = 0,
-    LWM2M = 2,
-  }
-}
-
-export class LwM2MSettings extends jspb.Message {
-  getEndpointname(): string;
-  setEndpointname(value: string): LwM2MSettings;
-
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): LwM2MSettings.AsObject;
-  static toObject(includeInstance: boolean, msg: LwM2MSettings): LwM2MSettings.AsObject;
-  static serializeBinaryToWriter(message: LwM2MSettings, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): LwM2MSettings;
-  static deserializeBinaryFromReader(message: LwM2MSettings, reader: jspb.BinaryReader): LwM2MSettings;
-}
-
-export namespace LwM2MSettings {
-  export type AsObject = {
-    endpointname: string,
-  }
-}
-
-export class MQTTSettings extends jspb.Message {
-  getMqtttopic(): string;
-  setMqtttopic(value: string): MQTTSettings;
-
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): MQTTSettings.AsObject;
-  static toObject(includeInstance: boolean, msg: MQTTSettings): MQTTSettings.AsObject;
-  static serializeBinaryToWriter(message: MQTTSettings, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): MQTTSettings;
-  static deserializeBinaryFromReader(message: MQTTSettings, reader: jspb.BinaryReader): MQTTSettings;
-}
-
-export namespace MQTTSettings {
-  export type AsObject = {
-    mqtttopic: string,
-  }
-}
-
-export class OPCUASettings extends jspb.Message {
-  getOpcuanodeid(): string;
-  setOpcuanodeid(value: string): OPCUASettings;
-
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): OPCUASettings.AsObject;
-  static toObject(includeInstance: boolean, msg: OPCUASettings): OPCUASettings.AsObject;
-  static serializeBinaryToWriter(message: OPCUASettings, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): OPCUASettings;
-  static deserializeBinaryFromReader(message: OPCUASettings, reader: jspb.BinaryReader): OPCUASettings;
-}
-
-export namespace OPCUASettings {
-  export type AsObject = {
-    opcuanodeid: string,
+    setting: string,
+    gateway: string,
   }
 }
 

@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { GetDeviceDetails } from "src/apis/shifu/device";
 import { GetDeviceDetailsResponse } from "src/proto/proto/shifu/shifu_pb";
-import { Button, Divider, Drawer, DrawerBody, DrawerContent, DrawerFooter, DrawerHeader, Input } from "@nextui-org/react";
-import { IoIosArrowRoundForward } from "react-icons/io";
+import { Button, Divider, Input } from "@nextui-org/react";
 import "./detail.css"
+import { ForwardDrawer } from "./forward";
 
 export default function Device() {
     const { name } = useParams()
@@ -26,6 +26,36 @@ export default function Device() {
         { label: "Age", value: device?.getEdgedevice()?.getAge() }
     ]
 
+    const gatewaySettings = useMemo(() => {
+        try {
+            if (device?.getEdgedevice()?.getGateway() === "null") return null;
+            const gateway = JSON.parse(device?.getEdgedevice()?.getGateway() || "");
+
+            // 先处理顶层的 protocol 和 address
+            const baseSettings = [
+                { label: "Protocol", value: gateway.protocol },
+                { label: "Address", value: gateway.address }
+            ];
+
+            const otherSettings = Object.entries(gateway).reduce((acc: Array<{ label: string, value: any }>, [key, value]) => {
+                if (key === 'protocol' || key === 'address') return acc;
+
+                if (value && typeof value === 'object' && !Array.isArray(value)) {
+                    const flattenedSettings = Object.entries(value).map(([subKey, subValue]) => ({
+                        label: subKey,
+                        value: Array.isArray(subValue) ? subValue.join(', ') : subValue
+                    }));
+                    return [...acc, ...flattenedSettings];
+                }
+                return acc;
+            }, []);
+
+            return [...baseSettings, ...otherSettings];
+        } catch (e) {
+            return null;
+        }
+    }, [device]);
+
     return (
         <div className="flex flex-col w-full p-6 rounded-lg shadow-lg">
             <div className="flex items-center mb-2">
@@ -39,11 +69,11 @@ export default function Device() {
             </div>
 
             <div className="rounded-xl">
-                <div className="flex flex-row gap-4 min-h-[200px]">
-                    <div className="grid grid-cols-2 w-full">
+                <div className="flex flex-row gap-4">
+                    <div className="grid grid-cols-2 gap-4 w-full">
                         {deviceDetails.map((detail, index) => (
                             <div key={index} className="flex items-center mx-2">
-                                <div className="w-20 font-medium">{detail.label}:</div>
+                                <div className="w-32 font-medium">{detail.label}:</div>
                                 <Input
                                     value={detail.value || '-'}
                                     className="flex-1"
@@ -64,41 +94,38 @@ export default function Device() {
                         </div>
                     </div>
                 </div>
-            </div>
-            <Drawer isOpen={isOpen} onOpenChange={setIsOpen}>
-                <DrawerContent>
-                    {(onClose) => (
-                        <>
-                            <DrawerHeader className="flex flex-col gap-1">Port Forwarding</DrawerHeader>
-                            <DrawerBody>
-                                <p>
-                                    It will forward the port of the device to the local port.
-                                </p>
-                                <div className="flex flex-row gap-2 items-center relative">
-                                    <Input label="Device Port" defaultValue="8080" />
-                                    <div className="h-full w-32 relative overflow-hidden">
-                                        <div className="arrows-container h-full w-fit">
-                                            <IoIosArrowRoundForward className="h-full w-fit" />
-                                            <IoIosArrowRoundForward className="h-full w-fit" />
-                                            <IoIosArrowRoundForward className="h-full w-fit" />
-                                        </div>
+                {device?.getEdgedevice()?.getSetting() !== "null" && <>
+                    <Divider className="my-4" />
+                    <div className="flex flex-col gap-4">
+                        {device?.getEdgedevice()?.getSetting()}
+                    </div>
+                </>}
+                {gatewaySettings && (
+                    <>
+                        <Divider className="my-4" />
+                        <div className="flex flex-col gap-4">
+                            <h2 className="text-xl font-semibold mb-2">Gateway Settings</h2>
+                            <div className="grid grid-cols-2 gap-4">
+                                {gatewaySettings.map((setting, index) => (
+                                    <div key={index} className="flex items-center mx-2">
+                                        <div className="w-32 font-medium">{setting.label}:</div>
+                                        <Input
+                                            value={setting.value || '-'}
+                                            className="flex-1"
+                                            variant="bordered"
+                                            size="sm"
+                                            readOnly
+                                            isDisabled
+                                        />
                                     </div>
-                                    <Input label="Local Port" defaultValue="8080" />
-                                </div>
-                            </DrawerBody>
-                            <DrawerFooter>
-                                <Button color="primary" onPress={Forward}>
-                                    Forward
-                                </Button>
-                            </DrawerFooter>
-                        </>
-                    )}
-                </DrawerContent>
-            </Drawer>
-        </div>
+                                ))}
+                            </div>
+                        </div>
+                    </>
+                )}
+            </div>
+            <ForwardDrawer isOpen={isOpen} setIsOpen={setIsOpen} />
+        </div >
     )
 }
 
-function Forward() {
-    console.log("Forward")
-}

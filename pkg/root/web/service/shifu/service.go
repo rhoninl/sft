@@ -2,6 +2,7 @@ package shifu
 
 import (
 	"context"
+	"encoding/json"
 
 	"github.com/rhoninl/sft/pkg/k8s"
 	"github.com/rhoninl/sft/pkg/root/devices"
@@ -99,6 +100,17 @@ func (s *ShifuServer) GetDeviceDetails(ctx context.Context, req *pb.GetDeviceDet
 	edgedevice.Protocol = string(*device.EdgeDevice.Spec.Protocol)
 	edgedevice.Address = *device.EdgeDevice.Spec.Address
 	edgedevice.Age = devices.TimeToAge(device.EdgeDevice.CreationTimestamp.Time)
+	data, err := json.Marshal(device.EdgeDevice.Spec.ProtocolSettings)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to marshal setting: %v", err)
+	}
+	edgedevice.Setting = string(data)
+	data, err = json.Marshal(device.EdgeDevice.Spec.GatewaySettings)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to marshal gateway: %v", err)
+	}
+	edgedevice.Gateway = string(data)
+
 	resp.Edgedevice = &edgedevice
 	return &resp, nil
 }

@@ -82,33 +82,6 @@ message Edgedevice {
   string status = 5;
   string age = 6;
 
-  DeviceSettings setting = 7;
-  optional GatewaySettings gateway = 8;
-}
-
-message DeviceSettings {
-  oneof settings {
-    MQTTSettings mqtt = 1;
-    OPCUASettings opcua = 2;
-  }
-}
-
-message GatewaySettings {
-  string protocol = 1;
-
-  oneof settings {
-    LwM2MSettings lwm2m = 2;
-  }
-}
-
-message LwM2MSettings {
-  string endpointName = 1;
-}
-
-message MQTTSettings {
-  string mqttTopic = 1;
-}
-
-message OPCUASettings {
-  string opcuaNodeId = 1;
+  string setting = 7;
+  string gateway = 8;
 }
