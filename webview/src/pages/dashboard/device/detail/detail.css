@@ -14,7 +14,6 @@
 .arrows-container {
   display: flex;
   position: absolute;
-  animation: scroll 2s linear infinite;
 }
 
 @keyframes scroll {
@@ -24,4 +23,9 @@
   100% {
     transform: translateX(0);
   }
+}
+
+.animate-scroll {
+  animation: scroll 2s linear infinite;
+  color: #1ca941;
 }

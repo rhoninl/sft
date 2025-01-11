@@ -25,6 +25,7 @@ const (
 	ShifuService_UninstallShifu_FullMethodName          = "/shifu.ShifuService/UninstallShifu"
 	ShifuService_ListDevices_FullMethodName             = "/shifu.ShifuService/ListDevices"
 	ShifuService_GetDeviceDetails_FullMethodName        = "/shifu.ShifuService/GetDeviceDetails"
+	ShifuService_ForwardPort_FullMethodName             = "/shifu.ShifuService/ForwardPort"
 )
 
 // ShifuServiceClient is the client API for ShifuService service.
@@ -43,6 +44,8 @@ type ShifuServiceClient interface {
 	ListDevices(ctx context.Context, in *ListDevicesRequest, opts ...grpc.CallOption) (*ListDevicesResponse, error)
 	// Get device details
 	GetDeviceDetails(ctx context.Context, in *GetDeviceDetailsRequest, opts ...grpc.CallOption) (*GetDeviceDetailsResponse, error)
+	// Forward Port
+	ForwardPort(ctx context.Context, in *ForwardPortRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[ForwardPortResponse], error)
 }
 
 type shifuServiceClient struct {
@@ -113,6 +116,25 @@ func (c *shifuServiceClient) GetDeviceDetails(ctx context.Context, in *GetDevice
 	return out, nil
 }
 
+func (c *shifuServiceClient) ForwardPort(ctx context.Context, in *ForwardPortRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[ForwardPortResponse], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &ShifuService_ServiceDesc.Streams[0], ShifuService_ForwardPort_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[ForwardPortRequest, ForwardPortResponse]{ClientStream: stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type ShifuService_ForwardPortClient = grpc.ServerStreamingClient[ForwardPortResponse]
+
 // ShifuServiceServer is the server API for ShifuService service.
 // All implementations must embed UnimplementedShifuServiceServer
 // for forward compatibility.
@@ -129,6 +151,8 @@ type ShifuServiceServer interface {
 	ListDevices(context.Context, *ListDevicesRequest) (*ListDevicesResponse, error)
 	// Get device details
 	GetDeviceDetails(context.Context, *GetDeviceDetailsRequest) (*GetDeviceDetailsResponse, error)
+	// Forward Port
+	ForwardPort(*ForwardPortRequest, grpc.ServerStreamingServer[ForwardPortResponse]) error
 	mustEmbedUnimplementedShifuServiceServer()
 }
 
@@ -156,6 +180,9 @@ func (UnimplementedShifuServiceServer) ListDevices(context.Context, *ListDevices
 }
 func (UnimplementedShifuServiceServer) GetDeviceDetails(context.Context, *GetDeviceDetailsRequest) (*GetDeviceDetailsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetDeviceDetails not implemented")
+}
+func (UnimplementedShifuServiceServer) ForwardPort(*ForwardPortRequest, grpc.ServerStreamingServer[ForwardPortResponse]) error {
+	return status.Errorf(codes.Unimplemented, "method ForwardPort not implemented")
 }
 func (UnimplementedShifuServiceServer) mustEmbedUnimplementedShifuServiceServer() {}
 func (UnimplementedShifuServiceServer) testEmbeddedByValue()                      {}
@@ -286,6 +313,17 @@ func _ShifuService_GetDeviceDetails_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ShifuService_ForwardPort_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(ForwardPortRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(ShifuServiceServer).ForwardPort(m, &grpc.GenericServerStream[ForwardPortRequest, ForwardPortResponse]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type ShifuService_ForwardPortServer = grpc.ServerStreamingServer[ForwardPortResponse]
+
 // ShifuService_ServiceDesc is the grpc.ServiceDesc for ShifuService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -318,6 +356,12 @@ var ShifuService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _ShifuService_GetDeviceDetails_Handler,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "ForwardPort",
+			Handler:       _ShifuService_ForwardPort_Handler,
+			ServerStreams: true,
+		},
+	},
 	Metadata: "proto/shifu/shifu.proto",
 }

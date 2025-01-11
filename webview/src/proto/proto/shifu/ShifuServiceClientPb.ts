@@ -297,5 +297,27 @@ export class ShifuServiceClient {
     this.methodDescriptorGetDeviceDetails);
   }
 
+  methodDescriptorForwardPort = new grpcWeb.MethodDescriptor(
+    '/shifu.ShifuService/ForwardPort',
+    grpcWeb.MethodType.SERVER_STREAMING,
+    proto_shifu_shifu_pb.ForwardPortRequest,
+    proto_shifu_shifu_pb.ForwardPortResponse,
+    (request: proto_shifu_shifu_pb.ForwardPortRequest) => {
+      return request.serializeBinary();
+    },
+    proto_shifu_shifu_pb.ForwardPortResponse.deserializeBinary
+  );
+
+  forwardPort(
+    request: proto_shifu_shifu_pb.ForwardPortRequest,
+    metadata?: grpcWeb.Metadata): grpcWeb.ClientReadableStream<proto_shifu_shifu_pb.ForwardPortResponse> {
+    return this.client_.serverStreaming(
+      this.hostname_ +
+        '/shifu.ShifuService/ForwardPort',
+      request,
+      metadata || {},
+      this.methodDescriptorForwardPort);
+  }
+
 }
 

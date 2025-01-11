@@ -1,15 +1,17 @@
 package k8s
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"os"
 
+	"github.com/rhoninl/sft/pkg/utils/logger"
 	"k8s.io/client-go/tools/portforward"
 	"k8s.io/client-go/transport/spdy"
 )
 
-func PortForwardPod(namespace, podName, localPort, remotePort string) error {
+func PortForwardPod(ctx context.Context, namespace, podName, localPort, remotePort string, readyChan chan struct{}) error {
 	clientset, config, err := NewClientSet()
 	if err != nil {
 		return fmt.Errorf("failed to create clientset: %w", err)
@@ -29,10 +31,8 @@ func PortForwardPod(namespace, podName, localPort, remotePort string) error {
 	dialer := spdy.NewDialer(upgrader, &http.Client{Transport: transport}, "POST", req.URL())
 
 	ports := []string{fmt.Sprintf("%s:%s", localPort, remotePort)}
-	stopChan := make(chan struct{}, 1)
-	readyChan := make(chan struct{})
 
-	forwarder, err := portforward.New(dialer, ports, stopChan, readyChan, os.Stdout, os.Stderr)
+	forwarder, err := portforward.New(dialer, ports, ctx.Done(), readyChan, os.Stdout, os.Stderr)
 	if err != nil {
 		return fmt.Errorf("failed to create port forwarder: %w", err)
 	}
@@ -42,9 +42,11 @@ func PortForwardPod(namespace, podName, localPort, remotePort string) error {
 		fmt.Printf("Port-forward to pod %s on localhost:%s -> remote port %s is ready.\n", podName, localPort, remotePort)
 	}()
 
-	if err := forwarder.ForwardPorts(); err != nil {
-		return fmt.Errorf("failed to forward ports: %w", err)
-	}
+	go func() {
+		if err := forwarder.ForwardPorts(); err != nil {
+			logger.Printf("Error: Failed to forward ports: %v", err)
+		}
+	}()
 
 	return nil
 }

@@ -160,7 +160,7 @@ export default function Device() {
                     </>
                 )}
             </div>
-            <ForwardDrawer isOpen={isOpen} setIsOpen={setIsOpen} />
+            <ForwardDrawer deviceName={name || ""} isOpen={isOpen} setIsOpen={setIsOpen} />
         </div >
     )
 }

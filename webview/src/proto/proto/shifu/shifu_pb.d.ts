@@ -296,3 +296,47 @@ export namespace Edgedevice {
   }
 }
 
+export class ForwardPortRequest extends jspb.Message {
+  getDeviceName(): string;
+  setDeviceName(value: string): ForwardPortRequest;
+
+  getDevicePort(): string;
+  setDevicePort(value: string): ForwardPortRequest;
+
+  getLocalPort(): string;
+  setLocalPort(value: string): ForwardPortRequest;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): ForwardPortRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: ForwardPortRequest): ForwardPortRequest.AsObject;
+  static serializeBinaryToWriter(message: ForwardPortRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ForwardPortRequest;
+  static deserializeBinaryFromReader(message: ForwardPortRequest, reader: jspb.BinaryReader): ForwardPortRequest;
+}
+
+export namespace ForwardPortRequest {
+  export type AsObject = {
+    deviceName: string,
+    devicePort: string,
+    localPort: string,
+  }
+}
+
+export class ForwardPortResponse extends jspb.Message {
+  getSuccess(): boolean;
+  setSuccess(value: boolean): ForwardPortResponse;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): ForwardPortResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: ForwardPortResponse): ForwardPortResponse.AsObject;
+  static serializeBinaryToWriter(message: ForwardPortResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ForwardPortResponse;
+  static deserializeBinaryFromReader(message: ForwardPortResponse, reader: jspb.BinaryReader): ForwardPortResponse;
+}
+
+export namespace ForwardPortResponse {
+  export type AsObject = {
+    success: boolean,
+  }
+}
+

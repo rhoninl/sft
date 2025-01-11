@@ -3,6 +3,8 @@ import {
   Device,
   GetDeviceDetailsResponse,
   GetDeviceDetailsRequest,
+  ForwardPortResponse,
+  ForwardPortRequest,
 } from "src/proto/proto/shifu/shifu_pb";
 import { ListDevicesRequest } from "src/proto/proto/shifu/shifu_pb";
 
@@ -25,4 +27,39 @@ export function GetDeviceDetails(
   const request = new GetDeviceDetailsRequest();
   request.setName(name);
   return client.getDeviceDetails(request, {});
+}
+
+export function ForwardPort(
+  deviceName: string,
+  devicePort: string,
+  localPort: string
+): { promise: Promise<boolean>; cancel: () => void } {
+  const stream = client.forwardPort(
+    new ForwardPortRequest()
+      .setDeviceName(deviceName)
+      .setDevicePort(devicePort)
+      .setLocalPort(localPort),
+    {}
+  );
+
+  const promise = new Promise<boolean>((resolve, reject) => {
+    stream.on("data", (response: ForwardPortResponse) => {
+      resolve(response.getSuccess());
+    });
+
+    stream.on("error", (err) => {
+      reject(err);
+    });
+
+    stream.on("end", () => {
+      resolve(false);
+    });
+  });
+
+  return {
+    promise,
+    cancel: () => {
+      stream.cancel();
+    },
+  };
 }

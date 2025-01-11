@@ -6,8 +6,10 @@ import (
 
 	"github.com/rhoninl/sft/pkg/k8s"
 	"github.com/rhoninl/sft/pkg/root/devices"
+	"github.com/rhoninl/sft/pkg/root/forward"
 	"github.com/rhoninl/sft/pkg/root/install"
 	"github.com/rhoninl/sft/pkg/root/uninstall"
+	"github.com/rhoninl/sft/pkg/utils/logger"
 	"github.com/rhoninl/sft/pkg/utils/shifu"
 	pb "github.com/rhoninl/sft/proto/shifu"
 	"google.golang.org/grpc/codes"
@@ -115,4 +117,33 @@ func (s *ShifuServer) GetDeviceDetails(ctx context.Context, req *pb.GetDeviceDet
 
 	resp.Edgedevice = &edgedevice
 	return &resp, nil
+}
+
+func (s *ShifuServer) ForwardPort(req *pb.ForwardPortRequest, stream pb.ShifuService_ForwardPortServer) error {
+	readyChan := make(chan struct{})
+
+	if err := forward.ForwardPort(stream.Context(), req.GetDeviceName(), req.GetDevicePort(), req.GetLocalPort(), readyChan); err != nil {
+		if err := stream.Send(&pb.ForwardPortResponse{
+			Success: false,
+		}); err != nil {
+			return err
+		}
+		logger.Printf("GRPC: Error: Failed to forward port: %v", err)
+		return err
+	}
+
+	select {
+	case <-readyChan:
+		if err := stream.Send(&pb.ForwardPortResponse{
+			Success: true,
+		}); err != nil {
+			return err
+		}
+	case <-stream.Context().Done():
+		return stream.Context().Err()
+	}
+
+	<-stream.Context().Done()
+
+	return nil
 }
