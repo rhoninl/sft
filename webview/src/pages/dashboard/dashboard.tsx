@@ -11,12 +11,12 @@ export default function Dashboard() {
     const path = useLocation().pathname.split("/")[1];
 
     return (
-        <div className='w-full p-2 dashboard'>
+        <div className='w-full dashboard dark:bg-gray-700 rounded-lg m-4'>
             <TopTab />
             <Divider />
             {path !== "settings" && (
                 <div className='flex flex-col gap-4 pt-5'>
-                    <ShifuInstall />
+                    < ShifuInstall />
                 </div>
             )}
 
@@ -26,6 +26,6 @@ export default function Dashboard() {
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/devices/:name" element={<Device />} />
             </Routes>
-        </div>
+        </div >
     );
 }

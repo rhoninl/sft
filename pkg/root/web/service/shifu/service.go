@@ -115,6 +115,9 @@ func (s *ShifuServer) GetDeviceDetails(ctx context.Context, req *pb.GetDeviceDet
 	}
 	edgedevice.Gateway = string(data)
 
+	apis := device.ConfigMap.Data["instructions"]
+	resp.APIs = apis
+
 	resp.Edgedevice = &edgedevice
 	return &resp, nil
 }

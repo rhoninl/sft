@@ -67,6 +67,7 @@ message GetDeviceDetailsRequest {
 
 message GetDeviceDetailsResponse {
   Edgedevice edgedevice = 1;
+  string APIs = 2;
 }
 
 message Device {

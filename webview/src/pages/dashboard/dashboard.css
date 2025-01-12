@@ -2,3 +2,7 @@
     min-width: 720px;
     max-width: 1000px;
 }
+
+.dashboard-dark {
+    background-color: #2f2f36;
+}

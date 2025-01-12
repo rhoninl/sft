@@ -1835,7 +1835,8 @@ proto.shifu.GetDeviceDetailsResponse.prototype.toObject = function(opt_includeIn
  */
 proto.shifu.GetDeviceDetailsResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-edgedevice: (f = msg.getEdgedevice()) && proto.shifu.Edgedevice.toObject(includeInstance, f)
+edgedevice: (f = msg.getEdgedevice()) && proto.shifu.Edgedevice.toObject(includeInstance, f),
+apis: jspb.Message.getFieldWithDefault(msg, 2, "")
   };
 
   if (includeInstance) {
@@ -1877,6 +1878,10 @@ proto.shifu.GetDeviceDetailsResponse.deserializeBinaryFromReader = function(msg,
       reader.readMessage(value,proto.shifu.Edgedevice.deserializeBinaryFromReader);
       msg.setEdgedevice(value);
       break;
+    case 2:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setApis(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -1912,6 +1917,13 @@ proto.shifu.GetDeviceDetailsResponse.serializeBinaryToWriter = function(message,
       1,
       f,
       proto.shifu.Edgedevice.serializeBinaryToWriter
+    );
+  }
+  f = message.getApis();
+  if (f.length > 0) {
+    writer.writeString(
+      2,
+      f
     );
   }
 };
@@ -1951,6 +1963,24 @@ proto.shifu.GetDeviceDetailsResponse.prototype.clearEdgedevice = function() {
  */
 proto.shifu.GetDeviceDetailsResponse.prototype.hasEdgedevice = function() {
   return jspb.Message.getField(this, 1) != null;
+};
+
+
+/**
+ * optional string APIs = 2;
+ * @return {string}
+ */
+proto.shifu.GetDeviceDetailsResponse.prototype.getApis = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.shifu.GetDeviceDetailsResponse} returns this
+ */
+proto.shifu.GetDeviceDetailsResponse.prototype.setApis = function(value) {
+  return jspb.Message.setProto3StringField(this, 2, value);
 };
 
 

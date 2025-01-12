@@ -2,9 +2,17 @@ import { useEffect, useState, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { GetDeviceDetails } from "src/apis/shifu/device";
 import { GetDeviceDetailsResponse } from "src/proto/proto/shifu/shifu_pb";
-import { Button, Divider, Input } from "@nextui-org/react";
+import { Button, Divider, Input, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@nextui-org/react";
 import "./detail.css"
 import { ForwardDrawer } from "./forward";
+
+type APIProperty = {
+    [key: string]: {
+        protocolPropertyList: {
+            [key: string]: string;
+        };
+    };
+};
 
 export default function Device() {
     const { name } = useParams()
@@ -14,6 +22,7 @@ export default function Device() {
     useEffect(() => {
         if (!name) return
         GetDeviceDetails(name).then((res) => {
+            console.log('Device Response:', res?.getApis())
             setDevice(res)
         })
     }, [name])
@@ -75,6 +84,72 @@ export default function Device() {
         }
     }, [device]);
 
+    const parseApiData = useMemo(() => {
+        try {
+            if (!device?.getApis()) {
+                return null;
+            }
+            const apisString = device.getApis();
+            if (apisString === "" || apisString === "null") {
+                return null;
+            }
+
+            // Parse YAML-like string format
+            const parseYamlLikeString = (str: string) => {
+                const apis: APIProperty = {};
+                const lines = str.split('\n');
+                let currentInstruction = '';
+
+                lines.forEach(line => {
+                    const trimmedLine = line.trim();
+                    if (trimmedLine.startsWith('"') && trimmedLine.includes('":')) {
+                        currentInstruction = trimmedLine.split('"')[1];
+                        apis[currentInstruction] = { protocolPropertyList: {} };
+                    } else if (trimmedLine.includes(':')) {
+                        const [key, value] = trimmedLine.split(':').map(s => s.trim());
+                        if (value.startsWith('"') && value.endsWith('"')) {
+                            apis[currentInstruction].protocolPropertyList[key] = value.slice(1, -1);
+                        }
+                    }
+                });
+                return apis;
+            };
+
+            const apis = parseYamlLikeString(apisString);
+
+            if (Object.keys(apis).length === 0) {
+                return null;
+            }
+
+            const propertyKeys = new Set<string>();
+            Object.values(apis).forEach(api => {
+                if (api.protocolPropertyList) {
+                    Object.keys(api.protocolPropertyList).forEach(key => {
+                        propertyKeys.add(key);
+                    });
+                }
+            });
+
+            const tableData = Object.entries(apis).map(([instruction, data]) => ({
+                instruction,
+                ...Object.fromEntries(
+                    Array.from(propertyKeys).map(key => [
+                        key,
+                        data.protocolPropertyList?.[key] || '-'
+                    ])
+                )
+            }));
+
+            return {
+                columns: ['Instruction', ...Array.from(propertyKeys)],
+                rows: tableData
+            };
+        } catch (e) {
+            console.error('Error parsing API data:', e);
+            return null;
+        }
+    }, [device]);
+
     return (
         <div className="flex flex-col w-full p-6 rounded-lg shadow-lg">
             <div className="flex items-center mb-2">
@@ -113,6 +188,32 @@ export default function Device() {
                         </div>
                     </div>
                 </div>
+                {parseApiData && (
+                    <>
+                        <Divider className="my-4" />
+                        <div className="flex flex-col gap-4">
+                            <h2 className="text-xl font-semibold mb-2">Device APIs</h2>
+                            <Table aria-label="Device APIs table">
+                                <TableHeader className="">
+                                    {parseApiData.columns.map((column) => (
+                                        <TableColumn key={column}>{column}</TableColumn>
+                                    ))}
+                                </TableHeader>
+                                <TableBody>
+                                    {parseApiData.rows.map((row, index) => (
+                                        <TableRow key={index}>
+                                            {parseApiData.columns.map((column) => (
+                                                <TableCell key={column}>
+                                                    {column === 'Instruction' ? row.instruction : row[column as keyof typeof row]}
+                                                </TableCell>
+                                            ))}
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </div>
+                    </>
+                )}
                 {device?.getEdgedevice()?.getSetting() !== "null" && deviceSettings && (
                     <>
                         <Divider className="my-4" />

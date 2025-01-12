@@ -202,6 +202,9 @@ export class GetDeviceDetailsResponse extends jspb.Message {
   hasEdgedevice(): boolean;
   clearEdgedevice(): GetDeviceDetailsResponse;
 
+  getApis(): string;
+  setApis(value: string): GetDeviceDetailsResponse;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): GetDeviceDetailsResponse.AsObject;
   static toObject(includeInstance: boolean, msg: GetDeviceDetailsResponse): GetDeviceDetailsResponse.AsObject;
@@ -213,6 +216,7 @@ export class GetDeviceDetailsResponse extends jspb.Message {
 export namespace GetDeviceDetailsResponse {
   export type AsObject = {
     edgedevice?: Edgedevice.AsObject,
+    apis: string,
   }
 }
 

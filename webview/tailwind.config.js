@@ -22,11 +22,14 @@ module.exports = {
         },
         dark: {
           colors: {
-            background: "#3f3f46",
-            foreground: "#ECEDEE",
+            background: "#2f2f36",
+            foreground: "#DCEDEE",
             primary: {
               foreground: "#FFFFFF",
               DEFAULT: "#006FEE",
+            },
+            content1: {
+              DEFAULT: "#3f3f46",
             },
           },
         },
