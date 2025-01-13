@@ -5,6 +5,7 @@ import { GetDeviceDetailsResponse } from "src/proto/proto/shifu/shifu_pb";
 import { Button, Divider, Input, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@nextui-org/react";
 import "./detail.css"
 import { ForwardDrawer } from "./forward";
+import { ConfirmRestart } from "./confrimRestart";
 
 type APIProperty = {
     [key: string]: {
@@ -17,7 +18,8 @@ type APIProperty = {
 export default function Device() {
     const { name } = useParams()
     const [device, setDevice] = useState<GetDeviceDetailsResponse | null>(null)
-    const [isOpen, setIsOpen] = useState(false)
+    const [forwardIsOpen, setForwardIsOpen] = useState(false)
+    const [restartIsOpen, setRestartIsOpen] = useState(false)
 
     useEffect(() => {
         if (!name) return
@@ -182,8 +184,8 @@ export default function Device() {
                     <Divider orientation="vertical" className="h-auto" />
                     <div className="w-32">
                         <div className="flex flex-col gap-3">
-                            <Button color="primary" disableRipple onClick={() => setIsOpen(true)}>Forward</Button>
-                            <Button color="warning" disableRipple>Restart</Button>
+                            <Button color="primary" disableRipple onClick={() => setForwardIsOpen(true)}>Forward</Button>
+                            <Button color="warning" disableRipple onClick={() => setRestartIsOpen(true)}>Restart</Button>
                             <Button color="danger" disableRipple>Delete</Button>
                         </div>
                     </div>
@@ -261,7 +263,8 @@ export default function Device() {
                     </>
                 )}
             </div>
-            <ForwardDrawer deviceName={name || ""} isOpen={isOpen} setIsOpen={setIsOpen} />
+            <ForwardDrawer deviceName={name || ""} isOpen={forwardIsOpen} setIsOpen={setForwardIsOpen} />
+            <ConfirmRestart deviceName={name || ""} isOpen={restartIsOpen} setIsOpen={setRestartIsOpen} />
         </div >
     )
 }

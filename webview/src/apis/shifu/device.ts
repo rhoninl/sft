@@ -5,6 +5,8 @@ import {
   GetDeviceDetailsRequest,
   ForwardPortResponse,
   ForwardPortRequest,
+  RestartDeviceShifuRequest,
+  Empty,
 } from "src/proto/proto/shifu/shifu_pb";
 import { ListDevicesRequest } from "src/proto/proto/shifu/shifu_pb";
 
@@ -62,4 +64,10 @@ export function ForwardPort(
       stream.cancel();
     },
   };
+}
+
+export function RestartDevice(deviceName: string): Promise<Empty> {
+  const request = new RestartDeviceShifuRequest();
+  request.setDeviceName(deviceName);
+  return client.restartDeviceShifu(request, {});
 }

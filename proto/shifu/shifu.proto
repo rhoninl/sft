@@ -25,6 +25,9 @@ service ShifuService {
 
   // Forward Port
   rpc ForwardPort(ForwardPortRequest) returns (stream ForwardPortResponse) {}
+
+  // Restart deviceShifu
+  rpc RestartDeviceShifu(RestartDeviceShifuRequest) returns (Empty) {}
 }
 
 message CheckInstallationRequest {}
@@ -99,3 +102,9 @@ message ForwardPortRequest {
 message ForwardPortResponse {
   bool success = 1;
 }
+
+message RestartDeviceShifuRequest {
+  string device_name = 1;
+}
+
+message Empty {}

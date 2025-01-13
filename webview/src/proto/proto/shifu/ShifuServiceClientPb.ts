@@ -319,5 +319,48 @@ export class ShifuServiceClient {
       this.methodDescriptorForwardPort);
   }
 
+  methodDescriptorRestartDeviceShifu = new grpcWeb.MethodDescriptor(
+    '/shifu.ShifuService/RestartDeviceShifu',
+    grpcWeb.MethodType.UNARY,
+    proto_shifu_shifu_pb.RestartDeviceShifuRequest,
+    proto_shifu_shifu_pb.Empty,
+    (request: proto_shifu_shifu_pb.RestartDeviceShifuRequest) => {
+      return request.serializeBinary();
+    },
+    proto_shifu_shifu_pb.Empty.deserializeBinary
+  );
+
+  restartDeviceShifu(
+    request: proto_shifu_shifu_pb.RestartDeviceShifuRequest,
+    metadata?: grpcWeb.Metadata | null): Promise<proto_shifu_shifu_pb.Empty>;
+
+  restartDeviceShifu(
+    request: proto_shifu_shifu_pb.RestartDeviceShifuRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback: (err: grpcWeb.RpcError,
+               response: proto_shifu_shifu_pb.Empty) => void): grpcWeb.ClientReadableStream<proto_shifu_shifu_pb.Empty>;
+
+  restartDeviceShifu(
+    request: proto_shifu_shifu_pb.RestartDeviceShifuRequest,
+    metadata?: grpcWeb.Metadata | null,
+    callback?: (err: grpcWeb.RpcError,
+               response: proto_shifu_shifu_pb.Empty) => void) {
+    if (callback !== undefined) {
+      return this.client_.rpcCall(
+        this.hostname_ +
+          '/shifu.ShifuService/RestartDeviceShifu',
+        request,
+        metadata || {},
+        this.methodDescriptorRestartDeviceShifu,
+        callback);
+    }
+    return this.client_.unaryCall(
+    this.hostname_ +
+      '/shifu.ShifuService/RestartDeviceShifu',
+    request,
+    metadata || {},
+    this.methodDescriptorRestartDeviceShifu);
+  }
+
 }
 

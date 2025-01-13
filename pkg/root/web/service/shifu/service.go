@@ -8,6 +8,7 @@ import (
 	"github.com/rhoninl/sft/pkg/root/devices"
 	"github.com/rhoninl/sft/pkg/root/forward"
 	"github.com/rhoninl/sft/pkg/root/install"
+	"github.com/rhoninl/sft/pkg/root/restart"
 	"github.com/rhoninl/sft/pkg/root/uninstall"
 	"github.com/rhoninl/sft/pkg/utils/logger"
 	"github.com/rhoninl/sft/pkg/utils/shifu"
@@ -149,4 +150,12 @@ func (s *ShifuServer) ForwardPort(req *pb.ForwardPortRequest, stream pb.ShifuSer
 	<-stream.Context().Done()
 
 	return nil
+}
+
+func (s *ShifuServer) RestartDeviceShifu(ctx context.Context, req *pb.RestartDeviceShifuRequest) (*pb.Empty, error) {
+	if err := restart.RestartDeviceShifu(req.DeviceName); err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to restart device shifu: %v", err)
+	}
+
+	return &pb.Empty{}, nil
 }

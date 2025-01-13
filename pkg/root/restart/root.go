@@ -18,17 +18,8 @@ var RestartCmd = &cobra.Command{
 		}
 
 		deviceName := args[0]
-
-		deployment, err := k8s.GetDeployByEnv("EDGEDEVICE_NAME", deviceName)
-		if err != nil {
-			logger.Println("Failed to get deployment", err)
-			return
-		}
-
-		if err := k8s.RestartDeployment(deployment[0].Name, deployment[0].Namespace); err != nil {
-			logger.Println("Failed to restart deployment", err)
-			return
-		}
+		err := RestartDeviceShifu(deviceName)
+		cobra.CheckErr(err)
 	},
 
 	ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
@@ -47,4 +38,19 @@ var RestartCmd = &cobra.Command{
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
 		cobra.CheckErr(shifu.CheckShifuInstalled())
 	},
+}
+
+func RestartDeviceShifu(deviceName string) error {
+	deployment, err := k8s.GetDeployByEnv("EDGEDEVICE_NAME", deviceName)
+	if err != nil {
+		logger.Println("Failed to get deployment", err)
+		return err
+	}
+
+	if err := k8s.RestartDeployment(deployment[0].Name, deployment[0].Namespace); err != nil {
+		logger.Println("Failed to restart deployment", err)
+		return err
+	}
+
+	return nil
 }
