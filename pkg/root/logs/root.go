@@ -2,6 +2,7 @@ package logs
 
 import (
 	"fmt"
+	"os"
 	"strconv"
 
 	"github.com/rhoninl/sft/pkg/k8s"
@@ -44,7 +45,7 @@ var LogsCmd = &cobra.Command{
 		}
 
 		containerName := GetContainerName(deployments[0], container)
-		if err := k8s.GetDeploymentLogs("deviceshifu", deployments[0].Name, containerName, follow); err != nil {
+		if err := k8s.GetDeploymentLogs("deviceshifu", deployments[0].Name, containerName, follow, os.Stdout); err != nil {
 			logger.Printf("Error retrieving logs: %v\n", err)
 		}
 	},

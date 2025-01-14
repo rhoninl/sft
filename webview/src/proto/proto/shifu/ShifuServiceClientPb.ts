@@ -362,5 +362,113 @@ export class ShifuServiceClient {
     this.methodDescriptorRestartDeviceShifu);
   }
 
+  methodDescriptorDeleteDeviceShifu = new grpcWeb.MethodDescriptor(
+    '/shifu.ShifuService/DeleteDeviceShifu',
+    grpcWeb.MethodType.UNARY,
+    proto_shifu_shifu_pb.DeleteDeviceShifuRequest,
+    proto_shifu_shifu_pb.Empty,
+    (request: proto_shifu_shifu_pb.DeleteDeviceShifuRequest) => {
+      return request.serializeBinary();
+    },
+    proto_shifu_shifu_pb.Empty.deserializeBinary
+  );
+
+  deleteDeviceShifu(
+    request: proto_shifu_shifu_pb.DeleteDeviceShifuRequest,
+    metadata?: grpcWeb.Metadata | null): Promise<proto_shifu_shifu_pb.Empty>;
+
+  deleteDeviceShifu(
+    request: proto_shifu_shifu_pb.DeleteDeviceShifuRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback: (err: grpcWeb.RpcError,
+               response: proto_shifu_shifu_pb.Empty) => void): grpcWeb.ClientReadableStream<proto_shifu_shifu_pb.Empty>;
+
+  deleteDeviceShifu(
+    request: proto_shifu_shifu_pb.DeleteDeviceShifuRequest,
+    metadata?: grpcWeb.Metadata | null,
+    callback?: (err: grpcWeb.RpcError,
+               response: proto_shifu_shifu_pb.Empty) => void) {
+    if (callback !== undefined) {
+      return this.client_.rpcCall(
+        this.hostname_ +
+          '/shifu.ShifuService/DeleteDeviceShifu',
+        request,
+        metadata || {},
+        this.methodDescriptorDeleteDeviceShifu,
+        callback);
+    }
+    return this.client_.unaryCall(
+    this.hostname_ +
+      '/shifu.ShifuService/DeleteDeviceShifu',
+    request,
+    metadata || {},
+    this.methodDescriptorDeleteDeviceShifu);
+  }
+
+  methodDescriptorGetAllContainerName = new grpcWeb.MethodDescriptor(
+    '/shifu.ShifuService/GetAllContainerName',
+    grpcWeb.MethodType.UNARY,
+    proto_shifu_shifu_pb.GetAllContainerNameRequest,
+    proto_shifu_shifu_pb.GetAllContainerNameResponse,
+    (request: proto_shifu_shifu_pb.GetAllContainerNameRequest) => {
+      return request.serializeBinary();
+    },
+    proto_shifu_shifu_pb.GetAllContainerNameResponse.deserializeBinary
+  );
+
+  getAllContainerName(
+    request: proto_shifu_shifu_pb.GetAllContainerNameRequest,
+    metadata?: grpcWeb.Metadata | null): Promise<proto_shifu_shifu_pb.GetAllContainerNameResponse>;
+
+  getAllContainerName(
+    request: proto_shifu_shifu_pb.GetAllContainerNameRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback: (err: grpcWeb.RpcError,
+               response: proto_shifu_shifu_pb.GetAllContainerNameResponse) => void): grpcWeb.ClientReadableStream<proto_shifu_shifu_pb.GetAllContainerNameResponse>;
+
+  getAllContainerName(
+    request: proto_shifu_shifu_pb.GetAllContainerNameRequest,
+    metadata?: grpcWeb.Metadata | null,
+    callback?: (err: grpcWeb.RpcError,
+               response: proto_shifu_shifu_pb.GetAllContainerNameResponse) => void) {
+    if (callback !== undefined) {
+      return this.client_.rpcCall(
+        this.hostname_ +
+          '/shifu.ShifuService/GetAllContainerName',
+        request,
+        metadata || {},
+        this.methodDescriptorGetAllContainerName,
+        callback);
+    }
+    return this.client_.unaryCall(
+    this.hostname_ +
+      '/shifu.ShifuService/GetAllContainerName',
+    request,
+    metadata || {},
+    this.methodDescriptorGetAllContainerName);
+  }
+
+  methodDescriptorGetDeviceShifuLogs = new grpcWeb.MethodDescriptor(
+    '/shifu.ShifuService/GetDeviceShifuLogs',
+    grpcWeb.MethodType.SERVER_STREAMING,
+    proto_shifu_shifu_pb.GetDeviceShifuLogsRequest,
+    proto_shifu_shifu_pb.GetDeviceShifuLogsResponse,
+    (request: proto_shifu_shifu_pb.GetDeviceShifuLogsRequest) => {
+      return request.serializeBinary();
+    },
+    proto_shifu_shifu_pb.GetDeviceShifuLogsResponse.deserializeBinary
+  );
+
+  getDeviceShifuLogs(
+    request: proto_shifu_shifu_pb.GetDeviceShifuLogsRequest,
+    metadata?: grpcWeb.Metadata): grpcWeb.ClientReadableStream<proto_shifu_shifu_pb.GetDeviceShifuLogsResponse> {
+    return this.client_.serverStreaming(
+      this.hostname_ +
+        '/shifu.ShifuService/GetDeviceShifuLogs',
+      request,
+      metadata || {},
+      this.methodDescriptorGetDeviceShifuLogs);
+  }
+
 }
 

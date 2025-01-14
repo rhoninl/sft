@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"os"
 	"strings"
 
 	v1 "k8s.io/api/core/v1"
@@ -15,7 +14,7 @@ import (
 
 var LogLine int64
 
-func GetDeploymentLogs(namespace, deploymentName, containerName string, follow bool) error {
+func GetDeploymentLogs(namespace, deploymentName, containerName string, follow bool, w io.Writer) error {
 	dynamicClient, err := NewDynamicClient()
 	if err != nil {
 		return fmt.Errorf("failed to create clientset: %w", err)
@@ -73,7 +72,7 @@ func GetDeploymentLogs(namespace, deploymentName, containerName string, follow b
 
 	// Get logs for each pod and container (if specified)
 	for _, pod := range pods.Items {
-		if err := streamPodLogs(clientset, namespace, pod.Name, containerName, follow); err != nil {
+		if err := streamPodLogs(clientset, namespace, pod.Name, containerName, follow, w); err != nil {
 			fmt.Printf("Error streaming logs for pod %s: %v\n", pod.Name, err)
 		}
 	}
@@ -89,7 +88,7 @@ func buildLabelSelector(matchLabels map[string]interface{}) string {
 	return strings.TrimSuffix(labelSelector.String(), ",")
 }
 
-func streamPodLogs(clientset *kubernetes.Clientset, namespace, podName, containerName string, follow bool) error {
+func streamPodLogs(clientset *kubernetes.Clientset, namespace, podName, containerName string, follow bool, w io.Writer) error {
 	// Prepare PodLogOptions (filter by container if needed)
 	logOptions := &v1.PodLogOptions{
 		Follow:    follow,
@@ -107,7 +106,7 @@ func streamPodLogs(clientset *kubernetes.Clientset, namespace, podName, containe
 	}
 	defer podLogs.Close()
 
-	if _, err := io.Copy(os.Stdout, podLogs); err != nil && err != io.EOF {
+	if _, err := io.Copy(w, podLogs); err != nil && err != io.EOF {
 		return fmt.Errorf("error streaming logs for pod %s: %w", podName, err)
 	}
 

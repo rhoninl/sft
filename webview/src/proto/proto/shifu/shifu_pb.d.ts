@@ -376,3 +376,99 @@ export namespace Empty {
   }
 }
 
+export class DeleteDeviceShifuRequest extends jspb.Message {
+  getDeviceName(): string;
+  setDeviceName(value: string): DeleteDeviceShifuRequest;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): DeleteDeviceShifuRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: DeleteDeviceShifuRequest): DeleteDeviceShifuRequest.AsObject;
+  static serializeBinaryToWriter(message: DeleteDeviceShifuRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): DeleteDeviceShifuRequest;
+  static deserializeBinaryFromReader(message: DeleteDeviceShifuRequest, reader: jspb.BinaryReader): DeleteDeviceShifuRequest;
+}
+
+export namespace DeleteDeviceShifuRequest {
+  export type AsObject = {
+    deviceName: string,
+  }
+}
+
+export class GetAllContainerNameRequest extends jspb.Message {
+  getDeviceName(): string;
+  setDeviceName(value: string): GetAllContainerNameRequest;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetAllContainerNameRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: GetAllContainerNameRequest): GetAllContainerNameRequest.AsObject;
+  static serializeBinaryToWriter(message: GetAllContainerNameRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetAllContainerNameRequest;
+  static deserializeBinaryFromReader(message: GetAllContainerNameRequest, reader: jspb.BinaryReader): GetAllContainerNameRequest;
+}
+
+export namespace GetAllContainerNameRequest {
+  export type AsObject = {
+    deviceName: string,
+  }
+}
+
+export class GetAllContainerNameResponse extends jspb.Message {
+  getContainerNamesList(): Array<string>;
+  setContainerNamesList(value: Array<string>): GetAllContainerNameResponse;
+  clearContainerNamesList(): GetAllContainerNameResponse;
+  addContainerNames(value: string, index?: number): GetAllContainerNameResponse;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetAllContainerNameResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: GetAllContainerNameResponse): GetAllContainerNameResponse.AsObject;
+  static serializeBinaryToWriter(message: GetAllContainerNameResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetAllContainerNameResponse;
+  static deserializeBinaryFromReader(message: GetAllContainerNameResponse, reader: jspb.BinaryReader): GetAllContainerNameResponse;
+}
+
+export namespace GetAllContainerNameResponse {
+  export type AsObject = {
+    containerNamesList: Array<string>,
+  }
+}
+
+export class GetDeviceShifuLogsRequest extends jspb.Message {
+  getDeviceName(): string;
+  setDeviceName(value: string): GetDeviceShifuLogsRequest;
+
+  getContainerName(): string;
+  setContainerName(value: string): GetDeviceShifuLogsRequest;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetDeviceShifuLogsRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: GetDeviceShifuLogsRequest): GetDeviceShifuLogsRequest.AsObject;
+  static serializeBinaryToWriter(message: GetDeviceShifuLogsRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetDeviceShifuLogsRequest;
+  static deserializeBinaryFromReader(message: GetDeviceShifuLogsRequest, reader: jspb.BinaryReader): GetDeviceShifuLogsRequest;
+}
+
+export namespace GetDeviceShifuLogsRequest {
+  export type AsObject = {
+    deviceName: string,
+    containerName: string,
+  }
+}
+
+export class GetDeviceShifuLogsResponse extends jspb.Message {
+  getLog(): string;
+  setLog(value: string): GetDeviceShifuLogsResponse;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetDeviceShifuLogsResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: GetDeviceShifuLogsResponse): GetDeviceShifuLogsResponse.AsObject;
+  static serializeBinaryToWriter(message: GetDeviceShifuLogsResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetDeviceShifuLogsResponse;
+  static deserializeBinaryFromReader(message: GetDeviceShifuLogsResponse, reader: jspb.BinaryReader): GetDeviceShifuLogsResponse;
+}
+
+export namespace GetDeviceShifuLogsResponse {
+  export type AsObject = {
+    log: string,
+  }
+}
+

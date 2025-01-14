@@ -3,6 +3,8 @@ package shifu
 import (
 	"context"
 	"encoding/json"
+	"errors"
+	"io"
 
 	"github.com/rhoninl/sft/pkg/k8s"
 	"github.com/rhoninl/sft/pkg/root/devices"
@@ -158,4 +160,69 @@ func (s *ShifuServer) RestartDeviceShifu(ctx context.Context, req *pb.RestartDev
 	}
 
 	return &pb.Empty{}, nil
+}
+
+func (s *ShifuServer) DeleteDeviceShifu(ctx context.Context, req *pb.DeleteDeviceShifuRequest) (*pb.Empty, error) {
+	return nil, errors.New("not implemented")
+}
+
+func (s *ShifuServer) GetAllContainerName(ctx context.Context, req *pb.GetAllContainerNameRequest) (*pb.GetAllContainerNameResponse, error) {
+	// deploys, err := k8s.GetDeployByEnv(req.GetDeviceName())
+	device, err := k8s.GetAllByDeviceName(req.GetDeviceName())
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get all container name: %v", err)
+	}
+
+	pods, err := k8s.GetDeploymentPods("deviceshifu", device.Deployment.Name)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get all container name: %v", err)
+	}
+
+	if len(pods) == 0 {
+		return nil, status.Errorf(codes.NotFound, "no pods found")
+	}
+
+	pod := pods[0]
+
+	containerNames := make([]string, 0)
+	for _, container := range pod.Spec.Containers {
+		containerNames = append(containerNames, container.Name)
+	}
+
+	return &pb.GetAllContainerNameResponse{
+		ContainerNames: containerNames,
+	}, nil
+}
+
+func (s *ShifuServer) GetDeviceShifuLogs(req *pb.GetDeviceShifuLogsRequest, stream pb.ShifuService_GetDeviceShifuLogsServer) error {
+	r, w := io.Pipe()
+	device, err := k8s.GetAllByDeviceName(req.GetDeviceName())
+	if err != nil {
+		return err
+	}
+
+	go func() {
+		defer w.Close()
+		err := k8s.GetDeploymentLogs("deviceshifu", device.Deployment.Name, req.ContainerName, true, w)
+		if err != nil {
+			w.CloseWithError(err)
+		}
+	}()
+
+	buffer := make([]byte, 4096)
+	for {
+		n, err := r.Read(buffer)
+		if err == io.EOF {
+			return nil
+		}
+		if err != nil {
+			return err
+		}
+
+		if err := stream.Send(&pb.GetDeviceShifuLogsResponse{
+			Log: string(buffer[:n]),
+		}); err != nil {
+			return err
+		}
+	}
 }

@@ -1,3 +1,4 @@
+import { ClientReadableStream } from "grpc-web";
 import { client } from "./shifu";
 import {
   Device,
@@ -7,6 +8,11 @@ import {
   ForwardPortRequest,
   RestartDeviceShifuRequest,
   Empty,
+  DeleteDeviceShifuRequest,
+  GetAllContainerNameRequest,
+  GetAllContainerNameResponse,
+  GetDeviceShifuLogsRequest,
+  GetDeviceShifuLogsResponse,
 } from "src/proto/proto/shifu/shifu_pb";
 import { ListDevicesRequest } from "src/proto/proto/shifu/shifu_pb";
 
@@ -70,4 +76,38 @@ export function RestartDevice(deviceName: string): Promise<Empty> {
   const request = new RestartDeviceShifuRequest();
   request.setDeviceName(deviceName);
   return client.restartDeviceShifu(request, {});
+}
+
+export function DeleteDevice(deviceName: string): Promise<Empty> {
+  const request = new DeleteDeviceShifuRequest();
+  request.setDeviceName(deviceName);
+  return client.deleteDeviceShifu(request, {});
+}
+
+export function GetAllContainerName(
+  deviceName: string
+): Promise<GetAllContainerNameResponse> {
+  const request = new GetAllContainerNameRequest();
+  request.setDeviceName(deviceName);
+  return client.getAllContainerName(request, {});
+}
+
+export function GetDeviceShifuLogs(
+  deviceName: string,
+  containerName: string
+): {
+  stream: ClientReadableStream<GetDeviceShifuLogsResponse>;
+  cancel: () => void;
+} {
+  const request = new GetDeviceShifuLogsRequest();
+  request.setDeviceName(deviceName);
+  request.setContainerName(containerName);
+  const stream = client.getDeviceShifuLogs(request, {});
+
+  return {
+    stream,
+    cancel: () => {
+      stream.cancel();
+    },
+  };
 }

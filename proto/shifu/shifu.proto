@@ -28,6 +28,15 @@ service ShifuService {
 
   // Restart deviceShifu
   rpc RestartDeviceShifu(RestartDeviceShifuRequest) returns (Empty) {}
+
+  // Delete deviceShifu
+  rpc DeleteDeviceShifu(DeleteDeviceShifuRequest) returns (Empty) {}
+
+  // Get all container name of deviceShifu
+  rpc GetAllContainerName(GetAllContainerNameRequest) returns (GetAllContainerNameResponse) {}
+
+  // Get deviceShifu logs
+  rpc GetDeviceShifuLogs(GetDeviceShifuLogsRequest) returns (stream GetDeviceShifuLogsResponse) {}
 }
 
 message CheckInstallationRequest {}
@@ -108,3 +117,24 @@ message RestartDeviceShifuRequest {
 }
 
 message Empty {}
+
+message DeleteDeviceShifuRequest {
+  string device_name = 1;
+}
+
+message GetAllContainerNameRequest {
+  string device_name = 1;
+}
+
+message GetAllContainerNameResponse {
+  repeated string container_names = 1;
+}
+
+message GetDeviceShifuLogsRequest {
+  string device_name = 1;
+  string container_name = 2;
+}
+
+message GetDeviceShifuLogsResponse {
+  string log = 1;
+}

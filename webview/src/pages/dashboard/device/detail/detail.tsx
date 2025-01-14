@@ -6,6 +6,8 @@ import { Button, Divider, Input, Table, TableHeader, TableColumn, TableBody, Tab
 import "./detail.css"
 import { ForwardDrawer } from "./forward";
 import { ConfirmRestart } from "./confrimRestart";
+import { ConfirmDelete } from "./confrimDelete";
+import { Logs } from "./logs";
 
 type APIProperty = {
     [key: string]: {
@@ -20,6 +22,7 @@ export default function Device() {
     const [device, setDevice] = useState<GetDeviceDetailsResponse | null>(null)
     const [forwardIsOpen, setForwardIsOpen] = useState(false)
     const [restartIsOpen, setRestartIsOpen] = useState(false)
+    const [deleteIsOpen, setDeleteIsOpen] = useState(false)
 
     useEffect(() => {
         if (!name) return
@@ -186,7 +189,7 @@ export default function Device() {
                         <div className="flex flex-col gap-3">
                             <Button color="primary" disableRipple onClick={() => setForwardIsOpen(true)}>Forward</Button>
                             <Button color="warning" disableRipple onClick={() => setRestartIsOpen(true)}>Restart</Button>
-                            <Button color="danger" disableRipple>Delete</Button>
+                            <Button color="danger" disableRipple onClick={() => setDeleteIsOpen(true)}>Delete</Button>
                         </div>
                     </div>
                 </div>
@@ -263,8 +266,11 @@ export default function Device() {
                     </>
                 )}
             </div>
+            <Divider className="my-4" />
+            <Logs deviceName={name || ""} />
             <ForwardDrawer deviceName={name || ""} isOpen={forwardIsOpen} setIsOpen={setForwardIsOpen} />
             <ConfirmRestart deviceName={name || ""} isOpen={restartIsOpen} setIsOpen={setRestartIsOpen} />
+            <ConfirmDelete deviceName={name || ""} isOpen={deleteIsOpen} setIsOpen={setDeleteIsOpen} />
         </div >
     )
 }
