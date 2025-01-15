@@ -2,11 +2,14 @@ package server
 
 import (
 	"fmt"
+	"io/fs"
 	"net/http"
+	"strings"
 
 	"github.com/improbable-eng/grpc-web/go/grpcweb"
 	"github.com/rhoninl/sft/pkg/root/web/service/shifu"
 	pb "github.com/rhoninl/sft/proto/shifu"
+	assets "github.com/rhoninl/sft/webview"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
@@ -27,6 +30,13 @@ func StartGRPCServer(port int) error {
 		}),
 		grpcweb.WithAllowedRequestHeaders([]string{"*"}),
 	)
+
+	// Setup static file server
+	contentStatic, err := fs.Sub(assets.Content, "build")
+	if err != nil {
+		return fmt.Errorf("failed to setup static file server: %v", err)
+	}
+	fileServer := http.FileServer(http.FS(contentStatic))
 
 	// Create HTTP server
 	httpServer := &http.Server{
@@ -49,12 +59,16 @@ func StartGRPCServer(port int) error {
 				return
 			}
 
-			// Handle normal HTTP requests
-			http.Error(resp, "Unsupported request", http.StatusNotImplemented)
+			// Handle static files and SPA routing
+			if strings.Contains(req.Header.Get("Accept"), "text/html") {
+				// Serve index.html for all HTML requests (SPA routing)
+				req.URL.Path = "/"
+			}
+			fileServer.ServeHTTP(resp, req)
 		}),
 	}
 
-	fmt.Printf("Starting gRPC-Web server on port %d\n", port)
+	fmt.Printf("Starting server on port %d\n", port)
 	if err := httpServer.ListenAndServe(); err != nil {
 		return fmt.Errorf("failed to serve: %v", err)
 	}
