@@ -6,7 +6,7 @@ import {
   UninstallShifuRequest,
 } from "../../proto/proto/shifu/shifu_pb";
 
-export const client = new ShifuServiceClient("http://localhost:34550", null, {
+export const client = new ShifuServiceClient("", null, {
   withCredentials: false,
   headers: {
     "Content-Type": "application/grpc-web+proto",

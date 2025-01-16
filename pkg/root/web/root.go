@@ -9,6 +9,7 @@ import (
 	"github.com/rhoninl/sft/pkg/root/web/devices"
 	"github.com/rhoninl/sft/pkg/root/web/middleware"
 	"github.com/rhoninl/sft/pkg/root/web/server"
+	"github.com/rhoninl/sft/pkg/utils/browser"
 	"github.com/rhoninl/sft/pkg/utils/logger"
 	"github.com/spf13/cobra"
 )
@@ -55,9 +56,9 @@ var WebCmd = &cobra.Command{
 		if !serverOnly {
 			// Open the browser to localhost:port
 			url := fmt.Sprintf("http://localhost:%s/device", port)
-			// if err := browser.Open(url); err != nil {
-			// 	logger.Printf("Failed to open browser: %v\n", err)
-			// }
+			if err := browser.Open(url); err != nil {
+				logger.Printf("Failed to open browser: %v\n", err)
+			}
 			fmt.Println(url)
 		}
 
