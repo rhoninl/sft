@@ -1,6 +1,6 @@
 import { Button, Navbar, NavbarContent, NavbarItem } from '@nextui-org/react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { IoSettingsSharp } from "react-icons/io5";
+import { IoSettingsSharp, IoTerminal } from "react-icons/io5";
 import "./toptab.css";
 import { ThemeSwitcher } from '../themeswitcher/themeswitcher';
 const pageList = [
@@ -35,6 +35,9 @@ export default function TopTab() {
       </NavbarContent>
       <NavbarContent className="sm:flex" justify="end">
         <ThemeSwitcher />
+        <Button variant='light' isIconOnly disableRipple disableAnimation onClick={() => navigate("/terminal")}>
+          <IoTerminal className='h-full w-auto p-2' />
+        </Button>
         <Button variant='light' isIconOnly disableRipple disableAnimation className='button-setting' onClick={() => navigate("/settings")}>
           <IoSettingsSharp className='h-full w-auto' />
         </Button>

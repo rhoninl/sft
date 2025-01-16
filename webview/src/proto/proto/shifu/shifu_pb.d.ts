@@ -472,3 +472,85 @@ export namespace GetDeviceShifuLogsResponse {
   }
 }
 
+export class CommandRequest extends jspb.Message {
+  getCommand(): string;
+  setCommand(value: string): CommandRequest;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): CommandRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: CommandRequest): CommandRequest.AsObject;
+  static serializeBinaryToWriter(message: CommandRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): CommandRequest;
+  static deserializeBinaryFromReader(message: CommandRequest, reader: jspb.BinaryReader): CommandRequest;
+}
+
+export namespace CommandRequest {
+  export type AsObject = {
+    command: string,
+  }
+}
+
+export class CommandResponse extends jspb.Message {
+  getOutput(): string;
+  setOutput(value: string): CommandResponse;
+
+  getIsError(): boolean;
+  setIsError(value: boolean): CommandResponse;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): CommandResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: CommandResponse): CommandResponse.AsObject;
+  static serializeBinaryToWriter(message: CommandResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): CommandResponse;
+  static deserializeBinaryFromReader(message: CommandResponse, reader: jspb.BinaryReader): CommandResponse;
+}
+
+export namespace CommandResponse {
+  export type AsObject = {
+    output: string,
+    isError: boolean,
+  }
+}
+
+export class CompletionRequest extends jspb.Message {
+  getPartial(): string;
+  setPartial(value: string): CompletionRequest;
+
+  getCurrentDir(): string;
+  setCurrentDir(value: string): CompletionRequest;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): CompletionRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: CompletionRequest): CompletionRequest.AsObject;
+  static serializeBinaryToWriter(message: CompletionRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): CompletionRequest;
+  static deserializeBinaryFromReader(message: CompletionRequest, reader: jspb.BinaryReader): CompletionRequest;
+}
+
+export namespace CompletionRequest {
+  export type AsObject = {
+    partial: string,
+    currentDir: string,
+  }
+}
+
+export class CompletionResponse extends jspb.Message {
+  getCompletionsList(): Array<string>;
+  setCompletionsList(value: Array<string>): CompletionResponse;
+  clearCompletionsList(): CompletionResponse;
+  addCompletions(value: string, index?: number): CompletionResponse;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): CompletionResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: CompletionResponse): CompletionResponse.AsObject;
+  static serializeBinaryToWriter(message: CompletionResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): CompletionResponse;
+  static deserializeBinaryFromReader(message: CompletionResponse, reader: jspb.BinaryReader): CompletionResponse;
+}
+
+export namespace CompletionResponse {
+  export type AsObject = {
+    completionsList: Array<string>,
+  }
+}
+

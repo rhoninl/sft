@@ -156,7 +156,7 @@ export default function Device() {
     }, [device]);
 
     return (
-        <div className="flex flex-col w-full p-6 rounded-lg shadow-lg">
+        <div className="device-detail-container flex flex-col w-full p-6 rounded-lg shadow-lg">
             <div className="flex items-center mb-2">
                 <h1 className="text-3xl font-bold text-blue-600 dark:text-blue-400">{name}</h1>
                 <div className={`ml-4 px-3 py-1 rounded-full text-sm font-medium ${device?.getEdgedevice()?.getStatus() === 'Running'

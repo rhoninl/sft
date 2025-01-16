@@ -1,10 +1,17 @@
 package shifu
 
 import (
+	"bufio"
 	"context"
 	"encoding/json"
 	"errors"
 	"io"
+	"os"
+	"os/exec"
+	"path/filepath"
+	"runtime"
+	"strings"
+	"sync"
 
 	"github.com/rhoninl/sft/pkg/k8s"
 	"github.com/rhoninl/sft/pkg/root/devices"
@@ -12,6 +19,7 @@ import (
 	"github.com/rhoninl/sft/pkg/root/install"
 	"github.com/rhoninl/sft/pkg/root/restart"
 	"github.com/rhoninl/sft/pkg/root/uninstall"
+	"github.com/rhoninl/sft/pkg/terminal"
 	"github.com/rhoninl/sft/pkg/utils/logger"
 	"github.com/rhoninl/sft/pkg/utils/shifu"
 	pb "github.com/rhoninl/sft/proto/shifu"
@@ -225,4 +233,139 @@ func (s *ShifuServer) GetDeviceShifuLogs(req *pb.GetDeviceShifuLogsRequest, stre
 			return err
 		}
 	}
+}
+
+func (s *ShifuServer) ExecuteCommand(req *pb.CommandRequest, stream pb.ShifuService_ExecuteCommandServer) error {
+	ctx := stream.Context()
+
+	// Extract working directory from command
+	var workDir string
+	if strings.HasPrefix(req.Command, "cd ") {
+		// Special handling for cd command
+		return handleCdCommand(req.Command, stream)
+	}
+
+	// Create command
+	var cmd *exec.Cmd
+	if runtime.GOOS == "windows" {
+		cmd = exec.CommandContext(ctx, "cmd", "/c", req.Command)
+	} else {
+		cmd = exec.CommandContext(ctx, "sh", "-c", req.Command)
+	}
+
+	// Set working directory
+	if workDir != "" {
+		cmd.Dir = workDir
+	}
+
+	stdout, err := cmd.StdoutPipe()
+	if err != nil {
+		return err
+	}
+
+	stderr, err := cmd.StderrPipe()
+	if err != nil {
+		return err
+	}
+
+	if err := cmd.Start(); err != nil {
+		return err
+	}
+
+	// Use WaitGroup to ensure all output is processed
+	var wg sync.WaitGroup
+	wg.Add(2)
+
+	go func() {
+		defer wg.Done()
+		streamOutput(stdout, stream, false)
+	}()
+
+	go func() {
+		defer wg.Done()
+		streamOutput(stderr, stream, true)
+	}()
+
+	// Wait for command completion and all output processing
+	err = cmd.Wait()
+	wg.Wait()
+	return err
+}
+
+func handleCdCommand(command string, stream pb.ShifuService_ExecuteCommandServer) error {
+	dir := strings.TrimSpace(strings.TrimPrefix(command, "cd "))
+	if dir == "" {
+		// If no directory specified, use HOME directory
+		dir = os.Getenv("HOME")
+		if runtime.GOOS == "windows" {
+			dir = os.Getenv("USERPROFILE")
+		}
+	}
+
+	// Expand path
+	expandedDir, err := filepath.Abs(dir)
+	if err != nil {
+		stream.Send(&pb.CommandResponse{
+			Output:  err.Error(),
+			IsError: true,
+		})
+		return err
+	}
+
+	// Check if directory exists
+	if _, err := os.Stat(expandedDir); err != nil {
+		stream.Send(&pb.CommandResponse{
+			Output:  err.Error(),
+			IsError: true,
+		})
+		return err
+	}
+
+	// Change working directory
+	if err := os.Chdir(expandedDir); err != nil {
+		stream.Send(&pb.CommandResponse{
+			Output:  err.Error(),
+			IsError: true,
+		})
+		return err
+	}
+
+	// Send new working directory
+	stream.Send(&pb.CommandResponse{
+		Output:  expandedDir,
+		IsError: false,
+	})
+
+	return nil
+}
+
+func streamOutput(reader io.Reader, stream pb.ShifuService_ExecuteCommandServer, isError bool) {
+	scanner := bufio.NewScanner(reader)
+	for scanner.Scan() {
+		text := scanner.Text()
+		if err := stream.Send(&pb.CommandResponse{
+			Output:  text,
+			IsError: isError,
+		}); err != nil {
+			return
+		}
+	}
+}
+
+func (s *ShifuServer) GetCompletions(ctx context.Context, req *pb.CompletionRequest) (*pb.CompletionResponse, error) {
+	// Get current working directory
+	currentDir := req.GetCurrentDir()
+	if currentDir == "" {
+		currentDir = "/"
+	}
+
+	// Get partial input
+	partial := req.GetPartial()
+
+	// Use terminal package to get completion suggestions
+	completions := terminal.GetCompletions(partial, currentDir)
+
+	return &pb.CompletionResponse{
+		Completions: completions,
+	}, nil
 }

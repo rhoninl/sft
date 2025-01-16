@@ -30,6 +30,8 @@ const (
 	ShifuService_DeleteDeviceShifu_FullMethodName       = "/shifu.ShifuService/DeleteDeviceShifu"
 	ShifuService_GetAllContainerName_FullMethodName     = "/shifu.ShifuService/GetAllContainerName"
 	ShifuService_GetDeviceShifuLogs_FullMethodName      = "/shifu.ShifuService/GetDeviceShifuLogs"
+	ShifuService_ExecuteCommand_FullMethodName          = "/shifu.ShifuService/ExecuteCommand"
+	ShifuService_GetCompletions_FullMethodName          = "/shifu.ShifuService/GetCompletions"
 )
 
 // ShifuServiceClient is the client API for ShifuService service.
@@ -58,6 +60,10 @@ type ShifuServiceClient interface {
 	GetAllContainerName(ctx context.Context, in *GetAllContainerNameRequest, opts ...grpc.CallOption) (*GetAllContainerNameResponse, error)
 	// Get deviceShifu logs
 	GetDeviceShifuLogs(ctx context.Context, in *GetDeviceShifuLogsRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GetDeviceShifuLogsResponse], error)
+	// Execute command
+	ExecuteCommand(ctx context.Context, in *CommandRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[CommandResponse], error)
+	// Get completions
+	GetCompletions(ctx context.Context, in *CompletionRequest, opts ...grpc.CallOption) (*CompletionResponse, error)
 }
 
 type shifuServiceClient struct {
@@ -196,6 +202,35 @@ func (c *shifuServiceClient) GetDeviceShifuLogs(ctx context.Context, in *GetDevi
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
 type ShifuService_GetDeviceShifuLogsClient = grpc.ServerStreamingClient[GetDeviceShifuLogsResponse]
 
+func (c *shifuServiceClient) ExecuteCommand(ctx context.Context, in *CommandRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[CommandResponse], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &ShifuService_ServiceDesc.Streams[2], ShifuService_ExecuteCommand_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[CommandRequest, CommandResponse]{ClientStream: stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type ShifuService_ExecuteCommandClient = grpc.ServerStreamingClient[CommandResponse]
+
+func (c *shifuServiceClient) GetCompletions(ctx context.Context, in *CompletionRequest, opts ...grpc.CallOption) (*CompletionResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CompletionResponse)
+	err := c.cc.Invoke(ctx, ShifuService_GetCompletions_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ShifuServiceServer is the server API for ShifuService service.
 // All implementations must embed UnimplementedShifuServiceServer
 // for forward compatibility.
@@ -222,6 +257,10 @@ type ShifuServiceServer interface {
 	GetAllContainerName(context.Context, *GetAllContainerNameRequest) (*GetAllContainerNameResponse, error)
 	// Get deviceShifu logs
 	GetDeviceShifuLogs(*GetDeviceShifuLogsRequest, grpc.ServerStreamingServer[GetDeviceShifuLogsResponse]) error
+	// Execute command
+	ExecuteCommand(*CommandRequest, grpc.ServerStreamingServer[CommandResponse]) error
+	// Get completions
+	GetCompletions(context.Context, *CompletionRequest) (*CompletionResponse, error)
 	mustEmbedUnimplementedShifuServiceServer()
 }
 
@@ -264,6 +303,12 @@ func (UnimplementedShifuServiceServer) GetAllContainerName(context.Context, *Get
 }
 func (UnimplementedShifuServiceServer) GetDeviceShifuLogs(*GetDeviceShifuLogsRequest, grpc.ServerStreamingServer[GetDeviceShifuLogsResponse]) error {
 	return status.Errorf(codes.Unimplemented, "method GetDeviceShifuLogs not implemented")
+}
+func (UnimplementedShifuServiceServer) ExecuteCommand(*CommandRequest, grpc.ServerStreamingServer[CommandResponse]) error {
+	return status.Errorf(codes.Unimplemented, "method ExecuteCommand not implemented")
+}
+func (UnimplementedShifuServiceServer) GetCompletions(context.Context, *CompletionRequest) (*CompletionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCompletions not implemented")
 }
 func (UnimplementedShifuServiceServer) mustEmbedUnimplementedShifuServiceServer() {}
 func (UnimplementedShifuServiceServer) testEmbeddedByValue()                      {}
@@ -470,6 +515,35 @@ func _ShifuService_GetDeviceShifuLogs_Handler(srv interface{}, stream grpc.Serve
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
 type ShifuService_GetDeviceShifuLogsServer = grpc.ServerStreamingServer[GetDeviceShifuLogsResponse]
 
+func _ShifuService_ExecuteCommand_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(CommandRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(ShifuServiceServer).ExecuteCommand(m, &grpc.GenericServerStream[CommandRequest, CommandResponse]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type ShifuService_ExecuteCommandServer = grpc.ServerStreamingServer[CommandResponse]
+
+func _ShifuService_GetCompletions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CompletionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ShifuServiceServer).GetCompletions(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ShifuService_GetCompletions_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ShifuServiceServer).GetCompletions(ctx, req.(*CompletionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ShifuService_ServiceDesc is the grpc.ServiceDesc for ShifuService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -513,6 +587,10 @@ var ShifuService_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "GetAllContainerName",
 			Handler:    _ShifuService_GetAllContainerName_Handler,
 		},
+		{
+			MethodName: "GetCompletions",
+			Handler:    _ShifuService_GetCompletions_Handler,
+		},
 	},
 	Streams: []grpc.StreamDesc{
 		{
@@ -523,6 +601,11 @@ var ShifuService_ServiceDesc = grpc.ServiceDesc{
 		{
 			StreamName:    "GetDeviceShifuLogs",
 			Handler:       _ShifuService_GetDeviceShifuLogs_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "ExecuteCommand",
+			Handler:       _ShifuService_ExecuteCommand_Handler,
 			ServerStreams: true,
 		},
 	},

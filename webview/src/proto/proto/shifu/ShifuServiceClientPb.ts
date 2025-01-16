@@ -470,5 +470,70 @@ export class ShifuServiceClient {
       this.methodDescriptorGetDeviceShifuLogs);
   }
 
+  methodDescriptorExecuteCommand = new grpcWeb.MethodDescriptor(
+    '/shifu.ShifuService/ExecuteCommand',
+    grpcWeb.MethodType.SERVER_STREAMING,
+    proto_shifu_shifu_pb.CommandRequest,
+    proto_shifu_shifu_pb.CommandResponse,
+    (request: proto_shifu_shifu_pb.CommandRequest) => {
+      return request.serializeBinary();
+    },
+    proto_shifu_shifu_pb.CommandResponse.deserializeBinary
+  );
+
+  executeCommand(
+    request: proto_shifu_shifu_pb.CommandRequest,
+    metadata?: grpcWeb.Metadata): grpcWeb.ClientReadableStream<proto_shifu_shifu_pb.CommandResponse> {
+    return this.client_.serverStreaming(
+      this.hostname_ +
+        '/shifu.ShifuService/ExecuteCommand',
+      request,
+      metadata || {},
+      this.methodDescriptorExecuteCommand);
+  }
+
+  methodDescriptorGetCompletions = new grpcWeb.MethodDescriptor(
+    '/shifu.ShifuService/GetCompletions',
+    grpcWeb.MethodType.UNARY,
+    proto_shifu_shifu_pb.CompletionRequest,
+    proto_shifu_shifu_pb.CompletionResponse,
+    (request: proto_shifu_shifu_pb.CompletionRequest) => {
+      return request.serializeBinary();
+    },
+    proto_shifu_shifu_pb.CompletionResponse.deserializeBinary
+  );
+
+  getCompletions(
+    request: proto_shifu_shifu_pb.CompletionRequest,
+    metadata?: grpcWeb.Metadata | null): Promise<proto_shifu_shifu_pb.CompletionResponse>;
+
+  getCompletions(
+    request: proto_shifu_shifu_pb.CompletionRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback: (err: grpcWeb.RpcError,
+               response: proto_shifu_shifu_pb.CompletionResponse) => void): grpcWeb.ClientReadableStream<proto_shifu_shifu_pb.CompletionResponse>;
+
+  getCompletions(
+    request: proto_shifu_shifu_pb.CompletionRequest,
+    metadata?: grpcWeb.Metadata | null,
+    callback?: (err: grpcWeb.RpcError,
+               response: proto_shifu_shifu_pb.CompletionResponse) => void) {
+    if (callback !== undefined) {
+      return this.client_.rpcCall(
+        this.hostname_ +
+          '/shifu.ShifuService/GetCompletions',
+        request,
+        metadata || {},
+        this.methodDescriptorGetCompletions,
+        callback);
+    }
+    return this.client_.unaryCall(
+    this.hostname_ +
+      '/shifu.ShifuService/GetCompletions',
+    request,
+    metadata || {},
+    this.methodDescriptorGetCompletions);
+  }
+
 }
 
