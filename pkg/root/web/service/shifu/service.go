@@ -3,7 +3,6 @@ package shifu
 import (
 	"bufio"
 	"context"
-	"encoding/json"
 	"errors"
 	"io"
 	"os"
@@ -20,6 +19,7 @@ import (
 	"github.com/rhoninl/sft/pkg/root/restart"
 	"github.com/rhoninl/sft/pkg/root/uninstall"
 	"github.com/rhoninl/sft/pkg/terminal"
+	"github.com/rhoninl/sft/pkg/utils/jsonhelper"
 	"github.com/rhoninl/sft/pkg/utils/logger"
 	"github.com/rhoninl/sft/pkg/utils/shifu"
 	pb "github.com/rhoninl/sft/proto/shifu"
@@ -115,12 +115,12 @@ func (s *ShifuServer) GetDeviceDetails(ctx context.Context, req *pb.GetDeviceDet
 	edgedevice.Protocol = string(*device.EdgeDevice.Spec.Protocol)
 	edgedevice.Address = *device.EdgeDevice.Spec.Address
 	edgedevice.Age = devices.TimeToAge(device.EdgeDevice.CreationTimestamp.Time)
-	data, err := json.Marshal(device.EdgeDevice.Spec.ProtocolSettings)
+	data, err := jsonhelper.MarshalAll(device.EdgeDevice.Spec.ProtocolSettings)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to marshal setting: %v", err)
 	}
 	edgedevice.Setting = string(data)
-	data, err = json.Marshal(device.EdgeDevice.Spec.GatewaySettings)
+	data, err = jsonhelper.MarshalAll(device.EdgeDevice.Spec.GatewaySettings)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to marshal gateway: %v", err)
 	}
