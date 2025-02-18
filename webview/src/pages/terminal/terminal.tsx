@@ -235,7 +235,7 @@ export default function Terminal() {
 
 
     return (
-        <div className="terminal-container" style={{ width: `${width}px`, height: '500px' }}>
+        <div className="terminal-container" style={{ width: `${width}px` }}>
             <div ref={terminalRef} className="terminal" style={{ height: '100%' }} />
             <div ref={resizerRef} className="terminal-resizer" />
         </div>
