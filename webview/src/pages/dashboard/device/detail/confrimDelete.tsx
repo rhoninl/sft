@@ -1,4 +1,4 @@
-import { Button, ModalBody, Modal, ModalContent, ModalFooter, ModalHeader, Input } from "@nextui-org/react";
+import { Button, ModalBody, Modal, ModalContent, ModalFooter, ModalHeader, Input } from "@heroui/react";
 import { useState, useEffect } from "react";
 import { DeleteDevice } from "src/apis/shifu/device";
 

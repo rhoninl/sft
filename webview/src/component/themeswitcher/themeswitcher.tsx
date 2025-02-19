@@ -1,7 +1,7 @@
-import { Button } from "@nextui-org/react";
+import { Button } from "@heroui/react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
-import { IoMdSunny, IoIosMoon } from "react-icons/io";
+import { IoSunny, IoMoon } from "react-icons/io5";
 
 export function ThemeSwitcher() {
     const [mounted, setMounted] = useState(false);
@@ -34,9 +34,9 @@ export function ThemeSwitcher() {
             onClick={switchTheme}
         >
             {resolvedTheme === 'dark' ? (
-                <IoMdSunny className='h-full w-full' />
+                <IoSunny className='h-full w-full' />
             ) : (
-                <IoIosMoon className='h-full w-full' />
+                <IoMoon className='h-full w-full' />
             )}
         </Button>
     );

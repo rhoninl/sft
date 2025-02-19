@@ -4,10 +4,11 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 import { RouterProvider, } from "react-router-dom";
 import { router } from './router';
-import { NextUIProvider } from "@nextui-org/react";
+import { HeroUIProvider } from "@heroui/react";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { Provider } from 'react-redux';
 import { store } from './store/store';
+import EasterEgg from './components/EasterEgg';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -15,14 +16,15 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <NextThemesProvider attribute="class" defaultTheme="system" enableSystem>
-        <NextUIProvider>
+      <NextThemesProvider defaultTheme="light" enableSystem>
+        <HeroUIProvider>
           <main className="min-h-screen text-foreground bg-background">
+            <EasterEgg />
             <div className='h-full w-full flex justify-center'>
               <RouterProvider router={router} />
             </div>
           </main>
-        </NextUIProvider>
+        </HeroUIProvider>
       </NextThemesProvider>
     </Provider>
   </React.StrictMode>

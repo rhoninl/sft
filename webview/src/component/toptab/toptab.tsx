@@ -1,4 +1,4 @@
-import { Button, Navbar, NavbarContent, NavbarItem } from '@nextui-org/react';
+import { Button, Navbar, NavbarContent, NavbarItem } from "@heroui/react";
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { IoSettingsSharp, IoTerminal } from "react-icons/io5";
 import "./toptab.css";

@@ -10,7 +10,7 @@ import {
     TableCell,
     getKeyValue,
     TableRow,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { Device } from "src/proto/proto/shifu/shifu_pb";
 
 export default function DevicePage() {

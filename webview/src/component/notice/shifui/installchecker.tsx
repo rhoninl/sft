@@ -1,4 +1,4 @@
-import { Alert, Button } from "@nextui-org/react";
+import { Alert, Button } from "@heroui/react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';

@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { GetDeviceDetails } from "src/apis/shifu/device";
 import { GetDeviceDetailsResponse } from "src/proto/proto/shifu/shifu_pb";
-import { Button, Divider, Input, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@nextui-org/react";
+import { Button, Divider, Input, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@heroui/react";
 import "./detail.css"
 import { ForwardDrawer } from "./forward";
 import { ConfirmRestart } from "./confrimRestart";

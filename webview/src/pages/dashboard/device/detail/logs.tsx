@@ -1,4 +1,4 @@
-import { Tab, Tabs } from "@nextui-org/react";
+import { Tab, Tabs } from "@heroui/react";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { GetAllContainerName, GetDeviceShifuLogs } from "src/apis/shifu/device"
 import { GetDeviceShifuLogsResponse } from "src/proto/proto/shifu/shifu_pb";

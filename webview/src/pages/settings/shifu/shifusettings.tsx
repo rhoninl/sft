@@ -1,4 +1,4 @@
-import { AccordionItem, Accordion, Button, Checkbox, Select, SelectItem, Divider } from "@nextui-org/react";
+import { AccordionItem, Accordion, Button, Checkbox, Select, SelectItem, Divider } from "@heroui/react";
 import { useEffect, useState } from "react";
 import { GetAllAvailableVersions, InstallShifu } from "src/apis/shifu/shifu";
 import { ConfirmDelete } from "./confirmdelete";
@@ -53,8 +53,8 @@ export default function ShifuSettings() {
                     {versionList.map((version) => (
                         <SelectItem
                             key={version}
-                            value={version}
-                            onClick={() => setVersion(version)}
+                            textValue={version}
+                            onPress={() => setVersion(version)}
                         >
                             {version}
                         </SelectItem>
@@ -64,14 +64,14 @@ export default function ShifuSettings() {
                 {isInstalled ?
                     <Button
                         color="danger"
-                        onClick={() => setIsDeleteShifuOpen(true)}
+                        onPress={() => setIsDeleteShifuOpen(true)}
                         isDisabled={loading}
                     >
                         Uninstall
                     </Button> :
                     <Button
                         color="primary"
-                        onClick={() => installShifu()}
+                        onPress={() => installShifu()}
                         isDisabled={loading}
                     >
                         Install

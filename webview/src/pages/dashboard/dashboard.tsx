@@ -1,6 +1,6 @@
 import './dashboard.css';
 import ShifuInstall from '../../component/notice/shifui/installchecker';
-import { Divider } from '@nextui-org/react';
+import { Divider } from "@heroui/react";
 import TopTab from '../../component/toptab/toptab';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import Settings from '../settings/settings';

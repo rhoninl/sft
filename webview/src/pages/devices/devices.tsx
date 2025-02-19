@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useShifu } from '../../hooks/useShifu';
-import { Card, Spinner } from '@nextui-org/react';
+import { Card, Spinner } from "@heroui/react";
 
 export default function Devices() {
   const { 

@@ -1,4 +1,4 @@
-import { Button, ModalBody, Modal, ModalContent, ModalFooter, ModalHeader, Input } from "@nextui-org/react";
+import { Button, ModalBody, Modal, ModalContent, ModalFooter, ModalHeader, Input } from "@heroui/react";
 import { useState } from "react";
 import { UninstallShifu } from "src/apis/shifu/shifu";
 

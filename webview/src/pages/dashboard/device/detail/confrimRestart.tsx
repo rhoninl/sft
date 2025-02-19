@@ -1,4 +1,4 @@
-import { Button, ModalBody, Modal, ModalContent, ModalFooter, ModalHeader } from "@nextui-org/react";
+import { Button, ModalBody, Modal, ModalContent, ModalFooter, ModalHeader } from "@heroui/react";
 import { RestartDevice } from "src/apis/shifu/device";
 
 interface ConfirmDeleteProps {
