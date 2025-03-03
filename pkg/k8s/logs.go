@@ -89,6 +89,8 @@ func buildLabelSelector(matchLabels map[string]interface{}) string {
 }
 
 func streamPodLogs(clientset *kubernetes.Clientset, namespace, podName, containerName string, follow bool, w io.Writer) error {
+	ctx, cancel := context.WithCancel(context.TODO())
+	defer cancel()
 	// Prepare PodLogOptions (filter by container if needed)
 	logOptions := &v1.PodLogOptions{
 		Follow:    follow,
@@ -100,7 +102,7 @@ func streamPodLogs(clientset *kubernetes.Clientset, namespace, podName, containe
 
 	// Get the logs for the pod (and container)
 	req := clientset.CoreV1().Pods(namespace).GetLogs(podName, logOptions)
-	podLogs, err := req.Stream(context.TODO())
+	podLogs, err := req.Stream(ctx)
 	if err != nil {
 		return fmt.Errorf("error retrieving logs for pod %s: %w", podName, err)
 	}

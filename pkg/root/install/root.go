@@ -5,7 +5,8 @@ import (
 )
 
 var (
-	version string
+	version        string
+	ignoreIfExists bool
 )
 
 const (

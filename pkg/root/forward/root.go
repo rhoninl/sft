@@ -75,27 +75,6 @@ func ForwardPort(ctx context.Context, deviceName string, devicePort string, loca
 		return err
 	}
 
-	// if devicePort == 0 {
-	// 	if len(deployments[0].Spec.Template.Spec.Containers) == 0 || len(deployments[0].Spec.Template.Spec.Containers[0].Ports) == 0 {
-	// 		logger.Println("Error: No container ports found in the deployment")
-	// 		return err
-	// 	}
-	// 	containerPort := deployments[0].Spec.Template.Spec.Containers[0].Ports[0].ContainerPort
-	// 	localPort := 3000
-	// 	for {
-	// 		if !isPortInUse(localPort) {
-	// 			break
-	// 		}
-	// 		localPort++
-	// 	}
-	// }
-
-	// ports := strings.Split(forwardPort, ":")
-	// if len(ports) != 2 {
-	// 	logger.Println("Error: Invalid port format. Expected format is 'localPort:remotePort'")
-	// 	return
-	// }
-
 	pods, err := k8s.GetPodsByDeployment("deviceshifu", deployments[0].Name)
 	if err != nil {
 		logger.Printf("Error: Failed to retrieve pods for deployment '%s': %v\n", deployments[0].Name, err)

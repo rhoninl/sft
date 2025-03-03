@@ -9,6 +9,7 @@ import (
 
 func init() {
 	UninstallCmd.AddCommand(UninstallShifuCmd)
+	UninstallShifuCmd.Flags().BoolVarP(&ignoreIfNotExists, "ignore-if-not-exists", "i", false, "ignore if the resource not exists")
 }
 
 var UninstallShifuCmd = &cobra.Command{
@@ -37,7 +38,7 @@ func UninstallShifu() error {
 		return err
 	}
 
-	_, err = k8s.DeleteYaml(string(yamlContent))
+	_, err = k8s.DeleteYaml(string(yamlContent), ignoreIfNotExists)
 	if err != nil {
 		return err
 	}

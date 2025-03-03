@@ -13,10 +13,13 @@ module.exports = {
         cyber: {
           colors: {
             background: "#0d0d0d",
-            foreground: "#00ffea",
+            foreground: "#a40aff",
             primary: {
               foreground: "#ffffff",
-              DEFAULT: "#FF0066",
+              DEFAULT: "#a40aff",
+            },
+            content1: {
+              DEFAULT: "#73d18d",
             },
           },
         },

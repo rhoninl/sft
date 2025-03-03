@@ -35,10 +35,10 @@ export default function TopTab() {
       </NavbarContent>
       <NavbarContent className="sm:flex" justify="end">
         <ThemeSwitcher />
-        <Button variant='light' isIconOnly disableRipple disableAnimation onClick={() => navigate("/terminal")}>
+        <Button variant='light' isIconOnly disableRipple disableAnimation onPress={() => navigate("/terminal")}>
           <IoTerminal className='h-full w-auto p-2' />
         </Button>
-        <Button variant='light' isIconOnly disableRipple disableAnimation className='button-setting' onClick={() => navigate("/settings")}>
+        <Button variant='light' isIconOnly disableRipple disableAnimation className='button-setting' onPress={() => navigate("/settings")}>
           <IoSettingsSharp className='h-full w-auto' />
         </Button>
       </NavbarContent>

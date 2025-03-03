@@ -171,6 +171,7 @@ func (s *ShifuServer) RestartDeviceShifu(ctx context.Context, req *pb.RestartDev
 }
 
 func (s *ShifuServer) DeleteDeviceShifu(ctx context.Context, req *pb.DeleteDeviceShifuRequest) (*pb.Empty, error) {
+
 	return nil, errors.New("not implemented")
 }
 

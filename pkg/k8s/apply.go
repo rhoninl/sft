@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/rhoninl/sft/pkg/utils/logger"
+	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime/serializer/yaml"
@@ -13,7 +14,7 @@ import (
 )
 
 // ApplyYaml applies a given YAML string to a Kubernetes cluster
-func ApplyYaml(yamlContent string) (bool, error) {
+func ApplyYaml(yamlContent string, ignoreIfExists bool) (bool, error) {
 	client, discoveryClient, err := NewClient()
 	if err != nil {
 		return false, err
@@ -68,7 +69,11 @@ func ApplyYaml(yamlContent string) (bool, error) {
 		}
 
 		if err != nil {
-			return false, fmt.Errorf("failed to apply resource: %v", err)
+			if errors.IsAlreadyExists(err) && ignoreIfExists {
+				logger.Debugf(logger.Verbose, "resource already exists: %s/%s", gvk.Kind, obj.GetName())
+			} else {
+				return false, fmt.Errorf("failed to apply resource: %v", err)
+			}
 		}
 
 		logger.Debugf(logger.Verbose, "applied resource: %s/%s", gvk.Kind, obj.GetName())

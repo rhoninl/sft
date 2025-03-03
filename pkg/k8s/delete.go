@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/rhoninl/sft/pkg/utils/logger"
+	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime/serializer/yaml"
@@ -13,7 +14,7 @@ import (
 )
 
 // DeleteYaml deletes resources defined in a given YAML string from a Kubernetes cluster
-func DeleteYaml(yamlContent string) (bool, error) {
+func DeleteYaml(yamlContent string, ignoreIfNotExists bool) (bool, error) {
 	client, discoveryClient, err := NewClient()
 	if err != nil {
 		return false, err
@@ -74,7 +75,11 @@ func DeleteYaml(yamlContent string) (bool, error) {
 		}
 
 		if err != nil {
-			return false, fmt.Errorf("failed to delete resource: %v", err)
+			if ignoreIfNotExists && errors.IsNotFound(err) {
+				logger.Debugf(logger.Verbose, "resource not found: %s/%s", gvk.Kind, resourceName)
+			} else {
+				return false, fmt.Errorf("failed to delete resource: %v", err)
+			}
 		}
 
 		logger.Debugf(logger.Verbose, "deleted resource: %s/%s", gvk.Kind, resourceName)
@@ -82,3 +87,11 @@ func DeleteYaml(yamlContent string) (bool, error) {
 
 	return true, nil
 }
+
+// func DeleteResource(namespace string, name string) error {
+// 	client, discoveryClient, err := NewClient()
+// 	if err != nil {
+// 		return err
+// 	}
+
+// }

@@ -9,6 +9,7 @@ import (
 
 func init() {
 	UninstallCmd.AddCommand(uninstallTelemetryServiceCmd)
+	uninstallTelemetryServiceCmd.Flags().BoolVarP(&ignoreIfNotExists, "ignore-if-not-exists", "i", false, "ignore if the resource not exists")
 }
 
 var uninstallTelemetryServiceCmd = &cobra.Command{
@@ -24,7 +25,7 @@ var uninstallTelemetryServiceCmd = &cobra.Command{
 			return
 		}
 
-		_, err = k8s.DeleteYaml(yamlContent)
+		_, err = k8s.DeleteYaml(yamlContent, ignoreIfNotExists)
 		if err != nil {
 			logger.Debug(logger.Verbose, err)
 			logger.Println("Failed to uninstall telemetryservice component")

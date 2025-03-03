@@ -6,6 +6,7 @@ import (
 
 func init() {
 	InstallCmd.AddCommand(installAllCmd)
+	installAllCmd.Flags().BoolVarP(&ignoreIfExists, "ignore-if-exists", "i", false, "ignore if the resource already exists")
 }
 
 var installAllCmd = &cobra.Command{

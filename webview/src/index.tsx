@@ -8,7 +8,7 @@ import { HeroUIProvider } from "@heroui/react";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { Provider } from 'react-redux';
 import { store } from './store/store';
-import EasterEgg from './components/EasterEgg';
+import EasterEgg from './components/easteregg/EasterEgg';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement

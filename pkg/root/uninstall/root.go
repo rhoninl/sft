@@ -5,8 +5,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func init() {
+var (
+	ignoreIfNotExists bool
+)
 
+func init() {
+	UninstallCmd.Flags().BoolVarP(&ignoreIfNotExists, "ignore-if-not-exists", "i", false, "ignore if the resource not exists")
 }
 
 var UninstallCmd = &cobra.Command{

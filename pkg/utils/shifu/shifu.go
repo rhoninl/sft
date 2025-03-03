@@ -93,3 +93,11 @@ func CheckShifuInstalled() error {
 	logger.Debugf(logger.MoreVerbose, "shifu is installed")
 	return nil
 }
+
+// func Delete(deviceName string) error {
+// 	device, err := k8s.GetAllByDeviceName(deviceName)
+// 	if err != nil {
+// 		return fmt.Errorf("failed to get all by device name")
+// 	}
+
+// }

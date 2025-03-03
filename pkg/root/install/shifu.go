@@ -9,6 +9,7 @@ import (
 
 func init() {
 	InstallCmd.AddCommand(installShifuCmd)
+	installShifuCmd.Flags().BoolVarP(&ignoreIfExists, "ignore-if-exists", "i", false, "ignore if the resource already exists")
 }
 
 var installShifuCmd = &cobra.Command{
@@ -29,7 +30,7 @@ func InstallShifu(version string) error {
 		return err
 	}
 
-	_, err = k8s.ApplyYaml(string(yamlContent))
+	_, err = k8s.ApplyYaml(string(yamlContent), ignoreIfExists)
 	if err != nil {
 		logger.Debugf(logger.Verbose, "Failed to install shifu component: %v", err)
 		logger.Println("Failed to install shifu component")

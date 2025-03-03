@@ -9,6 +9,7 @@ import (
 
 func init() {
 	InstallCmd.AddCommand(installTelemetryServiceCmd)
+	installTelemetryServiceCmd.Flags().BoolVarP(&ignoreIfExists, "ignore-if-exists", "i", false, "ignore if the resource already exists")
 }
 
 var installTelemetryServiceCmd = &cobra.Command{
@@ -24,7 +25,7 @@ var installTelemetryServiceCmd = &cobra.Command{
 			return
 		}
 
-		_, err = k8s.ApplyYaml(yamlContent)
+		_, err = k8s.ApplyYaml(yamlContent, ignoreIfExists)
 		if err != nil {
 			logger.Debug(logger.Verbose, err)
 			logger.Println("Failed to install telemetryservice component")
