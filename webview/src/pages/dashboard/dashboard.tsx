@@ -7,6 +7,7 @@ import Settings from '../settings/settings';
 import DevicePage from './device/device';
 import Device from './device/detail/detail';
 import Terminal from '../terminal/terminal';
+import Add from '../add/add';
 
 export default function Dashboard() {
     const path = useLocation().pathname.split("/")[1];
