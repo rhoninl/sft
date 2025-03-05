@@ -1,24 +1,19 @@
 import { Button, Divider, Drawer, DrawerBody, DrawerContent, DrawerFooter, DrawerHeader, Input } from "@heroui/react";
-
+import CreateByUrl from "./url/url";
 export default function Add({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) {
     console.log(isOpen);
     return (
-        <Drawer isOpen={isOpen} onClose={onClose} size="xl">
+        <Drawer isOpen={isOpen} onClose={onClose} size="xl" placement="left">
             <DrawerContent>
                 <DrawerHeader>
-                    Add Anything
+                    Install Things in your Cluster
                 </DrawerHeader>
                 <DrawerBody>
-                    <h1 className="font-bold"> Deploy with your link</h1>
-                    <div className="flex flex-row gap-2">
-                        <Input placeholder="https://your-link.com/xxx.yaml" />
-                        <Button color="primary" onPress={() => { console.log("add anythings") }}>Add</Button>
-                    </div>
+                    <CreateByUrl />
                     <Divider />
                 </DrawerBody>
                 <DrawerFooter>
-                    <Button variant="light" color="danger" onPress={onClose}>Cancel</Button>
-                    <Button color="primary" onPress={onClose}>Add</Button>
+                    <Button color="primary" onPress={onClose}>Close</Button>
                 </DrawerFooter>
             </DrawerContent>
         </Drawer>

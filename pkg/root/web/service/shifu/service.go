@@ -5,6 +5,7 @@ import (
 	"context"
 	"errors"
 	"io"
+	"net/http"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -369,4 +370,26 @@ func (s *ShifuServer) GetCompletions(ctx context.Context, req *pb.CompletionRequ
 	return &pb.CompletionResponse{
 		Completions: completions,
 	}, nil
+}
+
+func (s *ShifuServer) InstallViaURL(ctx context.Context, req *pb.InstallViaURLRequest) (*pb.Empty, error) {
+	body, err := http.Get(req.GetUrl())
+	if err != nil {
+		logger.Printf("GRPC: Error: failed to get yaml: %v", err)
+		return nil, status.Errorf(codes.Internal, "invalid url")
+	}
+	defer body.Body.Close()
+
+	yaml, err := io.ReadAll(body.Body)
+	if err != nil {
+		logger.Printf("GRPC: Error: failed to read yaml: %v", err)
+		return nil, status.Errorf(codes.Internal, "invalid url")
+	}
+
+	if _, err := k8s.ApplyYaml(string(yaml), true); err != nil {
+		logger.Printf("GRPC: Error: invalid yaml from url: %v", err)
+		return nil, status.Errorf(codes.Internal, "invalid yaml")
+	}
+
+	return nil, nil
 }

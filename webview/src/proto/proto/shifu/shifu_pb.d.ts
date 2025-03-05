@@ -554,3 +554,21 @@ export namespace CompletionResponse {
   }
 }
 
+export class InstallViaURLRequest extends jspb.Message {
+  getUrl(): string;
+  setUrl(value: string): InstallViaURLRequest;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): InstallViaURLRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: InstallViaURLRequest): InstallViaURLRequest.AsObject;
+  static serializeBinaryToWriter(message: InstallViaURLRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): InstallViaURLRequest;
+  static deserializeBinaryFromReader(message: InstallViaURLRequest, reader: jspb.BinaryReader): InstallViaURLRequest;
+}
+
+export namespace InstallViaURLRequest {
+  export type AsObject = {
+    url: string,
+  }
+}
+

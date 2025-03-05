@@ -43,6 +43,9 @@ service ShifuService {
 
   // Get completions
   rpc GetCompletions(CompletionRequest) returns (CompletionResponse);
+
+  // Install Via URL
+  rpc InstallViaURL(InstallViaURLRequest) returns (Empty) {}
 }
 
 message CheckInstallationRequest {}
@@ -162,3 +165,7 @@ message CompletionRequest {
 message CompletionResponse {
   repeated string completions = 1;  // List of completion suggestions
 } 
+
+message InstallViaURLRequest {
+  string url = 1;
+}

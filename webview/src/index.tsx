@@ -4,7 +4,7 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 import { RouterProvider, } from "react-router-dom";
 import { router } from './router';
-import { HeroUIProvider } from "@heroui/react";
+import { HeroUIProvider, ToastProvider } from "@heroui/react";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { Provider } from 'react-redux';
 import { store } from './store/store';
@@ -18,6 +18,7 @@ root.render(
     <Provider store={store}>
       <NextThemesProvider defaultTheme="light" enableSystem>
         <HeroUIProvider>
+          <ToastProvider />
           <main className="min-h-screen text-foreground bg-background">
             <EasterEgg />
             <div className='h-full w-full flex justify-center'>
