@@ -13,7 +13,6 @@ import (
 var internalHost = []string{
 	"localhost",
 	"0.0.0.0",
-	"",
 }
 
 var addressHallmark = []string{

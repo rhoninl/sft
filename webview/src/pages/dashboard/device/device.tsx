@@ -63,7 +63,13 @@ export default function DevicePage() {
             <TableBody items={devices}>
                 {(device) => (
                     <TableRow key={device.getName()} onClick={() => navigate(`/devices/${device.getName()}`)}>
-                        {(columnKey) => <TableCell>{getKeyValue(device.toObject(), columnKey)}</TableCell>}
+                        {(columnKey) => {
+                            if (columnKey === "address") {
+                                const address = device.getAddress();
+                                return <TableCell>{address.startsWith("[P]") ? "Positive Device" : address}</TableCell>;
+                            }
+                            return <TableCell>{getKeyValue(device.toObject(), columnKey)}</TableCell>;
+                        }}
                     </TableRow>
                 )}
             </TableBody>
