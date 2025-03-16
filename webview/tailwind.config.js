@@ -10,7 +10,8 @@ module.exports = {
     heroui({
       themes: {
         cyber: {
-          colors: {
+          extend: "dark",
+          "colors": {
             background: "#0d0d0d",
             foreground: "#a40aff",
             primary: {
@@ -22,7 +23,7 @@ module.exports = {
             },
           },
         },
-        light: {
+        "light": {
           colors: {
             background: "#FFFFFF",
             foreground: "#11181C",
@@ -32,7 +33,7 @@ module.exports = {
             },
           },
         },
-        dark: {
+        "dark": {
           colors: {
             background: "#2f2f36",
             foreground: "#DCEDEE",

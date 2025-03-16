@@ -7,7 +7,7 @@ const konamiCode = ['s', 'h', 'i', 'f', 'u'];
 const EasterEgg: React.FC = () => {
     const [keySequence, setKeySequence] = useState<string[]>([]);
     const [show, setShow] = useState<boolean>(false);
-    const { theme, setTheme } = useTheme();
+    const { theme, setTheme, themes } = useTheme();
     const [previousTheme, setPreviousTheme] = useState<string>('light');
     const themeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -18,7 +18,8 @@ const EasterEgg: React.FC = () => {
                 if (newSeq.length > konamiCode.length) {
                     newSeq.shift();
                 }
-                if (newSeq.join('') === konamiCode.join('')) {
+                if (newSeq.join('').toLowerCase() === konamiCode.join('').toLowerCase()) {
+                    console.log('Easter egg activated!');
                     if (!show) {
                         setPreviousTheme((theme === 'system' || !theme) ? 'light' : theme);
                         setShow(true);
@@ -27,7 +28,9 @@ const EasterEgg: React.FC = () => {
                             clearTimeout(themeTimeoutRef.current);
                             themeTimeoutRef.current = null;
                         }
+                        document.documentElement.classList.remove('cyber');
                         setTheme('system');
+                        console.log(themes)
                         setShow(false);
                     }
                 }
@@ -80,9 +83,11 @@ const EasterEgg: React.FC = () => {
         if (show) {
             setTheme('cyber');
             themeTimeoutRef.current = setTimeout(() => {
+                console.log('Restoring theme to:', previousTheme);
                 setTheme(previousTheme);
                 themeTimeoutRef.current = null;
             }, 5000);
+
             return () => {
                 if (themeTimeoutRef.current) {
                     clearTimeout(themeTimeoutRef.current);
