@@ -2,6 +2,20 @@ import * as jspb from 'google-protobuf'
 
 
 
+export class Empty extends jspb.Message {
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): Empty.AsObject;
+  static toObject(includeInstance: boolean, msg: Empty): Empty.AsObject;
+  static serializeBinaryToWriter(message: Empty, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): Empty;
+  static deserializeBinaryFromReader(message: Empty, reader: jspb.BinaryReader): Empty;
+}
+
+export namespace Empty {
+  export type AsObject = {
+  }
+}
+
 export class CheckInstallationRequest extends jspb.Message {
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): CheckInstallationRequest.AsObject;
@@ -31,6 +45,40 @@ export class CheckInstallationResponse extends jspb.Message {
 export namespace CheckInstallationResponse {
   export type AsObject = {
     installed: boolean,
+  }
+}
+
+export class GetAllAvailableVersionsRequest extends jspb.Message {
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetAllAvailableVersionsRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: GetAllAvailableVersionsRequest): GetAllAvailableVersionsRequest.AsObject;
+  static serializeBinaryToWriter(message: GetAllAvailableVersionsRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetAllAvailableVersionsRequest;
+  static deserializeBinaryFromReader(message: GetAllAvailableVersionsRequest, reader: jspb.BinaryReader): GetAllAvailableVersionsRequest;
+}
+
+export namespace GetAllAvailableVersionsRequest {
+  export type AsObject = {
+  }
+}
+
+export class GetAllAvailableVersionsResponse extends jspb.Message {
+  getVersionsList(): Array<string>;
+  setVersionsList(value: Array<string>): GetAllAvailableVersionsResponse;
+  clearVersionsList(): GetAllAvailableVersionsResponse;
+  addVersions(value: string, index?: number): GetAllAvailableVersionsResponse;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetAllAvailableVersionsResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: GetAllAvailableVersionsResponse): GetAllAvailableVersionsResponse.AsObject;
+  static serializeBinaryToWriter(message: GetAllAvailableVersionsResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetAllAvailableVersionsResponse;
+  static deserializeBinaryFromReader(message: GetAllAvailableVersionsResponse, reader: jspb.BinaryReader): GetAllAvailableVersionsResponse;
+}
+
+export namespace GetAllAvailableVersionsResponse {
+  export type AsObject = {
+    versionsList: Array<string>,
   }
 }
 
@@ -74,40 +122,6 @@ export namespace InstallShifuResponse {
   }
 }
 
-export class GetAllAvailableVersionsRequest extends jspb.Message {
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): GetAllAvailableVersionsRequest.AsObject;
-  static toObject(includeInstance: boolean, msg: GetAllAvailableVersionsRequest): GetAllAvailableVersionsRequest.AsObject;
-  static serializeBinaryToWriter(message: GetAllAvailableVersionsRequest, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): GetAllAvailableVersionsRequest;
-  static deserializeBinaryFromReader(message: GetAllAvailableVersionsRequest, reader: jspb.BinaryReader): GetAllAvailableVersionsRequest;
-}
-
-export namespace GetAllAvailableVersionsRequest {
-  export type AsObject = {
-  }
-}
-
-export class GetAllAvailableVersionsResponse extends jspb.Message {
-  getVersionsList(): Array<string>;
-  setVersionsList(value: Array<string>): GetAllAvailableVersionsResponse;
-  clearVersionsList(): GetAllAvailableVersionsResponse;
-  addVersions(value: string, index?: number): GetAllAvailableVersionsResponse;
-
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): GetAllAvailableVersionsResponse.AsObject;
-  static toObject(includeInstance: boolean, msg: GetAllAvailableVersionsResponse): GetAllAvailableVersionsResponse.AsObject;
-  static serializeBinaryToWriter(message: GetAllAvailableVersionsResponse, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): GetAllAvailableVersionsResponse;
-  static deserializeBinaryFromReader(message: GetAllAvailableVersionsResponse, reader: jspb.BinaryReader): GetAllAvailableVersionsResponse;
-}
-
-export namespace GetAllAvailableVersionsResponse {
-  export type AsObject = {
-    versionsList: Array<string>,
-  }
-}
-
 export class UninstallShifuRequest extends jspb.Message {
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): UninstallShifuRequest.AsObject;
@@ -141,6 +155,104 @@ export namespace UninstallShifuResponse {
   export type AsObject = {
     success: boolean,
     error: string,
+  }
+}
+
+export class InstallViaURLRequest extends jspb.Message {
+  getUrl(): string;
+  setUrl(value: string): InstallViaURLRequest;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): InstallViaURLRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: InstallViaURLRequest): InstallViaURLRequest.AsObject;
+  static serializeBinaryToWriter(message: InstallViaURLRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): InstallViaURLRequest;
+  static deserializeBinaryFromReader(message: InstallViaURLRequest, reader: jspb.BinaryReader): InstallViaURLRequest;
+}
+
+export namespace InstallViaURLRequest {
+  export type AsObject = {
+    url: string,
+  }
+}
+
+export class Device extends jspb.Message {
+  getName(): string;
+  setName(value: string): Device;
+
+  getProtocol(): string;
+  setProtocol(value: string): Device;
+
+  getAddress(): string;
+  setAddress(value: string): Device;
+
+  getStatus(): string;
+  setStatus(value: string): Device;
+
+  getAge(): string;
+  setAge(value: string): Device;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): Device.AsObject;
+  static toObject(includeInstance: boolean, msg: Device): Device.AsObject;
+  static serializeBinaryToWriter(message: Device, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): Device;
+  static deserializeBinaryFromReader(message: Device, reader: jspb.BinaryReader): Device;
+}
+
+export namespace Device {
+  export type AsObject = {
+    name: string,
+    protocol: string,
+    address: string,
+    status: string,
+    age: string,
+  }
+}
+
+export class EdgeDevice extends jspb.Message {
+  getSku(): string;
+  setSku(value: string): EdgeDevice;
+
+  getConnection(): string;
+  setConnection(value: string): EdgeDevice;
+
+  getAddress(): string;
+  setAddress(value: string): EdgeDevice;
+
+  getProtocol(): string;
+  setProtocol(value: string): EdgeDevice;
+
+  getStatus(): string;
+  setStatus(value: string): EdgeDevice;
+
+  getAge(): string;
+  setAge(value: string): EdgeDevice;
+
+  getSetting(): string;
+  setSetting(value: string): EdgeDevice;
+
+  getGateway(): string;
+  setGateway(value: string): EdgeDevice;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): EdgeDevice.AsObject;
+  static toObject(includeInstance: boolean, msg: EdgeDevice): EdgeDevice.AsObject;
+  static serializeBinaryToWriter(message: EdgeDevice, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): EdgeDevice;
+  static deserializeBinaryFromReader(message: EdgeDevice, reader: jspb.BinaryReader): EdgeDevice;
+}
+
+export namespace EdgeDevice {
+  export type AsObject = {
+    sku: string,
+    connection: string,
+    address: string,
+    protocol: string,
+    status: string,
+    age: string,
+    setting: string,
+    gateway: string,
   }
 }
 
@@ -197,10 +309,10 @@ export namespace GetDeviceDetailsRequest {
 }
 
 export class GetDeviceDetailsResponse extends jspb.Message {
-  getEdgedevice(): Edgedevice | undefined;
-  setEdgedevice(value?: Edgedevice): GetDeviceDetailsResponse;
-  hasEdgedevice(): boolean;
-  clearEdgedevice(): GetDeviceDetailsResponse;
+  getEdgeDevice(): EdgeDevice | undefined;
+  setEdgeDevice(value?: EdgeDevice): GetDeviceDetailsResponse;
+  hasEdgeDevice(): boolean;
+  clearEdgeDevice(): GetDeviceDetailsResponse;
 
   getApis(): string;
   setApis(value: string): GetDeviceDetailsResponse;
@@ -215,132 +327,26 @@ export class GetDeviceDetailsResponse extends jspb.Message {
 
 export namespace GetDeviceDetailsResponse {
   export type AsObject = {
-    edgedevice?: Edgedevice.AsObject,
+    edgeDevice?: EdgeDevice.AsObject,
     apis: string,
   }
 }
 
-export class Device extends jspb.Message {
-  getName(): string;
-  setName(value: string): Device;
-
-  getProtocol(): string;
-  setProtocol(value: string): Device;
-
-  getAddress(): string;
-  setAddress(value: string): Device;
-
-  getStatus(): string;
-  setStatus(value: string): Device;
-
-  getAge(): string;
-  setAge(value: string): Device;
-
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): Device.AsObject;
-  static toObject(includeInstance: boolean, msg: Device): Device.AsObject;
-  static serializeBinaryToWriter(message: Device, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): Device;
-  static deserializeBinaryFromReader(message: Device, reader: jspb.BinaryReader): Device;
-}
-
-export namespace Device {
-  export type AsObject = {
-    name: string,
-    protocol: string,
-    address: string,
-    status: string,
-    age: string,
-  }
-}
-
-export class Edgedevice extends jspb.Message {
-  getSku(): string;
-  setSku(value: string): Edgedevice;
-
-  getConnection(): string;
-  setConnection(value: string): Edgedevice;
-
-  getAddress(): string;
-  setAddress(value: string): Edgedevice;
-
-  getProtocol(): string;
-  setProtocol(value: string): Edgedevice;
-
-  getStatus(): string;
-  setStatus(value: string): Edgedevice;
-
-  getAge(): string;
-  setAge(value: string): Edgedevice;
-
-  getSetting(): string;
-  setSetting(value: string): Edgedevice;
-
-  getGateway(): string;
-  setGateway(value: string): Edgedevice;
-
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): Edgedevice.AsObject;
-  static toObject(includeInstance: boolean, msg: Edgedevice): Edgedevice.AsObject;
-  static serializeBinaryToWriter(message: Edgedevice, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): Edgedevice;
-  static deserializeBinaryFromReader(message: Edgedevice, reader: jspb.BinaryReader): Edgedevice;
-}
-
-export namespace Edgedevice {
-  export type AsObject = {
-    sku: string,
-    connection: string,
-    address: string,
-    protocol: string,
-    status: string,
-    age: string,
-    setting: string,
-    gateway: string,
-  }
-}
-
-export class ForwardPortRequest extends jspb.Message {
+export class DeleteDeviceRequest extends jspb.Message {
   getDeviceName(): string;
-  setDeviceName(value: string): ForwardPortRequest;
-
-  getDevicePort(): string;
-  setDevicePort(value: string): ForwardPortRequest;
-
-  getLocalPort(): string;
-  setLocalPort(value: string): ForwardPortRequest;
+  setDeviceName(value: string): DeleteDeviceRequest;
 
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): ForwardPortRequest.AsObject;
-  static toObject(includeInstance: boolean, msg: ForwardPortRequest): ForwardPortRequest.AsObject;
-  static serializeBinaryToWriter(message: ForwardPortRequest, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): ForwardPortRequest;
-  static deserializeBinaryFromReader(message: ForwardPortRequest, reader: jspb.BinaryReader): ForwardPortRequest;
+  toObject(includeInstance?: boolean): DeleteDeviceRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: DeleteDeviceRequest): DeleteDeviceRequest.AsObject;
+  static serializeBinaryToWriter(message: DeleteDeviceRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): DeleteDeviceRequest;
+  static deserializeBinaryFromReader(message: DeleteDeviceRequest, reader: jspb.BinaryReader): DeleteDeviceRequest;
 }
 
-export namespace ForwardPortRequest {
+export namespace DeleteDeviceRequest {
   export type AsObject = {
     deviceName: string,
-    devicePort: string,
-    localPort: string,
-  }
-}
-
-export class ForwardPortResponse extends jspb.Message {
-  getSuccess(): boolean;
-  setSuccess(value: boolean): ForwardPortResponse;
-
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): ForwardPortResponse.AsObject;
-  static toObject(includeInstance: boolean, msg: ForwardPortResponse): ForwardPortResponse.AsObject;
-  static serializeBinaryToWriter(message: ForwardPortResponse, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): ForwardPortResponse;
-  static deserializeBinaryFromReader(message: ForwardPortResponse, reader: jspb.BinaryReader): ForwardPortResponse;
-}
-
-export namespace ForwardPortResponse {
-  export type AsObject = {
-    success: boolean,
   }
 }
 
@@ -359,20 +365,6 @@ export class RestartDeviceShifuRequest extends jspb.Message {
 export namespace RestartDeviceShifuRequest {
   export type AsObject = {
     deviceName: string,
-  }
-}
-
-export class Empty extends jspb.Message {
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): Empty.AsObject;
-  static toObject(includeInstance: boolean, msg: Empty): Empty.AsObject;
-  static serializeBinaryToWriter(message: Empty, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): Empty;
-  static deserializeBinaryFromReader(message: Empty, reader: jspb.BinaryReader): Empty;
-}
-
-export namespace Empty {
-  export type AsObject = {
   }
 }
 
@@ -472,6 +464,50 @@ export namespace GetDeviceShifuLogsResponse {
   }
 }
 
+export class ForwardPortRequest extends jspb.Message {
+  getDeviceName(): string;
+  setDeviceName(value: string): ForwardPortRequest;
+
+  getDevicePort(): string;
+  setDevicePort(value: string): ForwardPortRequest;
+
+  getLocalPort(): string;
+  setLocalPort(value: string): ForwardPortRequest;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): ForwardPortRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: ForwardPortRequest): ForwardPortRequest.AsObject;
+  static serializeBinaryToWriter(message: ForwardPortRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ForwardPortRequest;
+  static deserializeBinaryFromReader(message: ForwardPortRequest, reader: jspb.BinaryReader): ForwardPortRequest;
+}
+
+export namespace ForwardPortRequest {
+  export type AsObject = {
+    deviceName: string,
+    devicePort: string,
+    localPort: string,
+  }
+}
+
+export class ForwardPortResponse extends jspb.Message {
+  getSuccess(): boolean;
+  setSuccess(value: boolean): ForwardPortResponse;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): ForwardPortResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: ForwardPortResponse): ForwardPortResponse.AsObject;
+  static serializeBinaryToWriter(message: ForwardPortResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ForwardPortResponse;
+  static deserializeBinaryFromReader(message: ForwardPortResponse, reader: jspb.BinaryReader): ForwardPortResponse;
+}
+
+export namespace ForwardPortResponse {
+  export type AsObject = {
+    success: boolean,
+  }
+}
+
 export class CommandRequest extends jspb.Message {
   getCommand(): string;
   setCommand(value: string): CommandRequest;
@@ -551,24 +587,6 @@ export class CompletionResponse extends jspb.Message {
 export namespace CompletionResponse {
   export type AsObject = {
     completionsList: Array<string>,
-  }
-}
-
-export class InstallViaURLRequest extends jspb.Message {
-  getUrl(): string;
-  setUrl(value: string): InstallViaURLRequest;
-
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): InstallViaURLRequest.AsObject;
-  static toObject(includeInstance: boolean, msg: InstallViaURLRequest): InstallViaURLRequest.AsObject;
-  static serializeBinaryToWriter(message: InstallViaURLRequest, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): InstallViaURLRequest;
-  static deserializeBinaryFromReader(message: InstallViaURLRequest, reader: jspb.BinaryReader): InstallViaURLRequest;
-}
-
-export namespace InstallViaURLRequest {
-  export type AsObject = {
-    url: string,
   }
 }
 

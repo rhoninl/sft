@@ -19,54 +19,49 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	ShifuService_GetAllAvailableVersions_FullMethodName = "/shifu.ShifuService/GetAllAvailableVersions"
 	ShifuService_CheckInstallation_FullMethodName       = "/shifu.ShifuService/CheckInstallation"
+	ShifuService_GetAllAvailableVersions_FullMethodName = "/shifu.ShifuService/GetAllAvailableVersions"
 	ShifuService_InstallShifu_FullMethodName            = "/shifu.ShifuService/InstallShifu"
 	ShifuService_UninstallShifu_FullMethodName          = "/shifu.ShifuService/UninstallShifu"
 	ShifuService_ListDevices_FullMethodName             = "/shifu.ShifuService/ListDevices"
 	ShifuService_GetDeviceDetails_FullMethodName        = "/shifu.ShifuService/GetDeviceDetails"
-	ShifuService_ForwardPort_FullMethodName             = "/shifu.ShifuService/ForwardPort"
+	ShifuService_InstallViaURL_FullMethodName           = "/shifu.ShifuService/InstallViaURL"
+	ShifuService_DeleteDevice_FullMethodName            = "/shifu.ShifuService/DeleteDevice"
 	ShifuService_RestartDeviceShifu_FullMethodName      = "/shifu.ShifuService/RestartDeviceShifu"
 	ShifuService_DeleteDeviceShifu_FullMethodName       = "/shifu.ShifuService/DeleteDeviceShifu"
 	ShifuService_GetAllContainerName_FullMethodName     = "/shifu.ShifuService/GetAllContainerName"
 	ShifuService_GetDeviceShifuLogs_FullMethodName      = "/shifu.ShifuService/GetDeviceShifuLogs"
+	ShifuService_ForwardPort_FullMethodName             = "/shifu.ShifuService/ForwardPort"
 	ShifuService_ExecuteCommand_FullMethodName          = "/shifu.ShifuService/ExecuteCommand"
 	ShifuService_GetCompletions_FullMethodName          = "/shifu.ShifuService/GetCompletions"
-	ShifuService_InstallViaURL_FullMethodName           = "/shifu.ShifuService/InstallViaURL"
 )
 
 // ShifuServiceClient is the client API for ShifuService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// ShifuService provides management capabilities for Shifu platform
 type ShifuServiceClient interface {
-	// Get All Available Versions
-	GetAllAvailableVersions(ctx context.Context, in *GetAllAvailableVersionsRequest, opts ...grpc.CallOption) (*GetAllAvailableVersionsResponse, error)
-	// Check if Shifu is installed
+	// Installation Management
 	CheckInstallation(ctx context.Context, in *CheckInstallationRequest, opts ...grpc.CallOption) (*CheckInstallationResponse, error)
-	// Install Shifu with specific version
+	GetAllAvailableVersions(ctx context.Context, in *GetAllAvailableVersionsRequest, opts ...grpc.CallOption) (*GetAllAvailableVersionsResponse, error)
 	InstallShifu(ctx context.Context, in *InstallShifuRequest, opts ...grpc.CallOption) (*InstallShifuResponse, error)
-	// Uninstall Shifu
 	UninstallShifu(ctx context.Context, in *UninstallShifuRequest, opts ...grpc.CallOption) (*UninstallShifuResponse, error)
-	// List devices in the cluster
+	// Device Management
 	ListDevices(ctx context.Context, in *ListDevicesRequest, opts ...grpc.CallOption) (*ListDevicesResponse, error)
-	// Get device details
 	GetDeviceDetails(ctx context.Context, in *GetDeviceDetailsRequest, opts ...grpc.CallOption) (*GetDeviceDetailsResponse, error)
-	// Forward Port
-	ForwardPort(ctx context.Context, in *ForwardPortRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[ForwardPortResponse], error)
-	// Restart deviceShifu
-	RestartDeviceShifu(ctx context.Context, in *RestartDeviceShifuRequest, opts ...grpc.CallOption) (*Empty, error)
-	// Delete deviceShifu
-	DeleteDeviceShifu(ctx context.Context, in *DeleteDeviceShifuRequest, opts ...grpc.CallOption) (*Empty, error)
-	// Get all container name of deviceShifu
-	GetAllContainerName(ctx context.Context, in *GetAllContainerNameRequest, opts ...grpc.CallOption) (*GetAllContainerNameResponse, error)
-	// Get deviceShifu logs
-	GetDeviceShifuLogs(ctx context.Context, in *GetDeviceShifuLogsRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GetDeviceShifuLogsResponse], error)
-	// Execute command
-	ExecuteCommand(ctx context.Context, in *CommandRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[CommandResponse], error)
-	// Get completions
-	GetCompletions(ctx context.Context, in *CompletionRequest, opts ...grpc.CallOption) (*CompletionResponse, error)
-	// Install Via URL
 	InstallViaURL(ctx context.Context, in *InstallViaURLRequest, opts ...grpc.CallOption) (*Empty, error)
+	DeleteDevice(ctx context.Context, in *DeleteDeviceRequest, opts ...grpc.CallOption) (*Empty, error)
+	// DeviceShifu Operations
+	RestartDeviceShifu(ctx context.Context, in *RestartDeviceShifuRequest, opts ...grpc.CallOption) (*Empty, error)
+	DeleteDeviceShifu(ctx context.Context, in *DeleteDeviceShifuRequest, opts ...grpc.CallOption) (*Empty, error)
+	GetAllContainerName(ctx context.Context, in *GetAllContainerNameRequest, opts ...grpc.CallOption) (*GetAllContainerNameResponse, error)
+	GetDeviceShifuLogs(ctx context.Context, in *GetDeviceShifuLogsRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GetDeviceShifuLogsResponse], error)
+	// Network Operations
+	ForwardPort(ctx context.Context, in *ForwardPortRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[ForwardPortResponse], error)
+	// Command and Control
+	ExecuteCommand(ctx context.Context, in *CommandRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[CommandResponse], error)
+	GetCompletions(ctx context.Context, in *CompletionRequest, opts ...grpc.CallOption) (*CompletionResponse, error)
 }
 
 type shifuServiceClient struct {
@@ -77,20 +72,20 @@ func NewShifuServiceClient(cc grpc.ClientConnInterface) ShifuServiceClient {
 	return &shifuServiceClient{cc}
 }
 
-func (c *shifuServiceClient) GetAllAvailableVersions(ctx context.Context, in *GetAllAvailableVersionsRequest, opts ...grpc.CallOption) (*GetAllAvailableVersionsResponse, error) {
+func (c *shifuServiceClient) CheckInstallation(ctx context.Context, in *CheckInstallationRequest, opts ...grpc.CallOption) (*CheckInstallationResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetAllAvailableVersionsResponse)
-	err := c.cc.Invoke(ctx, ShifuService_GetAllAvailableVersions_FullMethodName, in, out, cOpts...)
+	out := new(CheckInstallationResponse)
+	err := c.cc.Invoke(ctx, ShifuService_CheckInstallation_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *shifuServiceClient) CheckInstallation(ctx context.Context, in *CheckInstallationRequest, opts ...grpc.CallOption) (*CheckInstallationResponse, error) {
+func (c *shifuServiceClient) GetAllAvailableVersions(ctx context.Context, in *GetAllAvailableVersionsRequest, opts ...grpc.CallOption) (*GetAllAvailableVersionsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(CheckInstallationResponse)
-	err := c.cc.Invoke(ctx, ShifuService_CheckInstallation_FullMethodName, in, out, cOpts...)
+	out := new(GetAllAvailableVersionsResponse)
+	err := c.cc.Invoke(ctx, ShifuService_GetAllAvailableVersions_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -137,24 +132,25 @@ func (c *shifuServiceClient) GetDeviceDetails(ctx context.Context, in *GetDevice
 	return out, nil
 }
 
-func (c *shifuServiceClient) ForwardPort(ctx context.Context, in *ForwardPortRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[ForwardPortResponse], error) {
+func (c *shifuServiceClient) InstallViaURL(ctx context.Context, in *InstallViaURLRequest, opts ...grpc.CallOption) (*Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &ShifuService_ServiceDesc.Streams[0], ShifuService_ForwardPort_FullMethodName, cOpts...)
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, ShifuService_InstallViaURL_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &grpc.GenericClientStream[ForwardPortRequest, ForwardPortResponse]{ClientStream: stream}
-	if err := x.ClientStream.SendMsg(in); err != nil {
-		return nil, err
-	}
-	if err := x.ClientStream.CloseSend(); err != nil {
-		return nil, err
-	}
-	return x, nil
+	return out, nil
 }
 
-// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type ShifuService_ForwardPortClient = grpc.ServerStreamingClient[ForwardPortResponse]
+func (c *shifuServiceClient) DeleteDevice(ctx context.Context, in *DeleteDeviceRequest, opts ...grpc.CallOption) (*Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, ShifuService_DeleteDevice_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
 
 func (c *shifuServiceClient) RestartDeviceShifu(ctx context.Context, in *RestartDeviceShifuRequest, opts ...grpc.CallOption) (*Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
@@ -188,7 +184,7 @@ func (c *shifuServiceClient) GetAllContainerName(ctx context.Context, in *GetAll
 
 func (c *shifuServiceClient) GetDeviceShifuLogs(ctx context.Context, in *GetDeviceShifuLogsRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GetDeviceShifuLogsResponse], error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &ShifuService_ServiceDesc.Streams[1], ShifuService_GetDeviceShifuLogs_FullMethodName, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &ShifuService_ServiceDesc.Streams[0], ShifuService_GetDeviceShifuLogs_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -204,6 +200,25 @@ func (c *shifuServiceClient) GetDeviceShifuLogs(ctx context.Context, in *GetDevi
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
 type ShifuService_GetDeviceShifuLogsClient = grpc.ServerStreamingClient[GetDeviceShifuLogsResponse]
+
+func (c *shifuServiceClient) ForwardPort(ctx context.Context, in *ForwardPortRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[ForwardPortResponse], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &ShifuService_ServiceDesc.Streams[1], ShifuService_ForwardPort_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[ForwardPortRequest, ForwardPortResponse]{ClientStream: stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type ShifuService_ForwardPortClient = grpc.ServerStreamingClient[ForwardPortResponse]
 
 func (c *shifuServiceClient) ExecuteCommand(ctx context.Context, in *CommandRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[CommandResponse], error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
@@ -234,48 +249,32 @@ func (c *shifuServiceClient) GetCompletions(ctx context.Context, in *CompletionR
 	return out, nil
 }
 
-func (c *shifuServiceClient) InstallViaURL(ctx context.Context, in *InstallViaURLRequest, opts ...grpc.CallOption) (*Empty, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Empty)
-	err := c.cc.Invoke(ctx, ShifuService_InstallViaURL_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // ShifuServiceServer is the server API for ShifuService service.
 // All implementations must embed UnimplementedShifuServiceServer
 // for forward compatibility.
+//
+// ShifuService provides management capabilities for Shifu platform
 type ShifuServiceServer interface {
-	// Get All Available Versions
-	GetAllAvailableVersions(context.Context, *GetAllAvailableVersionsRequest) (*GetAllAvailableVersionsResponse, error)
-	// Check if Shifu is installed
+	// Installation Management
 	CheckInstallation(context.Context, *CheckInstallationRequest) (*CheckInstallationResponse, error)
-	// Install Shifu with specific version
+	GetAllAvailableVersions(context.Context, *GetAllAvailableVersionsRequest) (*GetAllAvailableVersionsResponse, error)
 	InstallShifu(context.Context, *InstallShifuRequest) (*InstallShifuResponse, error)
-	// Uninstall Shifu
 	UninstallShifu(context.Context, *UninstallShifuRequest) (*UninstallShifuResponse, error)
-	// List devices in the cluster
+	// Device Management
 	ListDevices(context.Context, *ListDevicesRequest) (*ListDevicesResponse, error)
-	// Get device details
 	GetDeviceDetails(context.Context, *GetDeviceDetailsRequest) (*GetDeviceDetailsResponse, error)
-	// Forward Port
-	ForwardPort(*ForwardPortRequest, grpc.ServerStreamingServer[ForwardPortResponse]) error
-	// Restart deviceShifu
-	RestartDeviceShifu(context.Context, *RestartDeviceShifuRequest) (*Empty, error)
-	// Delete deviceShifu
-	DeleteDeviceShifu(context.Context, *DeleteDeviceShifuRequest) (*Empty, error)
-	// Get all container name of deviceShifu
-	GetAllContainerName(context.Context, *GetAllContainerNameRequest) (*GetAllContainerNameResponse, error)
-	// Get deviceShifu logs
-	GetDeviceShifuLogs(*GetDeviceShifuLogsRequest, grpc.ServerStreamingServer[GetDeviceShifuLogsResponse]) error
-	// Execute command
-	ExecuteCommand(*CommandRequest, grpc.ServerStreamingServer[CommandResponse]) error
-	// Get completions
-	GetCompletions(context.Context, *CompletionRequest) (*CompletionResponse, error)
-	// Install Via URL
 	InstallViaURL(context.Context, *InstallViaURLRequest) (*Empty, error)
+	DeleteDevice(context.Context, *DeleteDeviceRequest) (*Empty, error)
+	// DeviceShifu Operations
+	RestartDeviceShifu(context.Context, *RestartDeviceShifuRequest) (*Empty, error)
+	DeleteDeviceShifu(context.Context, *DeleteDeviceShifuRequest) (*Empty, error)
+	GetAllContainerName(context.Context, *GetAllContainerNameRequest) (*GetAllContainerNameResponse, error)
+	GetDeviceShifuLogs(*GetDeviceShifuLogsRequest, grpc.ServerStreamingServer[GetDeviceShifuLogsResponse]) error
+	// Network Operations
+	ForwardPort(*ForwardPortRequest, grpc.ServerStreamingServer[ForwardPortResponse]) error
+	// Command and Control
+	ExecuteCommand(*CommandRequest, grpc.ServerStreamingServer[CommandResponse]) error
+	GetCompletions(context.Context, *CompletionRequest) (*CompletionResponse, error)
 	mustEmbedUnimplementedShifuServiceServer()
 }
 
@@ -286,11 +285,11 @@ type ShifuServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedShifuServiceServer struct{}
 
-func (UnimplementedShifuServiceServer) GetAllAvailableVersions(context.Context, *GetAllAvailableVersionsRequest) (*GetAllAvailableVersionsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetAllAvailableVersions not implemented")
-}
 func (UnimplementedShifuServiceServer) CheckInstallation(context.Context, *CheckInstallationRequest) (*CheckInstallationResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CheckInstallation not implemented")
+}
+func (UnimplementedShifuServiceServer) GetAllAvailableVersions(context.Context, *GetAllAvailableVersionsRequest) (*GetAllAvailableVersionsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAllAvailableVersions not implemented")
 }
 func (UnimplementedShifuServiceServer) InstallShifu(context.Context, *InstallShifuRequest) (*InstallShifuResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method InstallShifu not implemented")
@@ -304,8 +303,11 @@ func (UnimplementedShifuServiceServer) ListDevices(context.Context, *ListDevices
 func (UnimplementedShifuServiceServer) GetDeviceDetails(context.Context, *GetDeviceDetailsRequest) (*GetDeviceDetailsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetDeviceDetails not implemented")
 }
-func (UnimplementedShifuServiceServer) ForwardPort(*ForwardPortRequest, grpc.ServerStreamingServer[ForwardPortResponse]) error {
-	return status.Errorf(codes.Unimplemented, "method ForwardPort not implemented")
+func (UnimplementedShifuServiceServer) InstallViaURL(context.Context, *InstallViaURLRequest) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method InstallViaURL not implemented")
+}
+func (UnimplementedShifuServiceServer) DeleteDevice(context.Context, *DeleteDeviceRequest) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteDevice not implemented")
 }
 func (UnimplementedShifuServiceServer) RestartDeviceShifu(context.Context, *RestartDeviceShifuRequest) (*Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RestartDeviceShifu not implemented")
@@ -319,14 +321,14 @@ func (UnimplementedShifuServiceServer) GetAllContainerName(context.Context, *Get
 func (UnimplementedShifuServiceServer) GetDeviceShifuLogs(*GetDeviceShifuLogsRequest, grpc.ServerStreamingServer[GetDeviceShifuLogsResponse]) error {
 	return status.Errorf(codes.Unimplemented, "method GetDeviceShifuLogs not implemented")
 }
+func (UnimplementedShifuServiceServer) ForwardPort(*ForwardPortRequest, grpc.ServerStreamingServer[ForwardPortResponse]) error {
+	return status.Errorf(codes.Unimplemented, "method ForwardPort not implemented")
+}
 func (UnimplementedShifuServiceServer) ExecuteCommand(*CommandRequest, grpc.ServerStreamingServer[CommandResponse]) error {
 	return status.Errorf(codes.Unimplemented, "method ExecuteCommand not implemented")
 }
 func (UnimplementedShifuServiceServer) GetCompletions(context.Context, *CompletionRequest) (*CompletionResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCompletions not implemented")
-}
-func (UnimplementedShifuServiceServer) InstallViaURL(context.Context, *InstallViaURLRequest) (*Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method InstallViaURL not implemented")
 }
 func (UnimplementedShifuServiceServer) mustEmbedUnimplementedShifuServiceServer() {}
 func (UnimplementedShifuServiceServer) testEmbeddedByValue()                      {}
@@ -349,24 +351,6 @@ func RegisterShifuServiceServer(s grpc.ServiceRegistrar, srv ShifuServiceServer)
 	s.RegisterService(&ShifuService_ServiceDesc, srv)
 }
 
-func _ShifuService_GetAllAvailableVersions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetAllAvailableVersionsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ShifuServiceServer).GetAllAvailableVersions(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: ShifuService_GetAllAvailableVersions_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ShifuServiceServer).GetAllAvailableVersions(ctx, req.(*GetAllAvailableVersionsRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _ShifuService_CheckInstallation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CheckInstallationRequest)
 	if err := dec(in); err != nil {
@@ -381,6 +365,24 @@ func _ShifuService_CheckInstallation_Handler(srv interface{}, ctx context.Contex
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ShifuServiceServer).CheckInstallation(ctx, req.(*CheckInstallationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ShifuService_GetAllAvailableVersions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAllAvailableVersionsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ShifuServiceServer).GetAllAvailableVersions(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ShifuService_GetAllAvailableVersions_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ShifuServiceServer).GetAllAvailableVersions(ctx, req.(*GetAllAvailableVersionsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -457,16 +459,41 @@ func _ShifuService_GetDeviceDetails_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ShifuService_ForwardPort_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(ForwardPortRequest)
-	if err := stream.RecvMsg(m); err != nil {
-		return err
+func _ShifuService_InstallViaURL_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(InstallViaURLRequest)
+	if err := dec(in); err != nil {
+		return nil, err
 	}
-	return srv.(ShifuServiceServer).ForwardPort(m, &grpc.GenericServerStream[ForwardPortRequest, ForwardPortResponse]{ServerStream: stream})
+	if interceptor == nil {
+		return srv.(ShifuServiceServer).InstallViaURL(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ShifuService_InstallViaURL_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ShifuServiceServer).InstallViaURL(ctx, req.(*InstallViaURLRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
-// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type ShifuService_ForwardPortServer = grpc.ServerStreamingServer[ForwardPortResponse]
+func _ShifuService_DeleteDevice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteDeviceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ShifuServiceServer).DeleteDevice(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ShifuService_DeleteDevice_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ShifuServiceServer).DeleteDevice(ctx, req.(*DeleteDeviceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
 
 func _ShifuService_RestartDeviceShifu_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(RestartDeviceShifuRequest)
@@ -533,6 +560,17 @@ func _ShifuService_GetDeviceShifuLogs_Handler(srv interface{}, stream grpc.Serve
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
 type ShifuService_GetDeviceShifuLogsServer = grpc.ServerStreamingServer[GetDeviceShifuLogsResponse]
 
+func _ShifuService_ForwardPort_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(ForwardPortRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(ShifuServiceServer).ForwardPort(m, &grpc.GenericServerStream[ForwardPortRequest, ForwardPortResponse]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type ShifuService_ForwardPortServer = grpc.ServerStreamingServer[ForwardPortResponse]
+
 func _ShifuService_ExecuteCommand_Handler(srv interface{}, stream grpc.ServerStream) error {
 	m := new(CommandRequest)
 	if err := stream.RecvMsg(m); err != nil {
@@ -562,24 +600,6 @@ func _ShifuService_GetCompletions_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ShifuService_InstallViaURL_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(InstallViaURLRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ShifuServiceServer).InstallViaURL(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: ShifuService_InstallViaURL_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ShifuServiceServer).InstallViaURL(ctx, req.(*InstallViaURLRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // ShifuService_ServiceDesc is the grpc.ServiceDesc for ShifuService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -588,12 +608,12 @@ var ShifuService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*ShifuServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetAllAvailableVersions",
-			Handler:    _ShifuService_GetAllAvailableVersions_Handler,
-		},
-		{
 			MethodName: "CheckInstallation",
 			Handler:    _ShifuService_CheckInstallation_Handler,
+		},
+		{
+			MethodName: "GetAllAvailableVersions",
+			Handler:    _ShifuService_GetAllAvailableVersions_Handler,
 		},
 		{
 			MethodName: "InstallShifu",
@@ -612,6 +632,14 @@ var ShifuService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _ShifuService_GetDeviceDetails_Handler,
 		},
 		{
+			MethodName: "InstallViaURL",
+			Handler:    _ShifuService_InstallViaURL_Handler,
+		},
+		{
+			MethodName: "DeleteDevice",
+			Handler:    _ShifuService_DeleteDevice_Handler,
+		},
+		{
 			MethodName: "RestartDeviceShifu",
 			Handler:    _ShifuService_RestartDeviceShifu_Handler,
 		},
@@ -627,20 +655,16 @@ var ShifuService_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "GetCompletions",
 			Handler:    _ShifuService_GetCompletions_Handler,
 		},
-		{
-			MethodName: "InstallViaURL",
-			Handler:    _ShifuService_InstallViaURL_Handler,
-		},
 	},
 	Streams: []grpc.StreamDesc{
 		{
-			StreamName:    "ForwardPort",
-			Handler:       _ShifuService_ForwardPort_Handler,
+			StreamName:    "GetDeviceShifuLogs",
+			Handler:       _ShifuService_GetDeviceShifuLogs_Handler,
 			ServerStreams: true,
 		},
 		{
-			StreamName:    "GetDeviceShifuLogs",
-			Handler:       _ShifuService_GetDeviceShifuLogs_Handler,
+			StreamName:    "ForwardPort",
+			Handler:       _ShifuService_ForwardPort_Handler,
 			ServerStreams: true,
 		},
 		{

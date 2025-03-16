@@ -57,9 +57,16 @@ func GetAllByDeviceName(deviceName string) (*Device, error) {
 		return nil, fmt.Errorf("deployment %s not found", deviceName)
 	}
 
+	if deployment == nil {
+		return nil, fmt.Errorf("deployment %s not found", deviceName)
+	}
+
 	if deployment[0].Spec.Template.Spec.Volumes[0].VolumeSource.ConfigMap == nil {
 		return nil, fmt.Errorf("configmap not found")
 	}
+
+	deployment[0].Kind = "Deployment"
+	deployment[0].APIVersion = "apps/v1"
 
 	configmapName := deployment[0].Spec.Template.Spec.Volumes[0].VolumeSource.ConfigMap.Name
 	configmap, err := GetConfigmapByName(configmapName)
@@ -67,9 +74,17 @@ func GetAllByDeviceName(deviceName string) (*Device, error) {
 		return nil, err
 	}
 
+	configmap.Kind = "ConfigMap"
+	configmap.APIVersion = "v1"
+
 	services, err := GetServiceLinkedDeployment(deployment[0].Labels["app"])
 	if err != nil {
 		return nil, err
+	}
+
+	for i := range services.Items {
+		services.Items[i].Kind = "Service"
+		services.Items[i].APIVersion = "v1"
 	}
 
 	return &Device{

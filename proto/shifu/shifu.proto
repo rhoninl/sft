@@ -4,54 +4,50 @@ package shifu;
 
 option go_package = "github.com/rhoninl/sft/pkg/root/web/proto/shifu";
 
+// ShifuService provides management capabilities for Shifu platform
 service ShifuService {
-  // Get All Available Versions
-  rpc GetAllAvailableVersions(GetAllAvailableVersionsRequest) returns (GetAllAvailableVersionsResponse) {}
-  
-  // Check if Shifu is installed
+  // Installation Management
   rpc CheckInstallation(CheckInstallationRequest) returns (CheckInstallationResponse) {}
-    
-  // Install Shifu with specific version
+  rpc GetAllAvailableVersions(GetAllAvailableVersionsRequest) returns (GetAllAvailableVersionsResponse) {}
   rpc InstallShifu(InstallShifuRequest) returns (InstallShifuResponse) {}
-
-  // Uninstall Shifu
   rpc UninstallShifu(UninstallShifuRequest) returns (UninstallShifuResponse) {}
-  
-  // List devices in the cluster
+
+  // Device Management
   rpc ListDevices(ListDevicesRequest) returns (ListDevicesResponse) {}
-
-  // Get device details
   rpc GetDeviceDetails(GetDeviceDetailsRequest) returns (GetDeviceDetailsResponse) {}
-
-  // Forward Port
-  rpc ForwardPort(ForwardPortRequest) returns (stream ForwardPortResponse) {}
-
-  // Restart deviceShifu
-  rpc RestartDeviceShifu(RestartDeviceShifuRequest) returns (Empty) {}
-
-  // Delete deviceShifu
-  rpc DeleteDeviceShifu(DeleteDeviceShifuRequest) returns (Empty) {}
-
-  // Get all container name of deviceShifu
-  rpc GetAllContainerName(GetAllContainerNameRequest) returns (GetAllContainerNameResponse) {}
-
-  // Get deviceShifu logs
-  rpc GetDeviceShifuLogs(GetDeviceShifuLogsRequest) returns (stream GetDeviceShifuLogsResponse) {}
-
-  // Execute command
-  rpc ExecuteCommand(CommandRequest) returns (stream CommandResponse) {}
-
-  // Get completions
-  rpc GetCompletions(CompletionRequest) returns (CompletionResponse);
-
-  // Install Via URL
   rpc InstallViaURL(InstallViaURLRequest) returns (Empty) {}
+  rpc DeleteDevice(DeleteDeviceRequest) returns (Empty) {}
+  
+  // DeviceShifu Operations
+  rpc RestartDeviceShifu(RestartDeviceShifuRequest) returns (Empty) {}
+  rpc DeleteDeviceShifu(DeleteDeviceShifuRequest) returns (Empty) {}
+  rpc GetAllContainerName(GetAllContainerNameRequest) returns (GetAllContainerNameResponse) {}
+  rpc GetDeviceShifuLogs(GetDeviceShifuLogsRequest) returns (stream GetDeviceShifuLogsResponse) {}
+  
+  // Network Operations
+  rpc ForwardPort(ForwardPortRequest) returns (stream ForwardPortResponse) {}
+  
+  // Command and Control
+  rpc ExecuteCommand(CommandRequest) returns (stream CommandResponse) {}
+  rpc GetCompletions(CompletionRequest) returns (CompletionResponse) {}
 }
 
+// Common empty message for operations without return values
+message Empty {}
+
+//
+// Installation Management Messages
+//
 message CheckInstallationRequest {}
 
 message CheckInstallationResponse {
   bool installed = 1;
+}
+
+message GetAllAvailableVersionsRequest {}
+
+message GetAllAvailableVersionsResponse {
+  repeated string versions = 1;
 }
 
 message InstallShifuRequest {
@@ -61,12 +57,6 @@ message InstallShifuRequest {
 message InstallShifuResponse {
   bool success = 1;
   string error = 2;
-} 
-
-message GetAllAvailableVersionsRequest {}
-
-message GetAllAvailableVersionsResponse {
-  repeated string versions = 1;
 }
 
 message UninstallShifuRequest {}
@@ -74,6 +64,32 @@ message UninstallShifuRequest {}
 message UninstallShifuResponse {
   bool success = 1;
   string error = 2;
+}
+
+message InstallViaURLRequest {
+  string url = 1;
+}
+
+//
+// Device Management Messages
+//
+message Device {
+  string name = 1;
+  string protocol = 2;
+  string address = 3;
+  string status = 4;
+  string age = 5;
+}
+
+message EdgeDevice {
+  string sku = 1;
+  string connection = 2;
+  string address = 3;
+  string protocol = 4;
+  string status = 5;
+  string age = 6;
+  string setting = 7;
+  string gateway = 8;
 }
 
 message ListDevicesRequest {}
@@ -87,45 +103,20 @@ message GetDeviceDetailsRequest {
 }
 
 message GetDeviceDetailsResponse {
-  Edgedevice edgedevice = 1;
-  string APIs = 2;
+  EdgeDevice edge_device = 1;
+  string apis = 2;
 }
 
-message Device {
-  string name = 1;
-  string protocol = 2;
-  string address = 3;
-  string status = 4;
-  string age = 5;
-}
-
-message Edgedevice {
-  string sku = 1;
-  string connection = 2;
-  string address = 3;
-  string protocol = 4;
-  string status = 5;
-  string age = 6;
-
-  string setting = 7;
-  string gateway = 8;
-}
-
-message ForwardPortRequest {
+message DeleteDeviceRequest {
   string device_name = 1;
-  string device_port = 2;
-  string local_port = 3;
 }
 
-message ForwardPortResponse {
-  bool success = 1;
-}
-
+//
+// DeviceShifu Operation Messages
+//
 message RestartDeviceShifuRequest {
   string device_name = 1;
 }
-
-message Empty {}
 
 message DeleteDeviceShifuRequest {
   string device_name = 1;
@@ -148,6 +139,22 @@ message GetDeviceShifuLogsResponse {
   string log = 1;
 }
 
+//
+// Network Operation Messages
+//
+message ForwardPortRequest {
+  string device_name = 1;
+  string device_port = 2;
+  string local_port = 3;
+}
+
+message ForwardPortResponse {
+  bool success = 1;
+}
+
+//
+// Command and Control Messages
+//
 message CommandRequest {
   string command = 1;
 }
@@ -158,14 +165,10 @@ message CommandResponse {
 }
 
 message CompletionRequest {
-  string partial = 1;  // Partial command input
+  string partial = 1;      // Partial command input
   string current_dir = 2;  // Current working directory
 }
 
 message CompletionResponse {
   repeated string completions = 1;  // List of completion suggestions
-} 
-
-message InstallViaURLRequest {
-  string url = 1;
 }

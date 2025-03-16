@@ -2,7 +2,7 @@ import './dashboard.css';
 import ShifuInstall from '../../components/notice/shifui/installchecker';
 import { Divider } from "@heroui/react";
 import TopTab from '../../components/toptab/toptab';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import Settings from '../settings/settings';
 import DevicePage from './device/device';
 import Device from './device/detail/detail';
@@ -28,6 +28,7 @@ export default function Dashboard() {
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/terminal" element={<Terminal />} />
                 <Route path="/devices/:name" element={<Device />} />
+                <Route path="/" element={<Navigate to="/devices" />} />
             </Routes>
         </div >
     );

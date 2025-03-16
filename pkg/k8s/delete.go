@@ -87,11 +87,3 @@ func DeleteYaml(yamlContent string, ignoreIfNotExists bool) (bool, error) {
 
 	return true, nil
 }
-
-// func DeleteResource(namespace string, name string) error {
-// 	client, discoveryClient, err := NewClient()
-// 	if err != nil {
-// 		return err
-// 	}
-
-// }

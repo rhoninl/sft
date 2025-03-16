@@ -1,4 +1,4 @@
-import { Button, ModalBody, Modal, ModalContent, ModalFooter, ModalHeader, Input } from "@heroui/react";
+import { Button, ModalBody, Modal, ModalContent, ModalFooter, ModalHeader, Input, toast, addToast } from "@heroui/react";
 import { useState, useEffect } from "react";
 import { DeleteDevice } from "src/apis/shifu/device";
 
@@ -18,12 +18,17 @@ export function ConfirmDelete({ deviceName, isOpen, setIsOpen }: ConfirmDeletePr
     function deleteDevice() {
         if (confirmation.toLowerCase() === "delete") {
             DeleteDevice(deviceName).then(() => {
+                addToast({
+                    title: "Device deleted successfully",
+                    timeout: 3000,
+                });
                 setIsOpen(false);
             }).catch((error) => {
                 console.error(error);
             });
         }
     }
+
     return <>
         <Modal isOpen={isOpen} onOpenChange={setIsOpen}>
             <ModalContent>
@@ -37,8 +42,8 @@ export function ConfirmDelete({ deviceName, isOpen, setIsOpen }: ConfirmDeletePr
                     <Input label="Confirmation" placeholder="Type DELETE to confirm" value={confirmation} onChange={(e) => setConfirmation(e.target.value)} />
                 </ModalBody>
                 <ModalFooter>
-                    <Button color="danger" onClick={() => deleteDevice()} > Delete </Button>
-                    <Button color="primary" onClick={() => setIsOpen(false)}> Cancel </Button>
+                    <Button color="primary" onPress={() => setIsOpen(false)}> Cancel </Button>
+                    <Button color="danger" onPress={() => deleteDevice()} > Delete </Button>
                 </ModalFooter>
             </ModalContent>
         </Modal >

@@ -5,12 +5,7 @@ import { InstallViaURL } from "../../../apis/shifu/add";
 export default function CreateByUrl() {
     const [inputUrl, setInputUrl] = useState("");
     const [error, setError] = useState("");
-    useEffect(() => {
-        addToast({
-            title: "Installation failed",
-        });
-        console.log("Installation failed");
-    }, []);
+
     function createByUrl() {
         console.log(inputUrl);
 
@@ -30,6 +25,7 @@ export default function CreateByUrl() {
             console.log("Installation successful");
             addToast({
                 title: "Installation successful",
+                timeout: 3000,
             });
         }).catch((err) => {
             console.error("Installation failed:", err);

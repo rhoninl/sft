@@ -18,7 +18,7 @@ root.render(
     <Provider store={store}>
       <NextThemesProvider defaultTheme="light" enableSystem>
         <HeroUIProvider>
-          <ToastProvider />
+          <ToastProvider placement='bottom-left' />
           <main className="min-h-screen text-foreground bg-background">
             <EasterEgg />
             <div className='h-full w-full flex justify-center'>

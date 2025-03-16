@@ -3,7 +3,6 @@ package shifu
 import (
 	"bufio"
 	"context"
-	"errors"
 	"io"
 	"net/http"
 	"os"
@@ -108,7 +107,7 @@ func (s *ShifuServer) GetDeviceDetails(ctx context.Context, req *pb.GetDeviceDet
 	}
 
 	var resp pb.GetDeviceDetailsResponse
-	var edgedevice pb.Edgedevice
+	var edgedevice pb.EdgeDevice
 	if device.EdgeDevice.Status.EdgeDevicePhase != nil {
 		edgedevice.Status = string(*device.EdgeDevice.Status.EdgeDevicePhase)
 	}
@@ -128,9 +127,9 @@ func (s *ShifuServer) GetDeviceDetails(ctx context.Context, req *pb.GetDeviceDet
 	edgedevice.Gateway = string(data)
 
 	apis := device.ConfigMap.Data["instructions"]
-	resp.APIs = apis
+	resp.Apis = apis
 
-	resp.Edgedevice = &edgedevice
+	resp.EdgeDevice = &edgedevice
 	return &resp, nil
 }
 
@@ -169,11 +168,6 @@ func (s *ShifuServer) RestartDeviceShifu(ctx context.Context, req *pb.RestartDev
 	}
 
 	return &pb.Empty{}, nil
-}
-
-func (s *ShifuServer) DeleteDeviceShifu(ctx context.Context, req *pb.DeleteDeviceShifuRequest) (*pb.Empty, error) {
-
-	return nil, errors.New("not implemented")
 }
 
 func (s *ShifuServer) GetAllContainerName(ctx context.Context, req *pb.GetAllContainerNameRequest) (*pb.GetAllContainerNameResponse, error) {
@@ -392,4 +386,12 @@ func (s *ShifuServer) InstallViaURL(ctx context.Context, req *pb.InstallViaURLRe
 	}
 
 	return nil, nil
+}
+
+func (s *ShifuServer) DeleteDevice(ctx context.Context, req *pb.DeleteDeviceRequest) (*pb.Empty, error) {
+	if err := shifu.DeleteDevice(req.GetDeviceName()); err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to uninstall device: %v", err)
+	}
+
+	return &pb.Empty{}, nil
 }

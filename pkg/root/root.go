@@ -2,6 +2,7 @@ package root
 
 import (
 	"github.com/rhoninl/sft/pkg/k8s"
+	remove "github.com/rhoninl/sft/pkg/root/delete"
 	"github.com/rhoninl/sft/pkg/root/describe"
 	"github.com/rhoninl/sft/pkg/root/devices"
 	"github.com/rhoninl/sft/pkg/root/forward"
@@ -42,4 +43,5 @@ func init() {
 	RootCmd.AddCommand(uninstall.UninstallCmd)
 	RootCmd.AddCommand(versionCmd)
 	RootCmd.AddCommand(web.WebCmd)
+	RootCmd.AddCommand(remove.DeleteCommand)
 }

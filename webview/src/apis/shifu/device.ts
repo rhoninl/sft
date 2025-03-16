@@ -13,6 +13,7 @@ import {
   GetAllContainerNameResponse,
   GetDeviceShifuLogsRequest,
   GetDeviceShifuLogsResponse,
+  DeleteDeviceRequest,
 } from "src/proto/proto/shifu/shifu_pb";
 import { ListDevicesRequest } from "src/proto/proto/shifu/shifu_pb";
 
@@ -79,9 +80,9 @@ export function RestartDevice(deviceName: string): Promise<Empty> {
 }
 
 export function DeleteDevice(deviceName: string): Promise<Empty> {
-  const request = new DeleteDeviceShifuRequest();
+  const request = new DeleteDeviceRequest();
   request.setDeviceName(deviceName);
-  return client.deleteDeviceShifu(request, {});
+  return client.deleteDevice(request, {});
 }
 
 export function GetAllContainerName(

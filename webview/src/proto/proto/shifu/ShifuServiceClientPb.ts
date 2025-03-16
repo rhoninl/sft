@@ -39,49 +39,6 @@ export class ShifuServiceClient {
     this.options_ = options;
   }
 
-  methodDescriptorGetAllAvailableVersions = new grpcWeb.MethodDescriptor(
-    '/shifu.ShifuService/GetAllAvailableVersions',
-    grpcWeb.MethodType.UNARY,
-    proto_shifu_shifu_pb.GetAllAvailableVersionsRequest,
-    proto_shifu_shifu_pb.GetAllAvailableVersionsResponse,
-    (request: proto_shifu_shifu_pb.GetAllAvailableVersionsRequest) => {
-      return request.serializeBinary();
-    },
-    proto_shifu_shifu_pb.GetAllAvailableVersionsResponse.deserializeBinary
-  );
-
-  getAllAvailableVersions(
-    request: proto_shifu_shifu_pb.GetAllAvailableVersionsRequest,
-    metadata?: grpcWeb.Metadata | null): Promise<proto_shifu_shifu_pb.GetAllAvailableVersionsResponse>;
-
-  getAllAvailableVersions(
-    request: proto_shifu_shifu_pb.GetAllAvailableVersionsRequest,
-    metadata: grpcWeb.Metadata | null,
-    callback: (err: grpcWeb.RpcError,
-               response: proto_shifu_shifu_pb.GetAllAvailableVersionsResponse) => void): grpcWeb.ClientReadableStream<proto_shifu_shifu_pb.GetAllAvailableVersionsResponse>;
-
-  getAllAvailableVersions(
-    request: proto_shifu_shifu_pb.GetAllAvailableVersionsRequest,
-    metadata?: grpcWeb.Metadata | null,
-    callback?: (err: grpcWeb.RpcError,
-               response: proto_shifu_shifu_pb.GetAllAvailableVersionsResponse) => void) {
-    if (callback !== undefined) {
-      return this.client_.rpcCall(
-        this.hostname_ +
-          '/shifu.ShifuService/GetAllAvailableVersions',
-        request,
-        metadata || {},
-        this.methodDescriptorGetAllAvailableVersions,
-        callback);
-    }
-    return this.client_.unaryCall(
-    this.hostname_ +
-      '/shifu.ShifuService/GetAllAvailableVersions',
-    request,
-    metadata || {},
-    this.methodDescriptorGetAllAvailableVersions);
-  }
-
   methodDescriptorCheckInstallation = new grpcWeb.MethodDescriptor(
     '/shifu.ShifuService/CheckInstallation',
     grpcWeb.MethodType.UNARY,
@@ -123,6 +80,49 @@ export class ShifuServiceClient {
     request,
     metadata || {},
     this.methodDescriptorCheckInstallation);
+  }
+
+  methodDescriptorGetAllAvailableVersions = new grpcWeb.MethodDescriptor(
+    '/shifu.ShifuService/GetAllAvailableVersions',
+    grpcWeb.MethodType.UNARY,
+    proto_shifu_shifu_pb.GetAllAvailableVersionsRequest,
+    proto_shifu_shifu_pb.GetAllAvailableVersionsResponse,
+    (request: proto_shifu_shifu_pb.GetAllAvailableVersionsRequest) => {
+      return request.serializeBinary();
+    },
+    proto_shifu_shifu_pb.GetAllAvailableVersionsResponse.deserializeBinary
+  );
+
+  getAllAvailableVersions(
+    request: proto_shifu_shifu_pb.GetAllAvailableVersionsRequest,
+    metadata?: grpcWeb.Metadata | null): Promise<proto_shifu_shifu_pb.GetAllAvailableVersionsResponse>;
+
+  getAllAvailableVersions(
+    request: proto_shifu_shifu_pb.GetAllAvailableVersionsRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback: (err: grpcWeb.RpcError,
+               response: proto_shifu_shifu_pb.GetAllAvailableVersionsResponse) => void): grpcWeb.ClientReadableStream<proto_shifu_shifu_pb.GetAllAvailableVersionsResponse>;
+
+  getAllAvailableVersions(
+    request: proto_shifu_shifu_pb.GetAllAvailableVersionsRequest,
+    metadata?: grpcWeb.Metadata | null,
+    callback?: (err: grpcWeb.RpcError,
+               response: proto_shifu_shifu_pb.GetAllAvailableVersionsResponse) => void) {
+    if (callback !== undefined) {
+      return this.client_.rpcCall(
+        this.hostname_ +
+          '/shifu.ShifuService/GetAllAvailableVersions',
+        request,
+        metadata || {},
+        this.methodDescriptorGetAllAvailableVersions,
+        callback);
+    }
+    return this.client_.unaryCall(
+    this.hostname_ +
+      '/shifu.ShifuService/GetAllAvailableVersions',
+    request,
+    metadata || {},
+    this.methodDescriptorGetAllAvailableVersions);
   }
 
   methodDescriptorInstallShifu = new grpcWeb.MethodDescriptor(
@@ -297,26 +297,90 @@ export class ShifuServiceClient {
     this.methodDescriptorGetDeviceDetails);
   }
 
-  methodDescriptorForwardPort = new grpcWeb.MethodDescriptor(
-    '/shifu.ShifuService/ForwardPort',
-    grpcWeb.MethodType.SERVER_STREAMING,
-    proto_shifu_shifu_pb.ForwardPortRequest,
-    proto_shifu_shifu_pb.ForwardPortResponse,
-    (request: proto_shifu_shifu_pb.ForwardPortRequest) => {
+  methodDescriptorInstallViaURL = new grpcWeb.MethodDescriptor(
+    '/shifu.ShifuService/InstallViaURL',
+    grpcWeb.MethodType.UNARY,
+    proto_shifu_shifu_pb.InstallViaURLRequest,
+    proto_shifu_shifu_pb.Empty,
+    (request: proto_shifu_shifu_pb.InstallViaURLRequest) => {
       return request.serializeBinary();
     },
-    proto_shifu_shifu_pb.ForwardPortResponse.deserializeBinary
+    proto_shifu_shifu_pb.Empty.deserializeBinary
   );
 
-  forwardPort(
-    request: proto_shifu_shifu_pb.ForwardPortRequest,
-    metadata?: grpcWeb.Metadata): grpcWeb.ClientReadableStream<proto_shifu_shifu_pb.ForwardPortResponse> {
-    return this.client_.serverStreaming(
-      this.hostname_ +
-        '/shifu.ShifuService/ForwardPort',
-      request,
-      metadata || {},
-      this.methodDescriptorForwardPort);
+  installViaURL(
+    request: proto_shifu_shifu_pb.InstallViaURLRequest,
+    metadata?: grpcWeb.Metadata | null): Promise<proto_shifu_shifu_pb.Empty>;
+
+  installViaURL(
+    request: proto_shifu_shifu_pb.InstallViaURLRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback: (err: grpcWeb.RpcError,
+               response: proto_shifu_shifu_pb.Empty) => void): grpcWeb.ClientReadableStream<proto_shifu_shifu_pb.Empty>;
+
+  installViaURL(
+    request: proto_shifu_shifu_pb.InstallViaURLRequest,
+    metadata?: grpcWeb.Metadata | null,
+    callback?: (err: grpcWeb.RpcError,
+               response: proto_shifu_shifu_pb.Empty) => void) {
+    if (callback !== undefined) {
+      return this.client_.rpcCall(
+        this.hostname_ +
+          '/shifu.ShifuService/InstallViaURL',
+        request,
+        metadata || {},
+        this.methodDescriptorInstallViaURL,
+        callback);
+    }
+    return this.client_.unaryCall(
+    this.hostname_ +
+      '/shifu.ShifuService/InstallViaURL',
+    request,
+    metadata || {},
+    this.methodDescriptorInstallViaURL);
+  }
+
+  methodDescriptorDeleteDevice = new grpcWeb.MethodDescriptor(
+    '/shifu.ShifuService/DeleteDevice',
+    grpcWeb.MethodType.UNARY,
+    proto_shifu_shifu_pb.DeleteDeviceRequest,
+    proto_shifu_shifu_pb.Empty,
+    (request: proto_shifu_shifu_pb.DeleteDeviceRequest) => {
+      return request.serializeBinary();
+    },
+    proto_shifu_shifu_pb.Empty.deserializeBinary
+  );
+
+  deleteDevice(
+    request: proto_shifu_shifu_pb.DeleteDeviceRequest,
+    metadata?: grpcWeb.Metadata | null): Promise<proto_shifu_shifu_pb.Empty>;
+
+  deleteDevice(
+    request: proto_shifu_shifu_pb.DeleteDeviceRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback: (err: grpcWeb.RpcError,
+               response: proto_shifu_shifu_pb.Empty) => void): grpcWeb.ClientReadableStream<proto_shifu_shifu_pb.Empty>;
+
+  deleteDevice(
+    request: proto_shifu_shifu_pb.DeleteDeviceRequest,
+    metadata?: grpcWeb.Metadata | null,
+    callback?: (err: grpcWeb.RpcError,
+               response: proto_shifu_shifu_pb.Empty) => void) {
+    if (callback !== undefined) {
+      return this.client_.rpcCall(
+        this.hostname_ +
+          '/shifu.ShifuService/DeleteDevice',
+        request,
+        metadata || {},
+        this.methodDescriptorDeleteDevice,
+        callback);
+    }
+    return this.client_.unaryCall(
+    this.hostname_ +
+      '/shifu.ShifuService/DeleteDevice',
+    request,
+    metadata || {},
+    this.methodDescriptorDeleteDevice);
   }
 
   methodDescriptorRestartDeviceShifu = new grpcWeb.MethodDescriptor(
@@ -470,6 +534,28 @@ export class ShifuServiceClient {
       this.methodDescriptorGetDeviceShifuLogs);
   }
 
+  methodDescriptorForwardPort = new grpcWeb.MethodDescriptor(
+    '/shifu.ShifuService/ForwardPort',
+    grpcWeb.MethodType.SERVER_STREAMING,
+    proto_shifu_shifu_pb.ForwardPortRequest,
+    proto_shifu_shifu_pb.ForwardPortResponse,
+    (request: proto_shifu_shifu_pb.ForwardPortRequest) => {
+      return request.serializeBinary();
+    },
+    proto_shifu_shifu_pb.ForwardPortResponse.deserializeBinary
+  );
+
+  forwardPort(
+    request: proto_shifu_shifu_pb.ForwardPortRequest,
+    metadata?: grpcWeb.Metadata): grpcWeb.ClientReadableStream<proto_shifu_shifu_pb.ForwardPortResponse> {
+    return this.client_.serverStreaming(
+      this.hostname_ +
+        '/shifu.ShifuService/ForwardPort',
+      request,
+      metadata || {},
+      this.methodDescriptorForwardPort);
+  }
+
   methodDescriptorExecuteCommand = new grpcWeb.MethodDescriptor(
     '/shifu.ShifuService/ExecuteCommand',
     grpcWeb.MethodType.SERVER_STREAMING,
@@ -533,49 +619,6 @@ export class ShifuServiceClient {
     request,
     metadata || {},
     this.methodDescriptorGetCompletions);
-  }
-
-  methodDescriptorInstallViaURL = new grpcWeb.MethodDescriptor(
-    '/shifu.ShifuService/InstallViaURL',
-    grpcWeb.MethodType.UNARY,
-    proto_shifu_shifu_pb.InstallViaURLRequest,
-    proto_shifu_shifu_pb.Empty,
-    (request: proto_shifu_shifu_pb.InstallViaURLRequest) => {
-      return request.serializeBinary();
-    },
-    proto_shifu_shifu_pb.Empty.deserializeBinary
-  );
-
-  installViaURL(
-    request: proto_shifu_shifu_pb.InstallViaURLRequest,
-    metadata?: grpcWeb.Metadata | null): Promise<proto_shifu_shifu_pb.Empty>;
-
-  installViaURL(
-    request: proto_shifu_shifu_pb.InstallViaURLRequest,
-    metadata: grpcWeb.Metadata | null,
-    callback: (err: grpcWeb.RpcError,
-               response: proto_shifu_shifu_pb.Empty) => void): grpcWeb.ClientReadableStream<proto_shifu_shifu_pb.Empty>;
-
-  installViaURL(
-    request: proto_shifu_shifu_pb.InstallViaURLRequest,
-    metadata?: grpcWeb.Metadata | null,
-    callback?: (err: grpcWeb.RpcError,
-               response: proto_shifu_shifu_pb.Empty) => void) {
-    if (callback !== undefined) {
-      return this.client_.rpcCall(
-        this.hostname_ +
-          '/shifu.ShifuService/InstallViaURL',
-        request,
-        metadata || {},
-        this.methodDescriptorInstallViaURL,
-        callback);
-    }
-    return this.client_.unaryCall(
-    this.hostname_ +
-      '/shifu.ShifuService/InstallViaURL',
-    request,
-    metadata || {},
-    this.methodDescriptorInstallViaURL);
   }
 
 }

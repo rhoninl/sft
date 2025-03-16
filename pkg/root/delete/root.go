@@ -1,4 +1,4 @@
-package delete
+package remove
 
 import (
 	"github.com/rhoninl/sft/pkg/k8s"
@@ -22,15 +22,24 @@ var DeleteCommand = &cobra.Command{
 			return
 		}
 
-		deviceName := args[0]
-		device, err := k8s.GetAllByDeviceName(deviceName)
+		device, err := k8s.GetAllByDeviceName(args[0])
 		if err != nil {
 			logger.Printf("Error retrieving device: %v\n", err)
 			return
 		}
 
-		_ = device
-		// printDeviceDetails(device)
+		if device == nil {
+			logger.Println("Error: Device not found")
+			return
+		}
+
+		deviceName := args[0]
+		if err := shifu.DeleteDevice(deviceName); err != nil {
+			logger.Printf("Error deleting device: %v\n", err)
+			return
+		}
+
+		logger.Println("Device deleted successfully")
 	},
 	ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		if len(args) != 0 {

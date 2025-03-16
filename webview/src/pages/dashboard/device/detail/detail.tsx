@@ -33,17 +33,17 @@ export default function Device() {
     }, [name])
 
     const deviceDetails = [
-        { label: "Address", value: device?.getEdgedevice()?.getAddress() },
-        { label: "Protocol", value: device?.getEdgedevice()?.getProtocol() },
-        { label: "Status", value: device?.getEdgedevice()?.getStatus() },
-        { label: "SKU", value: device?.getEdgedevice()?.getSku() },
-        { label: "Age", value: device?.getEdgedevice()?.getAge() }
+        { label: "Address", value: device?.getEdgeDevice()?.getAddress() },
+        { label: "Protocol", value: device?.getEdgeDevice()?.getProtocol() },
+        { label: "Status", value: device?.getEdgeDevice()?.getStatus() },
+        { label: "SKU", value: device?.getEdgeDevice()?.getSku() },
+        { label: "Age", value: device?.getEdgeDevice()?.getAge() }
     ]
 
     const gatewaySettings = useMemo(() => {
         try {
-            if (device?.getEdgedevice()?.getGateway() === "null") return null;
-            const gateway = JSON.parse(device?.getEdgedevice()?.getGateway() || "");
+            if (device?.getEdgeDevice()?.getGateway() === "null") return null;
+            const gateway = JSON.parse(device?.getEdgeDevice()?.getGateway() || "");
 
             const baseSettings = [
                 { label: "Protocol", value: gateway.protocol },
@@ -71,8 +71,8 @@ export default function Device() {
 
     const deviceSettings = useMemo(() => {
         try {
-            if (device?.getEdgedevice()?.getSetting() === "null") return null;
-            const settings = JSON.parse(device?.getEdgedevice()?.getSetting() || "");
+            if (device?.getEdgeDevice()?.getSetting() === "null") return null;
+            const settings = JSON.parse(device?.getEdgeDevice()?.getSetting() || "");
 
             return Object.entries(settings).reduce((acc: Array<{ label: string, value: any }>, [key, value]) => {
                 if (value && typeof value === 'object' && !Array.isArray(value)) {
@@ -159,11 +159,11 @@ export default function Device() {
         <div className="device-detail-container flex flex-col w-full p-6 rounded-lg shadow-lg">
             <div className="flex items-center mb-2">
                 <h1 className="text-3xl font-bold text-blue-600 dark:text-blue-400">{name}</h1>
-                <div className={`ml-4 px-3 py-1 rounded-full text-sm font-medium ${device?.getEdgedevice()?.getStatus() === 'Running'
+                <div className={`ml-4 px-3 py-1 rounded-full text-sm font-medium ${device?.getEdgeDevice()?.getStatus() === 'Running'
                     ? 'bg-green-100 text-green-800'
                     : 'bg-red-100 text-red-800'
                     }`}>
-                    {device?.getEdgedevice()?.getStatus()}
+                    {device?.getEdgeDevice()?.getStatus()}
                 </div>
             </div>
 
@@ -219,7 +219,7 @@ export default function Device() {
                         </div>
                     </>
                 )}
-                {device?.getEdgedevice()?.getSetting() !== "null" && deviceSettings && (
+                {device?.getEdgeDevice()?.getSetting() !== "null" && deviceSettings && (
                     <>
                         <Divider className="my-4" />
                         <div className="flex flex-col gap-4">
