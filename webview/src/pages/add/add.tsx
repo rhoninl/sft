@@ -9,7 +9,7 @@ export default function Add({ isOpen, onClose }: { isOpen: boolean, onClose: () 
                     Install Things in your Cluster
                 </DrawerHeader>
                 <DrawerBody>
-                    <CreateByUrl />
+                    <CreateByUrl onSuccess={onClose} />
                     <Divider />
                 </DrawerBody>
                 <DrawerFooter>

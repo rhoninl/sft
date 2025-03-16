@@ -2,11 +2,18 @@ import { addToast, Button, Input, toast } from "@heroui/react";
 import { useEffect, useState } from "react";
 import { InstallViaURL } from "../../../apis/shifu/add";
 
-export default function CreateByUrl() {
+interface CreateByUrlProps {
+    onSuccess: () => void;
+}
+
+export default function CreateByUrl({ onSuccess }: CreateByUrlProps) {
     const [inputUrl, setInputUrl] = useState("");
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
+
     function createByUrl() {
+        setLoading(true);
         console.log(inputUrl);
 
         // regex to extract URL from either direct URL input or kubectl apply -f command
@@ -26,13 +33,18 @@ export default function CreateByUrl() {
             addToast({
                 title: "Installation successful",
                 timeout: 3000,
+                shouldShowTimeoutProgress: true,
+                color: "success",
             });
         }).catch((err) => {
             console.error("Installation failed:", err);
             setError("Installation failed: " + err.message);
         });
 
-        setInputUrl(url);
+        setTimeout(() => {
+            setLoading(false);
+            onSuccess();
+        }, 1000);
     }
 
     return (
@@ -58,6 +70,7 @@ export default function CreateByUrl() {
                     onPress={createByUrl}
                     isDisabled={inputUrl === ""}
                     disabled={inputUrl === ""}
+                    isLoading={loading}
                 >Add</Button>
             </div>
         </>

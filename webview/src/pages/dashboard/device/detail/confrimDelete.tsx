@@ -1,5 +1,6 @@
 import { Button, ModalBody, Modal, ModalContent, ModalFooter, ModalHeader, Input, toast, addToast } from "@heroui/react";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { DeleteDevice } from "src/apis/shifu/device";
 
 interface ConfirmDeleteProps {
@@ -10,6 +11,7 @@ interface ConfirmDeleteProps {
 
 export function ConfirmDelete({ deviceName, isOpen, setIsOpen }: ConfirmDeleteProps) {
     const [confirmation, setConfirmation] = useState("");
+    const navigate = useNavigate();
 
     useEffect(() => {
         setConfirmation("");
@@ -19,10 +21,15 @@ export function ConfirmDelete({ deviceName, isOpen, setIsOpen }: ConfirmDeletePr
         if (confirmation.toLowerCase() === "delete") {
             DeleteDevice(deviceName).then(() => {
                 addToast({
-                    title: "Device deleted successfully",
+                    title: "Device " + deviceName + " deleted successfully",
                     timeout: 3000,
+                    shouldShowTimeoutProgress: true,
+                    color: "success",
                 });
+
+
                 setIsOpen(false);
+                navigate("/devices");
             }).catch((error) => {
                 console.error(error);
             });
