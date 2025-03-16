@@ -16,7 +16,7 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <NextThemesProvider defaultTheme="light" enableSystem>
+      <NextThemesProvider defaultTheme="light" attribute="class" enableSystem>
         <HeroUIProvider>
           <ToastProvider placement='bottom-left' />
           <main className="min-h-screen text-foreground bg-background">
