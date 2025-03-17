@@ -10,6 +10,8 @@ import { Provider } from 'react-redux';
 import { store } from './store/store';
 import EasterEgg from './components/easteregg/EasterEgg';
 
+document.title = "Shifu Webview";
+
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
